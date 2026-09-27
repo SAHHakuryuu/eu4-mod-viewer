@@ -1,0 +1,51 @@
+{
+  "name": "eu4-mod-viewer",
+  "version": "1.0.0",
+  "description": "A local, zero-dependency viewer for Europa Universalis IV mods: browse every change a mod makes, and read events, decisions, ideas, advisors and policies in the format the game itself displays them.",
+  "keywords": [
+    "eu4",
+    "europa-universalis",
+    "paradox-interactive",
+    "mod",
+    "modding",
+    "clausewitz",
+    "viewer",
+    "localisation",
+    "localization",
+    "i18n",
+    "dds"
+  ],
+  "license": "MIT",
+  "author": "SAHHakuryuu",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node tools/launcher.js",
+    "start:en": "node tools/launcher.js --lang en",
+    "serve": "node src/server.js",
+    "test": "node tools/run-tests.js",
+    "test:codec": "node tools/test-codec.js",
+    "test:dds": "node tools/test-dds.js",
+    "test:gamedata": "node tools/test-gamedata.js",
+    "test:i18n": "node tools/test-i18n-backend.js",
+    "test:mods": "node tools/test-all-mods.js",
+    "test:fidelity": "node tools/test-fidelity.js",
+    "verify:game": "node tools/verify-game.js",
+    "verify:wiki": "node tools/verify-wiki.js",
+    "audit:i18n": "node tools/i18n-audit.js extract"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SAHHakuryuu/eu4-mod-viewer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SAHHakuryuu/eu4-mod-viewer/issues"
+  },
+  "homepage": "https://github.com/SAHHakuryuu/eu4-mod-viewer#readme"
+}

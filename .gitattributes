@@ -1,0 +1,29 @@
+# Normalise line endings in the repository to LF...
+* text=auto eol=lf
+
+# ...except Windows batch files, which cmd.exe parses incorrectly with bare LF.
+# The launcher .bat files are also deliberately pure ASCII: cmd reads batch files
+# in the OEM code page, so CJK text inside one gets mis-parsed. Keep it that way.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets must never be touched.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.dds binary
+*.tga binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+
+# Data snapshots are generated; collapse them in diffs.
+src/data/modifiers.json linguist-generated=true
+src/data/triggers.json linguist-generated=true
+src/data/effects.json linguist-generated=true
+
+# Documentation and vendored wiki data.
+*.md text
+docs/*.png binary

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="EU4 模组浏览器">EU4 Mod 浏览器</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#" id="brand">
+      <span class="brand-mark">EU4</span>
+      <span class="brand-text"><span data-i18n="Mod 浏览器">Mod 浏览器</span><small>Europa Universalis IV Mod Viewer</small></span>
+    </a>
+    <div class="header-search">
+      <input id="global-search" type="search" placeholder="搜索文件、本地化键或文本…"
+             data-i18n-placeholder="搜索文件、本地化键或文本…" autocomplete="off">
+      <button id="search-btn" class="btn" data-i18n="搜索">搜索</button>
+    </div>
+    <div class="header-actions">
+      <button id="lang-btn" class="btn ghost lang-btn" title="切换界面语言 / Switch language"
+              data-i18n-title="切换界面语言 / Switch language" aria-label="language">中文</button>
+      <button id="refresh-btn" class="btn ghost" title="重新扫描模组"
+              data-i18n-title="重新扫描模组" data-i18n="重新扫描">重新扫描</button>
+      <button id="settings-btn" class="btn ghost" title="设置"
+              data-i18n-title="设置"><span aria-hidden="true">⚙</span> <span data-i18n="设置">设置</span></button>
+    </div>
+  </div>
+  <div class="header-status" id="status-bar" data-i18n="正在扫描…">正在扫描…</div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <section class="panel">
+      <h2 class="panel-title" data-i18n="模组列表">模组列表</h2>
+      <div id="mod-list" class="mod-list"></div>
+    </section>
+  </aside>
+
+  <main class="content" id="content">
+    <div class="empty-state">
+      <h1 data-i18n="选择一个模组">选择一个模组</h1>
+      <p data-i18n="从左侧选择要浏览的模组，即可查看它对游戏做的全部改动。">从左侧选择要浏览的模组，即可查看它对游戏做的全部改动。</p>
+    </div>
+  </main>
+</div>
+
+<!-- Settings dialog and server-side folder picker are built by settings.js. -->
+<div id="settings-root"></div>
+
+<script src="/i18n.js"></script>
+<script src="/i18n.app.js"></script>
+<script src="/i18n.game.js"></script>
+<script src="/settings.js"></script>
+<script src="/app.js"></script>
+<script src="/gameview.js"></script>
+</body>
+</html>

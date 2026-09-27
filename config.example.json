@@ -1,0 +1,22 @@
+{
+  "$comment": "Copy this file to config.json to change defaults before the first run. The web UI writes config.json for you, so editing this by hand is optional.",
+  "language": "zh",
+  "wiki": {
+    "local": {
+      "enabled": true,
+      "dir": "F:\\20240820_Eu4离线wiki_1.37v2"
+    },
+    "online": {
+      "enabled": true,
+      "base": "https://eu4.paradoxwikis.com/"
+    }
+  },
+  "paths": {
+    "userDir": "",
+    "installDir": ""
+  },
+  "server": {
+    "port": 4173,
+    "openBrowser": true
+  }
+}
