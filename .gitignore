@@ -1,0 +1,45 @@
+# --- local settings (machine specific) ---------------------------------
+# config.json holds your language, wiki folder and directory overrides.
+# It is created on first save and must never be committed.
+config.json
+config.local.json
+
+# --- dependencies / build output (the project has none, but be safe) ---
+node_modules/
+dist/
+build/
+
+# --- third-party content that must never enter the repository ----------
+# Chinese term tables scraped out of the offline wiki. That wiki is licensed
+# CC BY-NC-SA 4.0 (non-commercial), so an extraction of it cannot be shipped
+# under this project's MIT licence. src/wikigloss.js parses those pages from the
+# user's own wiki at run time instead; only the hand-written *-curated.js files
+# are ours to commit. See CONTRIBUTING.md.
+src/data/triggers.json
+src/data/effects.json
+src/data/modifiers.json
+
+# --- scratch / debug ---------------------------------------------------
+*.log
+npm-debug.log*
+.npm/
+tmp/
+temp/
+*.tmp
+*.bak
+
+# --- editor / OS ------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# --- local verification artefacts -------------------------------------
+# Screenshots produced by tools/verify-*.js land in docs/ on purpose and are
+# committed; anything the verifiers drop elsewhere is not.
+/tools/out/
+/tools/dds-out/
+/tools/shot-*.png
