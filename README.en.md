@@ -511,7 +511,7 @@ eu4-mod-viewer/
 │  ├─ i18n.js               ★ backend language layer (L/pick/msg) deciding Chinese or English labels
 │  ├─ mods.js               mod discovery and scanning (.mod descriptor parsing, walking, category stats)
 │  ├─ fileview.js           single-file reading and content assembly
-│  ├─ taxonomy.js           34 change categories and their path rules (bilingual labels + descriptions)
+│  ├─ taxonomy.js           35 change categories and their path rules (bilingual labels + descriptions)
 │  ├─ wiki.js               ★ offline Chinese wiki parsing + English wiki deep links (configurable/switchable)
 │  ├─ gameloc.js            ★ localisation index (mod replace → mod → vanilla, with file and line per key)
 │  ├─ gamedata.js           ★ content-type assembly (type order, merged metadata, index cache, card dispatch)
@@ -542,12 +542,17 @@ eu4-mod-viewer/
 │  └─ gameview.js           ★ in-game preview: grouped navigation + six bespoke panels + generic card renderer
 ├─ docs/
 │  ├─ loc-key-conventions.md  localisation key conventions and each type's in-game render order (with measured hit rates)
-│  ├─ GITHUB.md               illustrated steps for uploading to GitHub (in Chinese)
+│  ├─ GITHUB.md               illustrated steps for uploading to GitHub (in Chinese; + GITHUB.en.md)
+│  ├─ GITHUB-UPDATE.md        ★ pushing updates when there is no git (+ GITHUB-UPDATE.en.md)
 │  └─ screenshot-*.png        screenshots (one per content type)
 └─ tools/
    ├─ launcher.js            ★ console launcher (bilingual banner, port probe, opens the browser)
    ├─ run-tests.js           ★ test entry point (core / mods / e2e tiers, with SKIP detection)
    ├─ i18n-audit.js          ★ scans frontend sources and reports Chinese literals not yet wrapped in t()
+   ├─ gh-upload.js           ★ pushes the working tree as one commit through the GitHub API (no git here)
+   ├─ gh-login.js            ★ guided publish: drives a controlled browser for the token, then pushes
+   ├─ gh-delete.js           ★ removes paths from the repository (gh-upload can only add or overwrite)
+   ├─ browser.js             Chrome DevTools Protocol client shared by the two scripts above
    ├─ test-codec.js           codec + parser tests (57 assertions)
    ├─ test-i18n-backend.js    backend bilingual layer (66 assertions, Chinese strings compared character by character to the old output)
    ├─ test-dds.js             DDS decoder tests (267 assertions, including real-texture round trips)
@@ -558,9 +563,9 @@ eu4-mod-viewer/
    ├─ test-missions.js      ★ mission tree layout: slot/position/link semantics + GUI geometry cross-check (297 assertions)
    ├─ test-wikigloss.js     ★ term tables come only from your wiki and are never invented; degrades with no wiki (59 assertions)
    ├─ test-fidelity.js        parser fidelity check (source keys vs parsed keys)
-   ├─ verify-wiki.js          DevTools-protocol driven Edge check of the embedded wiki
-   ├─ verify-game.js          DevTools-protocol driven Edge check of the in-game preview, one screenshot per type (210 assertions)
-   └─ verify-i18n.js          DevTools-protocol driven Edge check of language switching / settings / wiki switches (55 assertions)
+   ├─ verify-wiki.js          DevTools-protocol driven browser check of the embedded wiki
+   ├─ verify-game.js          DevTools-protocol driven browser check of the in-game preview, one screenshot per type (210 assertions)
+   └─ verify-i18n.js          DevTools-protocol driven browser check of language switching / settings / wiki switches (55 assertions)
 ```
 
 ---
@@ -717,9 +722,11 @@ Environment variables can override auto-detection: `EU4_USER_DIR`, `EU4_INSTALL_
 
 [MIT](LICENSE) © 2025–2026 SAHHakuryuu
 
-Want to publish this on GitHub? See **[docs/GITHUB.md](docs/GITHUB.md)** (two routes: web upload or
-the Git command line, including the `.gitattributes` CRLF caveat — that guide is written in Chinese).
-Before contributing, please read **[CONTRIBUTING.md](CONTRIBUTING.md)** (also Chinese).
+Want to publish this on GitHub? See **[docs/GITHUB.en.md](docs/GITHUB.en.md)** (two routes: web upload or
+the Git command line, including the `.gitattributes` CRLF caveat). **No git on this machine** and you
+want to push with the scripts that ship with the project? See
+**[docs/GITHUB-UPDATE.en.md](docs/GITHUB-UPDATE.en.md)**.
+Before contributing, please read **[CONTRIBUTING.en.md](CONTRIBUTING.en.md)**.
 
 **Nothing in this repository belongs to anyone else**, and that is maintained deliberately:
 
