@@ -15,17 +15,18 @@
 
 | 文件 | 作用 |
 |---|---|
-| `.gitignore` | 排除 `config.json`（含你的本机路径）、`node_modules/`、临时文件 |
+| `.gitignore` | 排除 `config.json`（含你的本机路径）、`node_modules/`、临时文件，以及翻译工作台 `src/data/locales/_work/` |
 | `.gitattributes` | **强制 `.bat` 用 CRLF 检出**——否则在别的机器上克隆下来双击又会打不开 |
 | `LICENSE` | MIT，版权行已写 `SAHHakuryuu` |
 | `CONTRIBUTING.md` / `CONTRIBUTING.en.md` | 三条硬规矩：不打包游戏资源 / wiki 内容 / 第三方依赖 |
 | `package.json` | 名称、版本、`npm start` / `npm test` 等脚本、仓库地址占位 |
 | `config.example.json` | 设置模板（真正的 `config.json` 不会被上传） |
-| `README.md` / `README.en.md` | 含徽章、截图、双语说明 |
-| `docs/` | 截图 + 本地化键约定 + 本文件（中英各一份） |
-| `src/` `web/` `tools/` | 全部源码与测试 |
+| `README.md` / `README.en.md` | 含徽章、截图、九语说明 |
+| `docs/` | 截图 + 本地化键约定 + 翻译流水线 + 本文件 + [GITHUB-UPDATE.md](GITHUB-UPDATE.md)（更新仓库，中英各一份） |
+| `src/` `web/` `tools/` | 全部源码与测试，含七种语言的侧表 `src/data/locales/*.json` 与生成的 `web/lang/*.js`，以及 `tools/gh-*.js`（无 git 时的推送脚本） |
 
 **不会被上传**：`config.json`（你的界面语言、wiki 目录、模组路径）、
+`src/data/locales/_work/`（切好的翻译 chunk 与 delta，`merge` 之后就是废料）、
 `tools/dds-out/`、`tools/out/`、任何 `*.tmp`，以及**任何从离线 wiki 抽出的词表**
 （`src/data/` 下只有手写的 `*-curated.js`，那是原创内容）。
 
@@ -54,7 +55,7 @@ dir /b
 
    > ⚠️ 网页上传**不能拖文件夹**，只能一个个拖文件，而且**空目录不会被保留**。
    > 这个项目的目录不多（`src/` `src/codec/` `src/data/` `web/` `tools/` `docs/`），
-   > 但一共 40 多个文件，手拖很累。
+   > 但一共 140 多个文件（其中 48 张是截图），手拖很累。
    >
    > 更省事的做法：先在本地把整个项目**压缩成 zip**，上传后 GitHub 不会自动解压，
    > 所以还是建议走**路线 B**。

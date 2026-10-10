@@ -19,8 +19,9 @@
       <button id="search-btn" class="btn" data-i18n="搜索">搜索</button>
     </div>
     <div class="header-actions">
-      <button id="lang-btn" class="btn ghost lang-btn" title="切换界面语言 / Switch language"
-              data-i18n-title="切换界面语言 / Switch language" aria-label="language">中文</button>
+      <select id="lang-select" class="lang-select" aria-label="language"
+              title="切换界面语言 / Switch language"
+              data-i18n-title="切换界面语言 / Switch language"></select>
       <button id="refresh-btn" class="btn ghost" title="重新扫描模组"
               data-i18n-title="重新扫描模组" data-i18n="重新扫描">重新扫描</button>
       <button id="settings-btn" class="btn ghost" title="设置"
@@ -52,6 +53,16 @@
 <script src="/i18n.js"></script>
 <script src="/i18n.app.js"></script>
 <script src="/i18n.game.js"></script>
+<!-- One dictionary per additional language, generated from src/data/locales/
+     by `node tools/build-langs.js`. Each calls I18N.extend(map, '<code>').
+     A missing file degrades to English: t() never renders a raw key. -->
+<script src="/lang/fr.js"></script>
+<script src="/lang/de.js"></script>
+<script src="/lang/es.js"></script>
+<script src="/lang/pt.js"></script>
+<script src="/lang/ru.js"></script>
+<script src="/lang/ja.js"></script>
+<script src="/lang/ko.js"></script>
 <script src="/settings.js"></script>
 <script src="/app.js"></script>
 <script src="/gameview.js"></script>

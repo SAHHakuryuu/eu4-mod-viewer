@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org/)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-blue.svg)](package.json)
-[![Languages](https://img.shields.io/badge/UI-%E4%B8%AD%E6%96%87%20%7C%20English-informational.svg)](#-界面语言--中英文切换)
+[![Languages](https://img.shields.io/badge/UI-9%20languages-informational.svg)](#-界面语言九种)
 
 一个 EU4 维基风格的本地软件，用来**读取并可视化 Europa Universalis IV 模组的全部改动**。
 它会自动发现你已安装的模组，把上万个文件按「改动了游戏的什么内容」归类，并且能正确
@@ -23,7 +23,7 @@
 
 ### 🎮 游戏内格式预览
 
-把**脚本文件与本地化文件对应起来**，按 EU4 在游戏里实际显示的样子渲染，**共 31 类内容**。
+把**脚本文件与本地化文件对应起来**，按 EU4 在游戏里实际显示的样子渲染，**共 35 类内容**。
 标签栏先按 6 个分组（内容 / 国家 / 宗教与经济 / 军事 / 世界 / 系统）收拢，一次只展开一组；
 左侧选条目，右边就是「游戏里长什么样」，卡片下方是脚本 ↔ 本地化的对照表。
 
@@ -71,12 +71,20 @@
 |---|---|
 | ![君主特质](docs/screenshot-game-ruler-traits.png) | ![将领特质](docs/screenshot-game-leader-traits.png) |
 
+| 👑 历史君主（能力点 + 王朝 + 同日在位将领） | 🎓 历史顾问（顾问类型 + 技能等级 + 所在省份） |
+|---|---|
+| ![历史君主](docs/screenshot-game-monarchs.png) | ![历史顾问](docs/screenshot-game-hist-advisors.png) |
+
+| 🗡 历史将领（火冲机围 + 特质） | 💥 历史战役（胜负 + 谁攻击了谁 + 损失百分比） |
+|---|---|
+| ![历史将领](docs/screenshot-game-leaders.png) | ![历史战役](docs/screenshot-game-battles.png) |
+
 其余各类（国家、叛军、时代、贸易、战争与和平、书签、修正、脚本效果、
-行动指令）的截图同样在 `docs/screenshot-game-*.png`（共 32 张）。
+行动指令）的截图同样在 `docs/screenshot-game-*.png`（共 36 张）。
 
 ![预览总览](docs/screenshot-game-overview.png)
 
-### 🌐 双语界面 + ⚙ 设置
+### 🌐 九种界面语言 + ⚙ 设置
 
 | 设置（中文） | 设置（English） |
 |---|---|
@@ -85,6 +93,10 @@
 | 服务端文件夹选择器 | 关掉本地 wiki 后的说明 |
 |---|---|
 | ![选择器](docs/screenshot-settings-picker.png) | ![wiki 关闭](docs/screenshot-wiki-off-settings.png) |
+
+| 相关 wiki 页面（本地离线 + 英文在线） | 两种 wiki 都关掉时，类别页会说明原因 |
+|---|---|
+| ![wiki 链接](docs/screenshot-wiki-links-en.png) | ![wiki 全关](docs/screenshot-wiki-disabled-en.png) |
 
 ---
 
@@ -147,19 +159,26 @@ npm run start:en                    :: 英文界面
     **由内置解码器实时解成 PNG**，事件插图、图标都能真正画出来。
   - 其余二进制（音频、模型等）—— 标注为资源文件，不做解析。
 - **全文搜索** —— 同时搜索文件名、本地化键和本地化文本（中文可搜）。
-- **🎮 游戏内格式预览** —— 见下节。**31 类内容**按 6 个分组排列，把脚本和本地化对应起来，
+- **🎮 游戏内格式预览** —— 见下节。**35 类内容**按 6 个分组排列，把脚本和本地化对应起来，
   渲染成游戏里真正看到的面板（事件窗、任务序列、政府改革面板、宗教页、兵种属性表…）。
-- **双语界面** —— 整套 UI 可在**中文 / English** 之间随时切换，见下节。
+- **九种界面语言** —— 整套 UI 可在**中文 / English / Français / Deutsch / Español / Português /
+  Русский / 日本語 / 한국어** 之间随时切换，见下节。
+- **👑 历史君主 / 🎓 历史顾问 / 🗡 历史将领 / 💥 历史战役** —— 把 `history/countries/*.txt`、
+  `history/advisors/*.txt` 与 `history/wars/*.txt` 里的人物、顾问与战役按游戏里的读数渲染：
+  能力点、王朝、生卒、将领四维、顾问类型/技能/所在省份、双方指挥官与兵力，
+  以及**这场仗谁赢了**（`result` 就是胜负），见下节。
 - **wiki 关联可开关** —— 本地离线中文 wiki 与英文在线 wiki 各自独立启用/禁用、目录可手动选择，见 [设置](#-设置)。
 - **可分享的地址** —— 视图写入 URL hash，刷新和分享都能回到同一个文件
   （`#mod/<id>/game/advisors/card/yangmingism_daru` 这样的深链也能直接打开对应内容）。
 
 ---
 
-## 🌐 界面语言 / 中英文切换
+## 🌐 界面语言：九种
 
-点右上角的语言按钮（显示的是**要切换到的**语言）或到 **⚙ 设置 → 界面语言** 下拉框切换。
-选择会同时写入浏览器 `localStorage` 和服务端 `config.json`，所以：
+右上角是一个下拉框，每个语言都用**它自己的文字**列出（`中文 / English / Français / Deutsch /
+Español / Português / Русский / 日本語 / 한국어`）——这是唯一不翻译的一类字符串，
+因为读者是在找「Русский」而不是「Russian」。下拉框里的选项同时也在
+**⚙ 设置 → 界面语言** 里。选择会同时写入浏览器 `localStorage` 和服务端 `config.json`，所以：
 
 - 刷新页面后保持；
 - 控制台启动器下次也用同一个语言输出；
@@ -167,7 +186,13 @@ npm run start:en                    :: 英文界面
 
 语言切换会**立刻重绘当前视图**（不用刷新），且不会丢失你正在看的位置。
 
-### 英文模式下「术语」怎么显示
+翻译是**人工侧表**，不是机翻：中文是源语言，英文是回退语言，其余七种的词取自
+**官方 EU4 本地化**（`localisation\*_l_<lang>.yml`）里游戏自己印的那个词。回退链是
+「目标语言 → 英文 → 中文原文」，所以任何时候都不会露出 `some.key.name` 这种键名。
+本轮实测：七种语言各 **720 条后端 + 397 条前端**，覆盖率 100%，`tools/build-langs.js check` 无告警。
+想自己加一种语言或改译文，见 **[docs/TRANSLATING.md](docs/TRANSLATING.md)**。
+
+### 非中文界面下「术语」怎么显示
 
 中文词表由两部分拼成，**都在你自己的机器上，仓库里一份都没有**：
 
@@ -176,10 +201,10 @@ npm run start:en                    :: 英文界面
 | **你挂载的离线 wiki** | 运行时解析 `条件.html` / `命令.html` / `修正列表.html` 三页（`src/wikigloss.js`） | 条件 689 · 效果 394 · 修正 604 |
 | `src/data/*-curated.js` | 手写补充，wiki 未覆盖的常用项 | 修正 267 · 效果 260 · 条件 18 |
 
-合并后约为 条件 703 / 效果 502 / 修正 692 条，**只有中文，没有英文对照**。
-所以英文模式下**不机翻**，而是显示 **EU4 脚本里的原始标识符**：
+合并后约为 条件 703 / 效果 502 / 修正 692 条，**只有中文，没有别的语言对照**。
+所以英文（以及其余六种）模式下**不机翻**，而是显示 **EU4 脚本里的原始标识符**：
 
-| 脚本 | 中文模式 | 英文模式 |
+| 脚本 | 中文模式 | 非中文模式 |
 |---|---|---|
 | `land_morale = 0.15` | `+15% 陆军士气修正` | `land_morale = +15%` |
 | `manpower_recovery_speed = 0.15` | `+15% 后备人力恢复速度` | `manpower_recovery_speed = +15%` |
@@ -187,7 +212,7 @@ npm run start:en                    :: 英文界面
 | `has_idea_group = humanist_ideas` | `有理念组 人文理念` | `has_idea_group = humanist_ideas` |
 
 这不是偷懒：`land_morale` 正是**英文 EU4 wiki 和游戏脚本里的官方名字**，可以直接拿去搜索。
-界面外壳（按钮、标题、字段名、作用域名、错误信息）在两种语言下都是完整翻译的。
+界面外壳（按钮、标题、字段名、作用域名、错误信息）在九种语言下都是完整翻译的。
 
 ---
 
@@ -197,7 +222,7 @@ npm run start:en                    :: 英文界面
 
 | 分组 | 可配置项 |
 |---|---|
-| **界面语言** | 中文 / English |
+| **界面语言** | 中文 / English / Français / Deutsch / Español / Português / Русский / 日本語 / 한국어 |
 | **本地中文 Wiki** | 总开关；离线 wiki 目录（手动填写 / **浏览…** / **自动检测** / **验证**） |
 | **英文在线 Wiki** | 总开关；在线 wiki 地址（默认 `https://eu4.paradoxwikis.com/`） |
 | **路径设置** | 模组目录、游戏安装目录（留空则自动检测；改动后会重新扫描模组） |
@@ -228,7 +253,7 @@ npm run start:en                    :: 英文界面
 
 游戏里的界面和脚本文件是两个世界：玩家看到的是「事件窗」「任务面板」「政府改革列表」，
 而模组作者写的是 `option = { name = ... add_stability = 1 }`。
-这一层把两边接起来，**共 31 类内容，按侧栏的 6 个分组排列**
+这一层把两边接起来，**共 35 类内容，按侧栏的 6 个分组排列**
 （内容 / 国家 / 宗教与经济 / 军事 / 世界 / 系统）——分组是可点的，一次只展开一组，
 所以三十来个标签也不会挤成一片。下面按主题列出每一类渲染成什么：
 
@@ -250,6 +275,8 @@ npm run start:en                    :: 英文界面
 | 类型 | 脚本来源 | 渲染成什么 |
 |---|---|---|
 | **国家与政体** | `history/countries/`、`common/countries/` | 国家档案：开局君主/继承人、宗教文化、科技、历史事件时间轴 |
+| **👑 历史君主** | `history/countries/*.txt` | 君主 / 继承人 / 配偶条目：姓名与王朝、生卒、即位日、**行政/外交/军事能力点（圆点）**、宗教文化、继承宣称、摄政与女性标记、君主特质；同一条目里若还有 `leader` 块，**就地把这位君主作为将领的四维一起画出来**（它是「历史将领」里独立的一条，可点击跳过去）；下方列出**同一个日期块里的其它改动** |
+| **🎓 历史顾问** | `history/advisors/*.txt` | 顾问条目：姓名、**顾问类型**（`type` 走本地化解析，如 神学家/航海家）、**技能等级（1–3 圆点）**、所在省份（名称 + 编号）、顾问编号、可用日期与逝世日期、折扣与女性标记。注意它与「顾问」（`common/advisortypes/`，顾问的定义）是两个不同的页签 |
 | **政府与改革** | `common/governments/`、`common/government_reforms/`、`government_mechanics/`、`subject_types/`、`factions/` 等 | 政体/改革面板：名称 + 说明 + 属性表（是否可联姻、是否有议会…）+ 修正 + 解锁条件 |
 | **君主特质** | `common/ruler_personalities/`、`ancestor_personalities/` | 特质卡：名称 + 它给的修正 + 生效条件（`allow`）+ **分「作为君主 / 继承人 / 配偶时」列出各自的允许条件与出现权重**（`*_allow` 块里的 `chance`）。先祖特质同属一套结构，一并收录 |
 | **议会与法令** | `common/parliament_issues/`、`decrees/`、`state_edicts/`、`trading_policies/` | 议会提案 / 法令条目：条件与效果 |
@@ -278,6 +305,8 @@ npm run start:en                    :: 英文界面
 | 类型 | 脚本来源 | 渲染成什么 |
 |---|---|---|
 | **单位与军事** | `common/units/`、`mercenary_companies/`、`naval_doctrines/`、`flagship_modifications/` | 兵种六维属性表、雇佣兵团、海军学说、旗舰改装 |
+| **🗡 历史将领** | `history/countries/*.txt` | 将领条目：`type`（陆军将领/海军将领/探险家/征服者）、**火力/冲击/机动/围城四维圆点**、生卒、将领特质；既收录日期块里独立的 `leader`，也收录嵌在君主/继承人块里的那一个（后者与君主卡双向互链） |
+| **💥 历史战役** | `history/wars/*.txt` | 战役卡：**结果条**（进攻方/防守方获胜 + 游戏自己的那行「X 名士兵攻击了 Y 名士兵」，海战自动换成「X 艘船与 Y 艘船交战」）、战场省份（名称 + 编号）、所属战争，**进攻方与防守方两张小表**（国家、指挥官、步兵/骑兵/炮兵或重型/轻型船只/桨帆船、合计、损失百分比），胜方一侧描绿边 |
 | **将领特质** | `common/leader_personalities/` | 将领性格卡：它给该将领所率部队的修正（`discipline`、`land_morale`…）+ `allow` 里的适用条件（`is_admiral` 区分陆军/海军将领） |
 | **战争与和平** | `common/cb_types/`、`wargoal_types/`、`peace_treaties/` | 宣战理由：使用条件、战争目标与和平选项系数 |
 
@@ -363,7 +392,7 @@ npm run start:en                    :: 英文界面
    每张卡片下方列出：脚本字段 → 本地化键 → 游戏显示的文本 → **来源文件:行号**，
    并区分模组本地化与原版本地化，点文件名可直接跳到那个 `.yml`。
    表里也包含**渲染过程中解析出的名字**——科技等级解锁的兵种、宗教组里的各宗教、
-   阶层影响力条目的 `desc` 键、GUI 窗口按钮的 `buttonText`，所以 31 类里绝大多数
+   阶层影响力条目的 `desc` 键、GUI 窗口按钮的 `buttonText`，所以 35 类里绝大多数
    都能看到「这条中文是从哪个键来的」。
 
 6. **AI 权重 → 「×N 当满足……」**
@@ -434,6 +463,28 @@ EU4 的本地化数值**只接受 Latin-1 范围内的字节**，所以中文不
 **如果跳过 CP1252 那一层，会得到「看起来像中文但其实是错的」结果**
 （例如 `江户城` 会变成 `汭户城`），所以这一步是必须的。
 
+这一层**必须是无损的**：早期版本在把读出来的字符串映射回字节时顺手做了一次
+「非法 UTF-8 → U+FFFD」的清洗，于是 0xF9 这类**合法的 CP1252 字节**被吃掉，
+`& 0xFF` 之后变成 0xFD ——`曹`（U+66F9）就显示成了 `曽`（U+66FD）。
+现在的 `cp1252Normalize()` 只把 UTF-8 序列解成码元、其余字节原样保留，
+并有一个显式的 `utf8Walk()` 判定（接受 C1 码位、拒绝过长编码与畸形序列），
+测试 `tools/test-codec.js` 里对应 57 项断言。
+
+### 模组里的 `¿` 是真的
+
+`history/countries/*.txt` 里约 **7% 的字符串**开头有一个裸露的 `0xBF` 字节
+（本机实测：93% 的中文脚本字符串带它，本地化文件里一个都没有）。
+这不是解码器的 bug：
+
+- 双字节补丁的解码函数 `convertEscapedTextToWideText()` 对**非转义字节**一律走 CP1252 表，
+  0xBF 就是 `¿`（U+00BF）；
+- 它的编码函数 `convertWideTextToEscapedText()` 只在 `high != 0` 时才写转义序列，
+  所以 `U+00BF` 这种单字节字符**只会以裸字节形式写出来**——它从来不是长度标记或分隔符。
+
+也就是说：**游戏自己就会把这些名字显示成 `¿曹勐得`**（本机实测 930 个君主字段里有 110 个带它，
+绝大多数是 `dynasty`）。查看器因此**照原样显示**，不做「顺手擦干净」的处理——
+擦掉才是篡改。这个数字由 `tools/test-history.js` 每次跑测试时打印出来，不会悄悄变化。
+
 实现见 `src/codec/localisation.js`（`decodeBest()` 为自动判别入口）。
 
 已用真实文件校验（逐字比对通过）：
@@ -461,26 +512,28 @@ eu4-mod-viewer/
 ├─ src/
 │  ├─ server.js             HTTP API + 静态资源 + 离线 wiki 挂载 + 贴图/DDS 解码
 │  ├─ config.js             ★ config.json 读写、默认值合并、目录自动探测
-│  ├─ i18n.js               ★ 后端语言层（L/pick/msg），决定中文还是英文标签
+│  ├─ i18n.js               ★ 后端语言层（L/pick/msg），决定九种语言里显示哪一种
 │  ├─ mods.js               模组发现与扫描（.mod 描述文件解析、文件遍历、分类统计）
 │  ├─ fileview.js           单文件读取与内容组装
-│  ├─ taxonomy.js           34 个改动类别与路径匹配规则（中英标签 + 中英描述）
+│  ├─ taxonomy.js           35 个改动类别与路径匹配规则（中英标签 + 中英描述）
 │  ├─ wiki.js               ★ 离线中文 wiki 解析 + 英文 wiki 深链映射（可配置/可关闭）
 │  ├─ gameloc.js            ★ 本地化索引（模组 replace → 模组 → 原版，含键的来源文件与行号）
 │  ├─ gamedata.js           ★ 内容类型总装配（类型顺序、合并元数据、索引缓存、卡片分发）
 │  ├─ content/              ★ 每一类内容一个描述符
 │  │  ├─ legacy.js            最早六个类型的手写渲染器（事件/决议/理念/顾问/政策）
-│  │  ├─ registry.js          其余 25 类的描述符（19 类走通用引擎，6 类另有构建器：任务树/任务/国家/书签/地图/界面)
+│  │  ├─ registry.js          其余 29 类的描述符（通用引擎 + 任务树/任务/国家/书签/地图/界面/历史四类另有构建器）
 │  │  ├─ missions.js          ★ 任务树：读 slot/position/required_missions，按 GUI 几何与箭头贴图排版
+│  │  ├─ history.js           ★ 历史君主/顾问/将领/战役：条目 id 由「位置」构成，建卡时按同一条链走回去
 │  │  └─ common.js            通用引擎：索引枚举、字段归类、卡片组装、贴图解析
 │  ├─ gametext.js           ★ §色码 / £图标£ / $KEY$ / [动态] 标记解析
-│  ├─ gameterms.js          ★ 修正 / 条件 / 效果 → 游戏内文本（词表驱动，双语）
+│  ├─ gameterms.js          ★ 修正 / 条件 / 效果 → 游戏内文本（词表驱动，九语）
 │  ├─ wikigloss.js          ★ 运行时解析你本机离线 wiki 的 条件/命令/修正列表 三页（不随仓库分发）
-│  ├─ data/                 中文词表（仓库里**只有手写的那一半**）
+│  ├─ data/                 中文词表（仓库里**只有手写的那一半**）+ 翻译侧表
 │  │  ├─ modifiers-curated.js 手写补充的修正名 + 显示方式（百分比 / 平值 / 布尔）
-│  │  └─ effects-curated.js   手写补充的效果名（wiki 的效果页没有中文名列）
+│  │  ├─ effects-curated.js   手写补充的效果名（wiki 的效果页没有中文名列）
+│  │  └─ locales/             ★ 翻译层：_source.*（抽取的源串）+ <lang>.json（七种语言侧表）
 │  └─ codec/
-│     ├─ localisation.js    ★ EU4 本地化/私有中文编码编解码
+│     ├─ localisation.js    ★ EU4 本地化/私有中文编码编解码（CP1252 层无损）
 │     ├─ script.js          ★ Clausewitz 脚本词法 + 语法分析器
 │     └─ dds.js             ★ 零依赖 DDS → RGBA → PNG 解码器
 ├─ web/
@@ -489,37 +542,50 @@ eu4-mod-viewer/
 │  ├─ i18n.js               ★ 前端语言层（t / setLang / applyStatic），词典按中文字符串索引
 │  ├─ i18n.app.js           ★ web/app.js 的英文词典
 │  ├─ i18n.game.js          ★ web/gameview.js 的英文词典
-│  ├─ settings.js           ★ 设置面板 + 服务端文件夹选择器 + 语言切换按钮
+│  ├─ lang/<code>.js        ★ 七种语言的浏览器词典（由 tools/build-langs.js 生成，照样提交）
+│  ├─ settings.js           ★ 设置面板 + 服务端文件夹选择器 + 语言下拉框
 │  ├─ app.js                前端渲染（分类、文件树、脚本树、本地化表、wiki 面板、搜索）
-│  └─ gameview.js           ★ 游戏内格式预览：分组导航 + 六个专用面板 + 通用卡片渲染器
+│  └─ gameview.js           ★ 游戏内格式预览：分组导航 + 专用面板 + 通用卡片渲染器
 ├─ docs/
 │  ├─ loc-key-conventions.md  本地化键约定与各类型在游戏中的渲染顺序（含实测命中率）
-│  ├─ GITHUB.md               上传到 GitHub 的图文步骤
+│  ├─ TRANSLATING.md          ★ 九语翻译流水线（+ TRANSLATING.en.md）
+│  ├─ GITHUB.md               上传到 GitHub 的图文步骤（+ GITHUB.en.md 英文版）
+│  ├─ GITHUB-UPDATE.md        ★ 更新仓库：没有 git 时怎么推送（+ GITHUB-UPDATE.en.md）
 │  └─ screenshot-*.png        截图（每类内容一张）
 └─ tools/
    ├─ launcher.js            ★ 控制台启动器（双语横幅、端口探测、自动开浏览器）
    ├─ run-tests.js           ★ 测试总入口（core / mods / e2e 三档，带 SKIP 判定）
+   ├─ i18n-extract.js        ★ 扫描源码抽出待翻字符串（后端 720 / 前端 397 个键）
+   ├─ build-langs.js         ★ 翻译流水线：split / delta / verify / merge / check / status
    ├─ i18n-audit.js          ★ 扫描前端源码，报告「还没包进 t() 的中文字面量」
+   ├─ check-doc-links.js     ★ 校验文档里的相对链接与截图都真实存在（README 的图不许挂），
+   │                           并检查 markdown 形状：表格列数、反引号成对、围栏闭合
+   ├─ check-css.js           ★ 校验每个 var(--x) 都有声明（页头语言框白底白字就是栽在这）
+   ├─ gh-upload.js           ★ 用 GitHub API 把工作树推成一个 commit（本机没有 git）
+   ├─ gh-login.js            ★ 引导式发布：开可控浏览器拿 token → 建仓库 → 推送 → 引导撤销
+   ├─ gh-delete.js           ★ 从仓库删除指定路径（gh-upload 只能新增/覆盖）
+   ├─ browser.js             上面脚本共用的 Chrome DevTools Protocol 客户端
    ├─ test-codec.js         编解码 + 解析器测试（57 项）
    ├─ test-i18n-backend.js  后端双语层测试（66 项，中文字符串逐字比对旧输出）
    ├─ test-dds.js           DDS 解码器测试（267 项断言，含真实贴图往返比对）
    ├─ test-scan.js          模组发现与扫描测试
    ├─ test-all-mods.js      全部模组、全部类别的覆盖测试
    ├─ test-gamedata.js      最早六个类型的内容抽取与卡片渲染检查
-   ├─ test-content-types.js ★ 全部 31 类：索引有记录、卡片非空、标题可读、英文界面无中文（252 项）
+   ├─ test-content-types.js ★ 全部 35 类：索引有记录、卡片非空、标题可读、英文界面无中文（284 项）
    ├─ test-missions.js      ★ 任务树版式：slot/position/连线语义 + GUI 几何对照（297 项）
+   ├─ test-history.js       ★ 历史君主/顾问/将领/战役：id 唯一、按链找回原块、胜负与损失百分比、能力点在刻度内、互链（51 项）
    ├─ test-wikigloss.js     ★ 词表只从你的 wiki 解析、不许编造；无 wiki 时可降级（59 项）
    ├─ test-fidelity.js      解析器保真度校验（源文件键 vs 解析结果）
-   ├─ verify-wiki.js        DevTools 协议驱动 Edge 验证 wiki 内嵌渲染
-   ├─ verify-game.js        DevTools 协议驱动 Edge 逐类验证游戏内预览 + 生成截图（210 项）
-   └─ verify-i18n.js        DevTools 协议驱动 Edge 验证语言切换 / 设置 / wiki 开关（55 项）
+   ├─ verify-wiki.js         DevTools 协议驱动浏览器验证 wiki 内嵌渲染
+   ├─ verify-game.js         DevTools 协议驱动浏览器逐类验证游戏内预览 + 生成截图
+   └─ verify-i18n.js         DevTools 协议驱动浏览器验证九语切换 / 设置 / wiki 开关
 ```
 
 ---
 
 ## HTTP 接口
 
-除 `/wikifile/*` 外，所有接口都接受 `?lang=zh|en` 覆盖服务端语言设置。
+除 `/wikifile/*` 外，所有接口都接受 `?lang=zh|en|fr|de|es|pt|ru|ja|ko` 覆盖服务端语言设置。
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
@@ -569,15 +635,20 @@ node tools\test-codec.js          :: 编解码 + 解析器（57 项）
 node tools\test-i18n-backend.js   :: 后端双语层（66 项，中文字符串逐字比对旧输出）
 node tools\test-dds.js            :: DDS 解码器（267 项断言，含真实贴图往返逐像素比对）
 node tools\test-gamedata.js       :: 最早六个类型的内容抽取与卡片渲染
-node tools\test-content-types.js  :: 全部 31 类内容：索引有记录、卡片非空、标题可读（252 项）
+node tools\test-content-types.js  :: 全部 35 类内容：索引有记录、卡片非空、标题可读（284 项）
 node tools\test-missions.js       :: 任务树版式：slot/position/连线语义 + GUI 几何对照（297 项）
+node tools\test-history.js        :: 历史君主/顾问/将领/战役：id 唯一、按链找回原块、胜负与损失百分比、能力点刻度、互链（51 项）
 node tools\test-wikigloss.js      :: 词表解析自你的离线 wiki + 无 wiki 时的降级（59 项）
 node tools\test-fidelity.js       :: 校验解析器未丢失内容（键级比对）
-node tools\test-all-mods.js       :: 全部 11 个模组、19,242 个文件的覆盖测试
+node tools\test-all-mods.js       :: 全部 11 个模组、19,467 个文件的覆盖测试
 node tools\verify-wiki.js         :: 用 Edge + DevTools 协议做端到端界面验证
 node tools\verify-game.js         :: 逐类验证游戏内预览并生成截图
-node tools\verify-i18n.js         :: 语言切换 / 设置面板 / wiki 开关端到端验证并生成截图
+node tools\verify-i18n.js         :: 九语切换 / 设置面板 / wiki 开关端到端验证并生成截图
+node tools\i18n-extract.js        :: 把源码里所有待翻字符串抽成 _source（后端 / 前端两个键空间）
+node tools\build-langs.js check   :: 七种语言的覆盖率 / 占位符 / 首尾空格审计
 node tools\i18n-audit.js check    :: 审计：t() 键是否都在词典里、是否有中文字面量漏包
+node tools\check-doc-links.js     :: 文档里的相对链接与截图是否都存在（含语言姊妹篇与 markdown 形状）
+node tools\check-css.js           :: 每个 var(--x) 是否都有声明（含自测：先证明它抓得住漏声明的写法）
 node tools\i18n-audit.js extract  :: 列出前端所有中文字面量及其包裹情况
 ```
 
@@ -585,45 +656,51 @@ node tools\i18n-audit.js extract  :: 列出前端所有中文字面量及其包�
 
 | 指标 | 结果 |
 |---|---|
-| 模组 / 文件总数 | 11 / 19,242 |
-| 抽样文件 | 1,370 |
+| 模组 / 文件总数 | 11 / 19,467 |
+| 抽样文件 | 1,386 |
 | 载入失败 | **0** |
 | 脚本解析失败 | **0** |
-| 键丢失率 | **0.01%**（29,532 个键中缺失 4 个，均为把中文说明文档误当配置的误报） |
-| 编码分布 | plain-utf8 864、escaped-raw 205、escaped-cp1252 182、gbk 63、cp1252 24、escaped-utf8 2 |
-| 测试总入口 | `node tools/run-tests.js --all` → **13 passed / 0 failed / 0 skipped** |
+| 键丢失率 | **0.01%**（29,431 个键中缺失 4 个，均为把中文说明文档误当配置的误报） |
+| 编码分布 | plain-utf8 879、escaped-cp1252 251、escaped-raw 137、gbk 63、cp1252 24、escaped-utf8 2 |
+| 测试总入口 | `node tools/run-tests.js --all` → **16 passed / 0 failed / 0 skipped** |
 
 主测试模组 `1.37 Celestial empire on which the sun never sets`（9,512 个文件 / 493 MB）的游戏内预览实测：
-**31 类内容共抽取出 20,936 条记录，0 个文件读取失败。**
+**35 类内容共抽取出 25,793 条记录，0 个文件读取失败。**
 
 | 分组 | 各类条数 |
 |---|---|
 | 事件与决议 | 事件 4,050 · 决议 618 · 任务树 235 · 任务 3,875 · 理念组 107 · 国家理念 615 · 顾问 55 · 政策 135 |
-| 国家与政府 | 国家 625 · 政府/改革 456 · 议会法令 38 · 阶层/特权 275 · 叛军 126 · 灾难 41 · 时代 5 · 伟大工程 203 |
+| 国家与政府 | 国家 625 · **历史君主 3,643** · **历史顾问 55** · 政府/改革 456 · 议会法令 38 · 阶层/特权 275 · 叛军 126 · 灾难 41 · 时代 5 · 伟大工程 203 |
 | 宗教与文化 | 宗教/信条/神祇 374 · 文化 600 |
 | 经济与贸易 | 建筑 54 · 商品/节点/公司 172 |
-| 军事 | 单位/雇佣兵/学说 504 · 宣战理由/战争目标 115 |
+| 军事 | 单位/雇佣兵/学说 504 · **历史将领 1,061** · **历史战役 98** · 宣战理由/战争目标 115 |
 | 科技与理念 | 科技等级 134 |
 | 脚本 | 修正 2,746 · 脚本效果/条件 2,748 · 行动指令 70 |
 | 世界 | 书签 15 · 地图定义 1,575 · GUI 窗口 348 |
+
+历史四类的构成：君主 2,412 + 继承人 964 + 配偶 267 = 3,643；
+将领 1,061（其中 316 位是嵌在君主/继承人块里的「君主亲征」）；
+战役 98（分布在 26 个 `history/wars/*.txt` 里）；顾问 55（来自 `history/advisors/ChinaKoreaJapan.txt`）。
+同一天里 `.txt` 重复写同一个日期块的有 64 处，条目 id 用 `TAG@日期#2@槽位` 区分。
 
 | 其它指标 | 结果 |
 |---|---|
 | 模组本地化键 | 36,344（原版另有 136,579 键作为回退） |
 | 中文词表 | 修正 692 · 条件 703 · 效果 502（运行时读自本机离线 wiki + 手写补充；仓库内**只有手写那一半**） |
-| 索引耗时 | 约 4.5 秒（进程内缓存，首次含原版 136,579 键的惰性装载） |
+| 索引耗时 | 约 6 秒（进程内缓存，首次含原版 136,579 键的惰性装载） |
 
-双语相关实测：
+多语言相关实测：
 
 | 指标 | 结果 |
 |---|---|
-| 英文词典条目 | 共 **383** 条（核心 + `i18n.app.js` + `i18n.game.js`），**0 条缺失、0 条含中文** |
+| 英文词典条目 | 共 **397** 条（核心 + `i18n.app.js` + `i18n.game.js`），**0 条缺失、0 条含中文** |
 | 词典审计 | `node tools/i18n-audit.js check` → 0 missing / 0 unexplained / 0 CJK value |
-| 后端双语 | `gameterms.js` 277 处 + `gametext.js` 49 处 `L()` 配对 |
+| 后端双语 | `gameterms.js` 297 处 + `gametext.js` 49 处 `L()` 配对，共 720 个英文键 |
+| 七种语言侧表 | 各 720 后端 + 397 前端，覆盖率 100%；`build-langs.js check` → `CHECK: clean` |
 | 中文回归 | 后端测试把中文字符串与改动前的输出**逐字比对**，完全一致 |
 | 英文 wiki 链接 | 57 个唯一链接全部实测 **HTTP 200** |
-| 界面端到端 | `verify-i18n.js` **55 / 55**（语言切换、刷新保持、`?lang=` 注入、设置面板、文件夹选择器、两种 wiki 开关、错误恢复） |
-| 游戏预览端到端 | `verify-game.js` 逐类检查 31 种面板（**210 项**）并生成 32 张截图 |
+| 界面端到端 | `verify-i18n.js` **88 / 88**（九语逐一切换、刷新保持、`?lang=` 注入、设置面板、文件夹选择器、两种 wiki 开关、错误恢复，以及页头语言框的对比度/不截断检查） |
+| 游戏预览端到端 | `verify-game.js` 逐类检查 35 种面板（**242 项**）并生成 36 张截图 |
 
 环境变量可覆盖自动探测：`EU4_USER_DIR`、`EU4_INSTALL_DIR`、`EU4_WIKI_DIR`、
 `EU4_MOD_VIEWER_LANG`、`EU4_MOD_VIEWER_CONFIG`、`PORT`、`HOST`。
@@ -632,7 +709,9 @@ node tools\i18n-audit.js extract  :: 列出前端所有中文字面量及其包�
 
 ## 已知限制
 
-- 转义规则对极少数生僻字约 99% 准确（模组自身字体为准），个别字可能显示为 `¿` 或 `…`。
+- 转义规则对极少数生僻字约 99% 准确（模组自身字体为准），个别字可能显示为 `…`；
+  而脚本文件里**确实存在**的裸 `0xBF` 字节会原样显示成 `¿`，因为游戏自己就是这么显示的
+  （见 [模组里的 `¿` 是真的](#模组里的--是真的)）。
 - 地图图像（`provinces.bmp`、`heightmap.bmp` 等）只统计不渲染，因为需要专门的调色板解析。
 - DDS 解码支持 DXT1/DXT3/DXT5 与未压缩 BGRA/BGR；DX10、BC5/ATI2 等格式会明确返回「不支持」而不是画错。
 - `.tga`（旗帜等）浏览器不能直接显示，会用占位提示说明。
@@ -646,7 +725,7 @@ node tools\i18n-audit.js extract  :: 列出前端所有中文字面量及其包�
 - `$VAL$`、`$VALUE$` 这类**运行时占位符**不会被当成同名本地化键替换。
   `EST_VAL_*` 阶层提示里 `$VAL$` 是引擎填的数值，而 `VAL` 恰好是瓦伦西亚的国家 TAG，
   按本地化解析会显示成「Valencia」；这些名字现在按运行时求值标注。
-- 英文模式下的术语显示为**脚本原始标识符**（见 [界面语言](#-界面语言--中英文切换)），不做机器翻译；
+- 英文模式下的术语显示为**脚本原始标识符**（见 [界面语言](#-界面语言九种)），不做机器翻译；
   中文 wiki 的 `desc` 列没有英文对照，因此该处英文模式显示 `(Chinese wiki text)` 占位。
 - `.bat` 启动脚本被刻意限制为**纯 ASCII + CRLF**：cmd.exe 按 OEM 代码页读取批处理文件，
   放中文会被解析错乱——这正是旧版本双击打不开的原因。所有中文提示改由 Node 输出。
@@ -660,7 +739,9 @@ node tools\i18n-audit.js extract  :: 列出前端所有中文字面量及其包�
 [MIT](LICENSE) © 2025–2026 SAHHakuryuu
 
 想把项目发布到 GitHub？见 **[docs/GITHUB.md](docs/GITHUB.md)**（两条路线：网页上传 / Git 命令行，
-含 `.gitattributes` 强制 CRLF 的注意事项）。参与开发前请读 **[CONTRIBUTING.md](CONTRIBUTING.md)**。
+含 `.gitattributes` 强制 CRLF 的注意事项）。**本机没有 git**、想用随项目附带的脚本直接推？
+见 **[docs/GITHUB-UPDATE.md](docs/GITHUB-UPDATE.md)**。参与开发前请读 **[CONTRIBUTING.md](CONTRIBUTING.md)**；
+每个版本改了什么见 **[CHANGELOG.md](CHANGELOG.md)**。
 
 **这个仓库里没有别人的东西**，这一点是刻意维持的：
 

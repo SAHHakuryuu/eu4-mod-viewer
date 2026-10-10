@@ -13,9 +13,34 @@
  */
 (function () {
   const STORAGE_KEY = 'eu4mv.lang';
-  const LANGS = ['zh', 'en'];
-  const LANG_NAMES = { zh: '中文', en: 'English' };
-  const LOCALES = { zh: 'zh-CN', en: 'en-US' };
+  const LANGS = ['zh', 'en', 'fr', 'de', 'es', 'pt', 'ru', 'ja', 'ko'];
+  /** Language names in their own script — a picker should never translate them. */
+  const LANG_NAMES = {
+    zh: '中文',
+    en: 'English',
+    fr: 'Français',
+    de: 'Deutsch',
+    es: 'Español',
+    pt: 'Português',
+    ru: 'Русский',
+    ja: '日本語',
+    ko: '한국어',
+  };
+  const LOCALES = {
+    zh: 'zh-CN', en: 'en-US', fr: 'fr-FR', de: 'de-DE', es: 'es-ES',
+    pt: 'pt-PT', ru: 'ru-RU', ja: 'ja-JP', ko: 'ko-KR',
+  };
+  const LANG_ALIASES = {
+    zh: ['zh', 'cn', 'chs', 'cht', 'chi', 'zho'],
+    en: ['en', 'eng'],
+    fr: ['fr', 'fra', 'fre'],
+    de: ['de', 'deu', 'ger'],
+    es: ['es', 'spa'],
+    pt: ['pt', 'por'],
+    ru: ['ru', 'rus'],
+    ja: ['ja', 'jp', 'jpn'],
+    ko: ['ko', 'kor'],
+  };
 
   /** English strings, keyed by the Chinese original. */
   const EN = {
@@ -167,7 +192,7 @@
     '正在重新扫描…': 'Rescanning…',
   };
 
-  /** Filled in by i18n.app.js / i18n.game.js and by t() calls with new keys. */
+  /** Filled in by i18n.app.js / i18n.game.js and by web/lang/<code>.js. */
   const DICT = { en: EN };
 
   let lang = 'zh';
@@ -175,16 +200,32 @@
 
   function normalize(l) {
     const s = String(l == null ? '' : l).toLowerCase();
-    return s.startsWith('en') ? 'en' : 'zh';
+    // Primary subtag only, so `pt-BR`, `zh-Hans-CN` and `ja_JP` all land.
+    const primary = s.split(/[-_]/)[0];
+    if (primary === 'cn') return 'zh';
+    for (const code of LANGS) if (primary === code) return code;
+    for (const code of LANGS) if ((LANG_ALIASES[code] || []).includes(primary)) return code;
+    return 'zh';
   }
 
-  /** Look up `s`, substituting `{name}` placeholders from `vars`. */
+  /**
+   * Look up `s`, substituting `{name}` placeholders from `vars`.
+   *
+   * Fallback chain: requested language -> English -> the Chinese source string
+   * itself. English sits in the middle on purpose: for a French or Korean
+   * reader an untranslated string is far more useful in English than in Chinese
+   * (and a missing key can never render as a raw key).
+   */
   function t(s, vars) {
     if (s == null) return '';
     let out = s;
     if (lang !== 'zh') {
       const table = DICT[lang] || {};
-      out = Object.prototype.hasOwnProperty.call(table, s) ? table[s] : s;
+      if (Object.prototype.hasOwnProperty.call(table, s)) out = table[s];
+      else if (lang !== 'en') {
+        const en = DICT.en || {};
+        if (Object.prototype.hasOwnProperty.call(en, s)) out = en[s];
+      }
     }
     if (vars) {
       out = String(out).replace(/\{(\w+)\}/g, (m, k) =>
@@ -223,7 +264,7 @@
     const changed = l !== lang;
     lang = l;
     try {
-      document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      document.documentElement.lang = getLocale();
       document.documentElement.setAttribute('data-lang', l);
     } catch { /* no document in tests */ }
     if (opts.persist !== false) {

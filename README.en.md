@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org/)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-blue.svg)](package.json)
-[![Languages](https://img.shields.io/badge/UI-%E4%B8%AD%E6%96%87%20%7C%20English-informational.svg)](#-ui-language-chinese-and-english)
+[![Languages](https://img.shields.io/badge/UI-9%20languages-informational.svg)](#-ui-language-nine-of-them)
 
 A local, wiki-style viewer that **reads an Europa Universalis IV mod and shows every change it makes**.
 It finds the mods you already have installed, sorts their tens of thousands of files by *what they
@@ -15,7 +15,7 @@ encoding), and then presents all of it the way a wiki would.
 **Zero dependencies**: Node.js built-ins plus plain HTML/CSS/JS. No `npm install`, no build step.
 
 > The interface and the screenshots below are in Chinese because that is this tool's primary
-> audience; press the language button (or read [UI language](#-ui-language-chinese-and-english))
+> audience; press the language button (or read [UI language](#-ui-language-nine-of-them))
 > for the fully translated English UI.
 
 | Change overview | Localisation (Chinese auto-decoded) |
@@ -29,7 +29,7 @@ encoding), and then presents all of it the way a wiki would.
 ### 🎮 In-game format preview
 
 It **pairs each script file with its localisation** and renders it the way EU4 actually shows it in
-game — **31 content types in all**. The tab bar first collapses them into 6 groups
+game — **35 content types in all**. The tab bar first collapses them into 6 groups
 (content / country / religion & economy / military / world / system) and expands one at a time;
 pick an entry on the left and the right side shows what the game would display, with a
 script ↔ localisation correspondence table underneath.
@@ -78,12 +78,20 @@ script ↔ localisation correspondence table underneath.
 |---|---|
 | ![Ruler traits](docs/screenshot-game-ruler-traits.png) | ![Leader traits](docs/screenshot-game-leader-traits.png) |
 
+| 👑 Historical rulers (pips + dynasty + the general he also was) | 🎓 Historical advisors (type + skill + province) |
+|---|---|
+| ![Historical rulers](docs/screenshot-game-monarchs.png) | ![Historical advisors](docs/screenshot-game-hist-advisors.png) |
+
+| 🗡 Historical leaders (fire/shock/maneuver/siege + traits) | 💥 Historical battles (who won, who attacked whom, losses) |
+|---|---|
+| ![Historical leaders](docs/screenshot-game-leaders.png) | ![Historical battles](docs/screenshot-game-battles.png) |
+
 The remaining types (countries, rebels, ages, trade, war & peace, bookmarks, modifiers, scripted
-effects, on_actions) are in `docs/screenshot-game-*.png` as well (32 screenshots in total).
+effects, on_actions) are in `docs/screenshot-game-*.png` as well (36 screenshots in total).
 
 ![Preview overview](docs/screenshot-game-overview.png)
 
-### 🌐 Bilingual UI + ⚙ Settings
+### 🌐 Nine interface languages + ⚙ Settings
 
 | Settings (Chinese) | Settings (English) |
 |---|---|
@@ -92,6 +100,10 @@ effects, on_actions) are in `docs/screenshot-game-*.png` as well (32 screenshots
 | Server-side folder picker | What you see with the local wiki switched off |
 |---|---|
 | ![Picker](docs/screenshot-settings-picker.png) | ![Wiki off](docs/screenshot-wiki-off-settings.png) |
+
+| Related wiki pages (local offline + English online) | With both wikis off, the category page says why |
+|---|---|
+| ![Wiki links](docs/screenshot-wiki-links-en.png) | ![Wiki disabled](docs/screenshot-wiki-disabled-en.png) |
 
 ---
 
@@ -158,10 +170,16 @@ All of it can be set by hand or switched off in **⚙ Settings** in the top-righ
     are really drawn.
   - Other binaries (audio, models) — labelled as resource files, not parsed.
 - **Full-text search** — file names, localisation keys and localisation text at once (Chinese searchable).
-- **🎮 In-game format preview** — the section below. **31 content types** in 6 groups, pairing script
+- **🎮 In-game format preview** — the section below. **35 content types** in 6 groups, pairing script
   with localisation and rendering the panel the game would show (event window, mission list,
   government reform panel, religion page, unit stat table …).
-- **Bilingual UI** — the whole interface switches between **中文 / English** at any time, see below.
+- **Nine interface languages** — the whole interface switches between **中文 / English / Français /
+  Deutsch / Español / Português / Русский / 日本語 / 한국어** at any time, see below.
+- **👑 Historical rulers / 🎓 Historical advisors / 🗡 Historical leaders / 💥 Historical battles** —
+  the people, the advisors and the battles in `history/countries/*.txt`, `history/advisors/*.txt` and
+  `history/wars/*.txt`, drawn with the numbers the game reads: monarch power, dynasty, life dates, the
+  four leader pips, an advisor's type, skill and province, and both sides of a battle with their
+  commanders, their troops, their losses and **who won**, see below.
 - **Switchable wiki links** — the local offline Chinese wiki and the English online wiki are enabled,
   disabled and located independently; see [Settings](#-settings).
 - **Shareable URLs** — the view is written into the URL hash, so a refresh or a shared link returns
@@ -170,11 +188,13 @@ All of it can be set by hand or switched off in **⚙ Settings** in the top-righ
 
 ---
 
-## 🌐 UI language: Chinese and English
+## 🌐 UI language: nine of them
 
-Click the language button in the top-right corner (it shows the language you would switch **to**), or
-use **⚙ Settings → UI language**. The choice is written to both browser `localStorage` and the
-server's `config.json`, so:
+The top-right corner holds a picker that lists every language **in its own script**
+(`中文 / English / Français / Deutsch / Español / Português / Русский / 日本語 / 한국어`) — the one
+class of string that is never translated, because a reader looks for `Русский`, not for `Russian`.
+The same list is in **⚙ Settings → UI language**. The choice is written to both browser `localStorage`
+and the server's `config.json`, so:
 
 - it survives a page refresh;
 - the console launcher speaks the same language next time;
@@ -182,7 +202,15 @@ server's `config.json`, so:
 
 Switching redraws the current view **immediately** (no reload) without losing your place.
 
-### How terms are shown in English mode
+The translations are **hand-written side tables, never machine translation**: Chinese is the source
+language, English is the fallback, and the other seven take their words from the **official EU4
+localisation** (`localisation\*_l_<lang>.yml`) — the exact word the game prints. The fallback chain is
+"requested language → English → the Chinese source", so a raw key like `some.key.name` can never
+appear. Measured this round: each of the seven languages covers **720 backend + 397 frontend** strings,
+100%, with `tools/build-langs.js check` reporting no problems. To add a language or change a
+translation, see **[docs/TRANSLATING.en.md](docs/TRANSLATING.en.md)**.
+
+### How terms are shown outside Chinese
 
 The Chinese term tables are assembled from two halves, **both on your own machine — neither is in
 this repository**:
@@ -196,7 +224,7 @@ Merged, that is roughly triggers 703 / effects 502 / modifiers 692, and it is **
 is no English twin**. So English mode does **not** machine-translate; it prints the **raw identifier
 from the EU4 script**:
 
-| Script | Chinese mode | English mode |
+| Script | Chinese mode | Outside Chinese |
 |---|---|---|
 | `land_morale = 0.15` | `+15% 陆军士气修正` | `land_morale = +15%` |
 | `manpower_recovery_speed = 0.15` | `+15% 后备人力恢复速度` | `manpower_recovery_speed = +15%` |
@@ -205,7 +233,7 @@ from the EU4 script**:
 
 This is not laziness: `land_morale` *is* the official name in the English EU4 wiki and in the game's
 own script, and it is directly searchable. The interface shell (buttons, titles, field names, scope
-nouns, error messages) is fully translated in both languages.
+nouns, error messages) is fully translated in all nine languages.
 
 ---
 
@@ -215,7 +243,7 @@ nouns, error messages) is fully translated in both languages.
 
 | Group | Options |
 |---|---|
-| **UI language** | 中文 / English |
+| **UI language** | 中文 / English / Français / Deutsch / Español / Português / Русский / 日本語 / 한국어 |
 | **Local Chinese wiki** | master switch; offline wiki folder (type it / **Browse…** / **Auto-detect** / **Validate**) |
 | **English online wiki** | master switch; online wiki base URL (default `https://eu4.paradoxwikis.com/`) |
 | **Paths** | mod folder, game install folder (empty = auto-detect; changing them rescans the mods) |
@@ -250,7 +278,7 @@ return HTTP 200**, so none of them 404.
 
 The game's interface and its script files are two different worlds: the player sees an "event
 window", a "mission panel", a "government reform list", while the mod author writes
-`option = { name = ... add_stability = 1 }`. This layer joins the two, **31 content types in the
+`option = { name = ... add_stability = 1 }`. This layer joins the two, **35 content types in the
 sidebar's 6 groups** (content / country / religion & economy / military / world / system). The groups
 are clickable and only one is expanded at a time, so thirty-odd tabs never turn into a wall. Below is
 what each type renders, by theme:
@@ -273,6 +301,8 @@ what each type renders, by theme:
 | Type | Script source | What it renders |
 |---|---|---|
 | **Countries & government** | `history/countries/`, `common/countries/` | Country dossier: starting ruler/heir, religion and culture, technology, a timeline of historical events |
+| **👑 Historical rulers** | `history/countries/*.txt` | A `monarch` / `heir` / `queen` / `monarch_consort` entry: name and dynasty, life dates, the day the game applies it, **administrative/diplomatic/military pips**, religion and culture, claim strength, regency and female flags, ruler traits; when the same entry also carries a `leader` block, **the ruler's own four pips as a commander are drawn in place** (it is a separate row in *Historical leaders* and the chip jumps to it), and the rest of that dated block follows underneath |
+| **🎓 Historical advisors** | `history/advisors/*.txt` | An advisor entry: name, **type of advice** (the `type` key is resolved through localisation — theologian, navigator …), **skill 1–3 (drawn as pips)**, the province they sit in (name + id), the advisor id, the appointed and death dates, the discount and the female flag. Note that this is a different tab from *Advisors* (`common/advisortypes/`, which defines what an advisor is) |
 | **Governments & reforms** | `common/governments/`, `common/government_reforms/`, `government_mechanics/`, `subject_types/`, `factions/` … | Government/reform panel: name + description + attribute table (royal marriage, parliament …) + modifiers + unlock requirements |
 | **Ruler traits** | `common/ruler_personalities/`, `ancestor_personalities/` | Trait card: name + the modifiers it grants + its own `allow` requirements, **plus a per-slot breakdown — as ruler / heir / consort — of each slot's requirements and spawn weights** (the `chance` inside each `*_allow` block). Ancestor traits share the same shape and are read here too |
 | **Parliament & decrees** | `common/parliament_issues/`, `decrees/`, `state_edicts/`, `trading_policies/` | Parliament issues / decrees: requirements and effects |
@@ -301,6 +331,8 @@ what each type renders, by theme:
 | Type | Script source | What it renders |
 |---|---|---|
 | **Units & military** | `common/units/`, `mercenary_companies/`, `naval_doctrines/`, `flagship_modifications/` | The six-stat unit table, mercenary companies, naval doctrines, flagship modifications |
+| **🗡 Historical leaders** | `history/countries/*.txt` | A leader entry: its `type` (general / admiral / explorer / conquistador), **fire/shock/maneuver/siege pips**, life dates and traits. Both places a leader can live are indexed — a free-standing `leader` block in a dated entry, and the one nested inside a `monarch`/`heir` block (which cross-links with that ruler's card) |
+| **💥 Historical battles** | `history/wars/*.txt` | A battle card: the battlefield province (name and id), the war it belongs to, **who won** (the game's own sentence — "N soldiers of A attacked M soldiers of B", ships for a naval battle — over two panels tinted by won/lost), and **one small table per side** (country, commander, infantry/cavalry/artillery, total, losses as a percentage of that side's strength) |
 | **Leader traits** | `common/leader_personalities/` | Leader personality card: the modifiers it gives the stack it leads (`discipline`, `land_morale` …) and the `allow` conditions that decide who can get it (`is_admiral` separates generals from admirals) |
 | **War & peace** | `common/cb_types/`, `wargoal_types/`, `peace_treaties/` | Casus belli: usage requirements, war goals and peace option factors |
 
@@ -402,7 +434,7 @@ blank.
    distinguishing mod localisation from vanilla, and clicking a file name jumps to that `.yml`.
    The table also includes **names resolved while rendering** — units unlocked by a technology level,
    the religions inside a religion group, the `desc` key of an estate influence entry, a GUI window's
-   `buttonText` — so for almost all of the 31 types you can see which key a given piece of Chinese
+   `buttonText` — so for almost all of the 35 types you can see which key a given piece of Chinese
    came from.
 
 6. **AI weights → "×N when …"**
@@ -480,6 +512,30 @@ that follows.
 **Skipping the CP1252 layer produces text that looks like Chinese but is wrong** (for instance
 `江户城` turning into `汭户城`), which is why that step is mandatory.
 
+That layer **has to be lossless**. An earlier revision sanitised the string on its way back to bytes
+("invalid UTF-8 → U+FFFD"), which ate *legitimate CP1252 bytes* such as 0xF9: `& 0xFF` then turned it
+into 0xFD, and `曹` (U+66F9) was displayed as `曽` (U+66FD). `cp1252Normalize()` now decodes UTF-8
+sequences into code units and keeps every other byte exactly as it is, behind an explicit
+`utf8Walk()` decision (C1 code points accepted, overlong and malformed sequences rejected);
+57 assertions in `tools/test-codec.js` cover it.
+
+### The `¿` in a mod is real
+
+About **7% of the strings** in `history/countries/*.txt` begin with a bare `0xBF` byte (measured here:
+93% of the Chinese script strings carry it, and localisation files carry none at all). This is not a
+decoder bug:
+
+- the double-byte patch's decoder, `convertEscapedTextToWideText()`, sends **every non-escape byte**
+  through the CP1252 table, and 0xBF is `¿` (U+00BF);
+- its encoder, `convertWideTextToEscapedText()`, only writes an escape sequence when `high != 0`, so a
+  single-byte character like `U+00BF` can **only** be written as a raw byte — it is never a length
+  marker or a separator.
+
+In other words **the game itself shows those names as `¿曹勐得`** (measured here: 110 of 930 ruler
+fields carry it, almost all of them `dynasty`). The viewer therefore **shows it as written** and does
+not quietly clean it up — cleaning it up would be falsifying the mod. `tools/test-history.js` prints
+that count on every run, so it cannot drift unnoticed.
+
 Implementation: `src/codec/localisation.js` (`decodeBest()` is the automatic entry point).
 
 Verified against real files (character-for-character):
@@ -508,7 +564,7 @@ eu4-mod-viewer/
 ├─ src/
 │  ├─ server.js             HTTP API + static files + offline wiki mount + texture/DDS decoding
 │  ├─ config.js             ★ config.json read/write, default merging, folder auto-detection
-│  ├─ i18n.js               ★ backend language layer (L/pick/msg) deciding Chinese or English labels
+│  ├─ i18n.js               ★ backend language layer (L/pick/msg) deciding which of the nine languages is shown
 │  ├─ mods.js               mod discovery and scanning (.mod descriptor parsing, walking, category stats)
 │  ├─ fileview.js           single-file reading and content assembly
 │  ├─ taxonomy.js           35 change categories and their path rules (bilingual labels + descriptions)
@@ -517,18 +573,20 @@ eu4-mod-viewer/
 │  ├─ gamedata.js           ★ content-type assembly (type order, merged metadata, index cache, card dispatch)
 │  ├─ content/              ★ one descriptor per content type
 │  │  ├─ legacy.js            hand-written renderers for the first six types (events/decisions/ideas/advisors/policies)
-│  │  ├─ registry.js          descriptors for the other 25 (19 via the generic engine, 6 with their own builders:
-│  │  │                       mission trees/missions/countries/bookmarks/map/interface)
+│  │  ├─ registry.js          descriptors for the other 28 (generic engine, plus mission trees / missions /
+│  │  │                       countries / bookmarks / map / interface / the four history types)
 │  │  ├─ missions.js          ★ mission trees: reads slot/position/required_missions, lays out by GUI geometry and arrow sprites
+│  │  ├─ history.js           ★ rulers / advisors / leaders / battles: an item's id comes from its *position*, and a card walks the same chain back
 │  │  └─ common.js            generic engine: index enumeration, field classification, card assembly, sprite resolution
 │  ├─ gametext.js           ★ §colour codes / £icon£ / $KEY$ / [dynamic] markup parsing
-│  ├─ gameterms.js          ★ modifiers / conditions / effects → in-game text (term-table driven, bilingual)
+│  ├─ gameterms.js          ★ modifiers / conditions / effects → in-game text (term-table driven, nine languages)
 │  ├─ wikigloss.js          ★ parses the 条件/命令/修正列表 pages of your local offline wiki at run time (never shipped)
-│  ├─ data/                 the Chinese term tables (only the **hand-written half** is in the repo)
+│  ├─ data/                 the Chinese term tables (only the **hand-written half** is in the repo) + the translation side tables
 │  │  ├─ modifiers-curated.js hand-written modifier names + how they display (percentage / flat / boolean)
-│  │  └─ effects-curated.js   hand-written effect names (the wiki's effects page has no name column)
+│  │  ├─ effects-curated.js   hand-written effect names (the wiki's effects page has no name column)
+│  │  └─ locales/             ★ translation layer: _source.* (the extracted strings) + <lang>.json (the seven side tables)
 │  └─ codec/
-│     ├─ localisation.js    ★ EU4 localisation / private Chinese encoding codec
+│     ├─ localisation.js    ★ EU4 localisation / private Chinese encoding codec (the CP1252 layer is lossless)
 │     ├─ script.js          ★ Clausewitz script lexer + parser
 │     └─ dds.js             ★ zero-dependency DDS → RGBA → PNG decoder
 ├─ web/
@@ -537,18 +595,25 @@ eu4-mod-viewer/
 │  ├─ i18n.js               ★ frontend language layer (t / setLang / applyStatic), dictionary keyed by Chinese source
 │  ├─ i18n.app.js           ★ English dictionary for web/app.js
 │  ├─ i18n.game.js          ★ English dictionary for web/gameview.js
-│  ├─ settings.js           ★ settings panel + server-side folder picker + language button
+│  ├─ lang/<code>.js        ★ browser dictionaries for the seven languages (generated by tools/build-langs.js, committed)
+│  ├─ settings.js           ★ settings panel + server-side folder picker + language picker
 │  ├─ app.js                frontend rendering (categories, file tree, script tree, localisation table, wiki panel, search)
-│  └─ gameview.js           ★ in-game preview: grouped navigation + six bespoke panels + generic card renderer
+│  └─ gameview.js           ★ in-game preview: grouped navigation + bespoke panels + generic card renderer
 ├─ docs/
 │  ├─ loc-key-conventions.md  localisation key conventions and each type's in-game render order (with measured hit rates)
+│  ├─ TRANSLATING.en.md       ★ the nine-language translation pipeline
 │  ├─ GITHUB.md               illustrated steps for uploading to GitHub (in Chinese; + GITHUB.en.md)
 │  ├─ GITHUB-UPDATE.md        ★ pushing updates when there is no git (+ GITHUB-UPDATE.en.md)
 │  └─ screenshot-*.png        screenshots (one per content type)
 └─ tools/
    ├─ launcher.js            ★ console launcher (bilingual banner, port probe, opens the browser)
    ├─ run-tests.js           ★ test entry point (core / mods / e2e tiers, with SKIP detection)
+   ├─ i18n-extract.js        ★ extracts every translatable string from the sources (720 backend / 397 frontend keys)
+   ├─ build-langs.js         ★ translation pipeline: split / delta / verify / merge / check / status
    ├─ i18n-audit.js          ★ scans frontend sources and reports Chinese literals not yet wrapped in t()
+   ├─ check-doc-links.js     ★ every relative link and screenshot in the docs must exist (no broken README images),
+   │                            and the markdown shape is checked too: table cells, paired backticks, closed fences
+   ├─ check-css.js           ★ every var(--x) must be declared (the header language box was white on white)
    ├─ gh-upload.js           ★ pushes the working tree as one commit through the GitHub API (no git here)
    ├─ gh-login.js            ★ guided publish: drives a controlled browser for the token, then pushes
    ├─ gh-delete.js           ★ removes paths from the repository (gh-upload can only add or overwrite)
@@ -559,20 +624,21 @@ eu4-mod-viewer/
    ├─ test-scan.js            mod discovery and scanning tests
    ├─ test-all-mods.js        coverage test across every mod and every category
    ├─ test-gamedata.js        content extraction and card rendering for the first six types
-   ├─ test-content-types.js ★ all 31 types: indexed, non-empty card, readable title, no Chinese in the English UI (252 assertions)
+   ├─ test-history.js       ★ rulers / advisors / leaders / battles: unique ids, the chain walk back to the block, winners and loss percentages, pip scale, cross-links (51 assertions)
+   ├─ test-content-types.js ★ all 35 types: indexed, non-empty card, readable title, no Chinese in the English UI (284 assertions)
    ├─ test-missions.js      ★ mission tree layout: slot/position/link semantics + GUI geometry cross-check (297 assertions)
    ├─ test-wikigloss.js     ★ term tables come only from your wiki and are never invented; degrades with no wiki (59 assertions)
    ├─ test-fidelity.js        parser fidelity check (source keys vs parsed keys)
    ├─ verify-wiki.js          DevTools-protocol driven browser check of the embedded wiki
-   ├─ verify-game.js          DevTools-protocol driven browser check of the in-game preview, one screenshot per type (210 assertions)
-   └─ verify-i18n.js          DevTools-protocol driven browser check of language switching / settings / wiki switches (55 assertions)
+   ├─ verify-game.js          DevTools-protocol driven browser check of the in-game preview, one screenshot per type (242 assertions)
+   └─ verify-i18n.js          DevTools-protocol driven browser check of all nine languages / settings / wiki switches (88 assertions)
 ```
 
 ---
 
 ## HTTP API
 
-Except for `/wikifile/*`, every endpoint accepts `?lang=zh|en` to override the server's language.
+Except for `/wikifile/*`, every endpoint accepts `?lang=zh|en|fr|de|es|pt|ru|ja|ko` to override the server's language.
 
 | Method | Path | Description |
 |---|---|---|
@@ -622,15 +688,20 @@ node tools\test-codec.js          :: codec + parser (57 assertions)
 node tools\test-i18n-backend.js   :: backend bilingual layer (66 assertions, Chinese compared to the old output)
 node tools\test-dds.js            :: DDS decoder (267 assertions, real textures pixel-by-pixel)
 node tools\test-gamedata.js       :: content extraction and card rendering for the first six types
-node tools\test-content-types.js  :: all 31 types: indexed, non-empty card, readable title (252 assertions)
+node tools\test-content-types.js  :: all 35 types: indexed, non-empty card, readable title (284 assertions)
 node tools\test-missions.js       :: mission tree layout: slot/position/link semantics + GUI geometry (297 assertions)
+node tools\test-history.js        :: rulers / advisors / leaders / battles: unique ids, the chain walk back to the block, winners and loss percentages, pip scale, cross-links (51 assertions)
 node tools\test-wikigloss.js      :: term tables parsed from your wiki + no-wiki degradation (59 assertions)
 node tools\test-fidelity.js       :: check that the parser loses no content (key-level comparison)
-node tools\test-all-mods.js       :: coverage test across all 11 mods and 19,242 files
+node tools\test-all-mods.js       :: coverage test across all 11 mods and 19,467 files
 node tools\verify-wiki.js         :: end-to-end check with Edge + the DevTools protocol
 node tools\verify-game.js         :: per-type check of the in-game preview, and writes the screenshots
-node tools\verify-i18n.js         :: end-to-end check of language switching / settings / wiki switches, and screenshots
+node tools\verify-i18n.js         :: end-to-end check of all nine languages / settings / wiki switches, and screenshots
+node tools\i18n-extract.js        :: extract every translatable string into _source (two key spaces: backend and frontend)
+node tools\build-langs.js check   :: coverage / placeholder / edge-whitespace audit for the seven languages
 node tools\i18n-audit.js check    :: audit: are all t() keys in the dictionary, is any Chinese literal unwrapped
+node tools\check-doc-links.js     :: do all relative links and screenshots exist, and is the markdown shape intact
+node tools\check-css.js           :: is every var(--x) declared (self-tests first, proving it catches the undeclared spelling)
 node tools\i18n-audit.js extract  :: list every Chinese literal in the frontend and how it is wrapped
 ```
 
@@ -638,45 +709,51 @@ Measured results (all 11 mods):
 
 | Metric | Result |
 |---|---|
-| Mods / files | 11 / 19,242 |
-| Sampled files | 1,370 |
+| Mods / files | 11 / 19,467 |
+| Sampled files | 1,386 |
 | Load failures | **0** |
 | Script parse failures | **0** |
-| Key loss rate | **0.01%** (4 of 29,532 keys missing, all false positives from Chinese prose documents mistaken for config) |
-| Encoding distribution | plain-utf8 864, escaped-raw 205, escaped-cp1252 182, gbk 63, cp1252 24, escaped-utf8 2 |
-| Test entry point | `node tools/run-tests.js --all` → **13 passed / 0 failed / 0 skipped** |
+| Key loss rate | **0.01%** (4 of 29,431 keys missing, all false positives from Chinese prose documents mistaken for config) |
+| Encoding distribution | plain-utf8 879, escaped-cp1252 251, escaped-raw 137, gbk 63, cp1252 24, escaped-utf8 2 |
+| Test entry point | `node tools/run-tests.js --all` → **16 passed / 0 failed / 0 skipped** |
 
 Measured on the main test mod `1.37 Celestial empire on which the sun never sets` (9,512 files / 493 MB),
-through the in-game preview: **31 content types, 20,936 records extracted, 0 files failed to read.**
+through the in-game preview: **35 content types, 25,793 records extracted, 0 files failed to read.**
 
 | Group | Entries per type |
 |---|---|
 | Events & decisions | events 4,050 · decisions 618 · mission trees 235 · missions 3,875 · idea groups 107 · national ideas 615 · advisors 55 · policies 135 |
-| Country & government | countries 625 · government/reforms 456 · parliament 38 · estates/privileges 275 · rebels 126 · disasters 41 · ages 5 · great projects 203 |
+| Country & government | countries 625 · **historical rulers 3,643** · **historical advisors 55** · government/reforms 456 · parliament 38 · estates/privileges 275 · rebels 126 · disasters 41 · ages 5 · great projects 203 |
 | Religion & culture | religion/aspects/deities 374 · cultures 600 |
 | Economy & trade | buildings 54 · goods/nodes/companies 172 |
-| Military | units/mercenaries/doctrines 504 · casus belli/war goals 115 |
+| Military | units/mercenaries/doctrines 504 · **historical leaders 1,061** · **historical battles 98** · casus belli/war goals 115 |
 | Technology & ideas | technology levels 134 |
 | Scripting | modifiers 2,746 · scripted effects/triggers 2,748 · on_actions 70 |
 | World | bookmarks 15 · map definitions 1,575 · GUI windows 348 |
+
+The four history types break down as: monarchs 2,412 + heirs 964 + consorts 267 = 3,643 rulers;
+1,061 leaders (316 of them the "the monarch also commands" blocks nested inside a ruler's entry);
+98 battles across 26 `history/wars/*.txt` files; 55 advisors from the mod's single
+`history/advisors/ChinaKoreaJapan.txt`. 64 dated blocks are written twice under the same date
+in one file, which is why an id can read `TAG@date#2@slot`.
 
 | Other metrics | Result |
 |---|---|
 | Mod localisation keys | 36,344 (plus 136,579 vanilla keys as fallback) |
 | Chinese term tables | modifiers 692 · triggers 703 · effects 502 (read at run time from the local offline wiki + hand-written fill; the repo holds **only the hand-written half**) |
-| Index build time | about 4.5 s (cached in-process; the first run lazily loads the 136,579 vanilla keys) |
+| Index build time | about 6 s (cached in-process; the first run lazily loads the 136,579 vanilla keys) |
 
-Bilingual measurements:
+Multi-language measurements:
 
 | Metric | Result |
 |---|---|
-| English dictionary entries | **383** in total (core + `i18n.app.js` + `i18n.game.js`), **0 missing, 0 containing Chinese** |
+| English dictionary entries | **397** in total (core + `i18n.app.js` + `i18n.game.js`), **0 missing, 0 containing Chinese** |
 | Dictionary audit | `node tools/i18n-audit.js check` → 0 missing / 0 unexplained / 0 CJK value |
-| Backend pairs | 277 `L()` pairs in `gameterms.js` + 49 in `gametext.js` |
+| Backend pairs | 297 `L()` pairs in `gameterms.js` + 49 in `gametext.js`, 720 distinct English keys |
 | Chinese regression | the backend test compares Chinese strings **character by character** with the pre-change output; identical |
 | English wiki links | all 57 unique links tested **HTTP 200** |
-| UI end-to-end | `verify-i18n.js` **55 / 55** (language switching, persistence, `?lang=` injection, settings panel, folder picker, both wiki switches, error recovery) |
-| Preview end-to-end | `verify-game.js` checks all 31 panels (**210 assertions**) and writes 32 screenshots |
+| UI end-to-end | `verify-i18n.js` **88 / 88** (all nine languages, persistence, `?lang=` injection, settings panel, folder picker, both wiki switches, error recovery, plus contrast and no-clipping checks on the header language picker) |
+| Preview end-to-end | `verify-game.js` checks all 35 panels (see the test table) and writes 36 screenshots |
 
 Environment variables can override auto-detection: `EU4_USER_DIR`, `EU4_INSTALL_DIR`, `EU4_WIKI_DIR`,
 `EU4_MOD_VIEWER_LANG`, `EU4_MOD_VIEWER_CONFIG`, `PORT`, `HOST`.
@@ -686,7 +763,7 @@ Environment variables can override auto-detection: `EU4_USER_DIR`, `EU4_INSTALL_
 ## Known limitations
 
 - The escape rules are about 99% accurate for a few rare characters (the mod's own font is the
-  authority); an occasional character may show as `¿` or `…`.
+  authority); an occasional character may show as `…`, and a bare `0xBF` byte that really is in the
 - Map images (`provinces.bmp`, `heightmap.bmp` …) are counted but not rendered, since they need a
   dedicated palette parser.
 - DDS decoding covers DXT1/DXT3/DXT5 and uncompressed BGRA/BGR; DX10, BC5/ATI2 and friends return an
@@ -708,7 +785,7 @@ Environment variables can override auto-detection: `EU4_USER_DIR`, `EU4_INSTALL_
   `VAL` happens to be Valencia's country TAG, so resolving it as localisation would print "Valencia";
   such names are now marked as runtime-evaluated.
 - In English mode, terms are shown as the **raw script identifiers** (see
-  [UI language](#-ui-language-chinese-and-english)); nothing is machine-translated. The Chinese wiki's
+  [UI language](#-ui-language-nine-of-them)); nothing is machine-translated. The Chinese wiki's
   `desc` column has no English twin, so English mode shows a `(Chinese wiki text)` placeholder there.
 - The `.bat` launchers are deliberately limited to **pure ASCII + CRLF**: cmd.exe reads batch files
   through an OEM code page, and Chinese text in them gets mangled — which is exactly why older
@@ -726,7 +803,8 @@ Want to publish this on GitHub? See **[docs/GITHUB.en.md](docs/GITHUB.en.md)** (
 the Git command line, including the `.gitattributes` CRLF caveat). **No git on this machine** and you
 want to push with the scripts that ship with the project? See
 **[docs/GITHUB-UPDATE.en.md](docs/GITHUB-UPDATE.en.md)**.
-Before contributing, please read **[CONTRIBUTING.en.md](CONTRIBUTING.en.md)**.
+Before contributing, please read **[CONTRIBUTING.en.md](CONTRIBUTING.en.md)**; what changed in each
+release is in **[CHANGELOG.en.md](CHANGELOG.en.md)**.
 
 **Nothing in this repository belongs to anyone else**, and that is maintained deliberately:
 

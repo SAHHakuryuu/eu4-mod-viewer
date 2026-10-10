@@ -6,6 +6,9 @@
   --pdx-navy-3: #2c4468;
   --pdx-gold: #c8a15a;
   --pdx-gold-soft: #e0c48a;
+  /* Hover border for chips that sit on the light wiki surface; the dark
+     parchment panels use --gw-gold-dim instead. */
+  --pdx-gold-dim: #b99450;
   --wiki-bg: #f6f3ea;
   --wiki-panel: #ffffff;
   --wiki-border: #c8c3b4;
@@ -13,7 +16,6 @@
   --wiki-text: #202122;
   --wiki-muted: #54595d;
   --wiki-link: #0b4f8a;
-  --wiki-link-visited: #6b3fa0;
   --wiki-heading: #223551;
   --accent-red: #a33;
   --accent-green: #2e7d32;
@@ -352,11 +354,9 @@ mark { background: #ffe9a8; padding: 0 1px; }
    ================================================================== */
 
 :root {
-  --gw-ink: #1d1710;
   --gw-gold: #d8b45c;
   --gw-gold-dim: #9a7b34;
   --gw-parch: #efe6d2;
-  --gw-parch-2: #e3d7bd;
   --gw-panel: #2b2417;
   --gw-panel-2: #3a3122;
   --gw-good: #4faa5a;
@@ -397,7 +397,7 @@ mark { background: #ffe9a8; padding: 0 1px; }
   background: #f2eee4; border: 1px solid var(--wiki-border); border-radius: 14px;
   color: var(--wiki-muted);
 }
-.gw-group:hover { background: #fffdf7; border-color: var(--pdx-gold-dim, #b99450); color: var(--wiki-text); }
+.gw-group:hover { background: #fffdf7; border-color: var(--pdx-gold-dim); color: var(--wiki-text); }
 .gw-group.active {
   background: linear-gradient(180deg, var(--pdx-navy-2) 0%, var(--pdx-navy) 100%);
   border-color: var(--pdx-gold); color: #f4ecd8;
@@ -413,7 +413,7 @@ mark { background: #ffe9a8; padding: 0 1px; }
   border: 1px solid var(--wiki-border); border-bottom-width: 3px; border-radius: 3px;
   color: var(--wiki-text);
 }
-.gw-tab:hover { background: #fffdf7; border-color: var(--pdx-gold-dim, #b99450); }
+.gw-tab:hover { background: #fffdf7; border-color: var(--pdx-gold-dim); }
 .gw-tab.active {
   background: linear-gradient(180deg, var(--pdx-navy-2) 0%, var(--pdx-navy) 100%);
   border-color: var(--pdx-gold); color: #f4ecd8;
@@ -649,6 +649,20 @@ mark { background: #ffe9a8; padding: 0 1px; }
 }
 .gw-role-raw .gw-group-head { color: #8d8570; }
 
+/* ---- tables inside the dark game panel ----
+   `table.wikitable` is styled for the light wiki columns (a pale sticky header
+   and a `#fafbfd` zebra row). Inside a game card the text is light, so that
+   zebra turns every second row unreadable — a two-row settings table, a battle
+   side's troop list, the unit stat table. One flat translucent cell background
+   is what the panel actually wants. The correspondence table below the card
+   lives outside `.gw-win` and keeps the wiki look. */
+.gw-win table.wikitable th {
+  background: rgba(255,255,255,.05); color: #cbbf9d;
+  font-weight: 500; position: static;
+}
+.gw-win table.wikitable td { background: transparent; color: #f0e8d4; }
+.gw-win table.wikitable tr:nth-child(even) td { background: transparent; }
+
 /* ---- settings table ---- */
 .gw-fields-table { width: 100%; font-size: 12.5px; margin: 4px 0 8px; }
 .gw-fields-table th {
@@ -781,6 +795,76 @@ mark { background: #ffe9a8; padding: 0 1px; }
 
 .gw-note { font-size: 11.5px; color: #a89c7d; margin: 6px 0; }
 
+/* ---- history: pips, the nested leader, and a battle's two sides ----
+   The pip row is the game's own reading of a ruler (`adm`/`dip`/`mil`) and of a
+   leader (`fire`/`shock`/`manuever`/`siege`): one dot per point, the filled ones
+   being the value the history file writes. */
+.gw-pips { margin: 10px 0 12px; }
+.gw-pip-row { display: grid; grid-template-columns: 64px minmax(0, 1fr) 26px; align-items: center; gap: 8px; padding: 2px 0; }
+.gw-pip-label { font-size: 12px; color: #cfc4a6; }
+.gw-pip-dots { display: flex; gap: 3px; }
+.gw-pip {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(216,180,92,.35);
+}
+.gw-pip.on { background: var(--gw-gold, #d8b45c); border-color: var(--gw-gold, #d8b45c); }
+.gw-pip-adm.on { background: #6fa8dc; border-color: #6fa8dc; }
+.gw-pip-dip.on { background: #93c47d; border-color: #93c47d; }
+.gw-pip-mil.on { background: #e06666; border-color: #e06666; }
+.gw-pip-val { font-family: var(--mono); font-size: 12px; color: #f0e8d4; text-align: right; }
+
+.gw-flag-date { font-family: var(--mono); }
+
+.gw-role-subcard {
+  border-left: 2px solid rgba(216,180,92,.45);
+  padding: 2px 0 6px 12px;
+  margin: 14px 0;
+}
+.gw-role-subcard h4 { margin: 0; font-size: 15px; }
+.gw-sub-note { font-size: 11px; color: #b0a382; margin-left: 6px; }
+
+/* Where a battle happened and which war it belongs to. */
+.gw-meta-table { width: auto; min-width: 55%; margin: 0 0 12px; }
+.gw-meta-table th { width: auto; white-space: nowrap; }
+.gw-battle-place { color: #f0e8d4; }
+.gw-battle-sides { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 0 0 12px; }
+.gw-side { border: 1px solid rgba(216,180,92,.25); border-radius: 6px; padding: 8px 10px; }
+.gw-side-attacker { border-color: rgba(224,102,102,.4); }
+.gw-side-defender { border-color: rgba(111,168,220,.4); }
+.gw-side-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.gw-side-role { font-weight: 700; font-size: 13px; color: #f0e8d4; }
+.gw-side-cmd { font-size: 12.5px; margin-bottom: 6px; }
+.gw-side-cmd-label { color: #b8ab8b; margin-right: 6px; }
+.gw-side-cmd-name { color: #f0e8d4; }
+.gw-side-table { width: 100%; margin: 0; }
+.gw-side-table th { font-weight: 400; }
+.gw-side-total th, .gw-side-total td { border-top: 1px solid rgba(216,180,92,.35); }
+.gw-side-loss td { color: #e8b0b0; }
+/* The winner's panel is the one the game marks in green; the loser fades. */
+.gw-side-won { border-color: rgba(79,170,90,.55); box-shadow: inset 0 0 0 1px rgba(79,170,90,.18); }
+.gw-side-won .gw-side-role { color: #b6e2b8; }
+.gw-side-lost { border-color: rgba(196,85,63,.35); }
+.gw-side-lost .gw-side-role { color: #d9b0a6; }
+
+/* Who won, and the game's own "N soldiers attacked M soldiers" line. */
+.gw-outcome {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  margin: 0 0 12px; padding: 8px 12px; border-radius: 4px;
+  background: rgba(0,0,0,.22); border-left: 3px solid var(--gw-gold-dim);
+}
+.gw-outcome-badge {
+  flex: none; padding: 2px 10px; border-radius: 10px; font-weight: 700; font-size: 12.5px;
+  background: rgba(79,170,90,.9); color: #10240f; border: 1px solid rgba(79,170,90,.6);
+}
+.gw-outcome-defender .gw-outcome-badge { background: rgba(216,180,92,.9); color: #2b2417; }
+.gw-outcome-line { margin: 0; color: #f0e8d4; font-size: 13px; }
+.gw-outcome-none { color: #b8ab8b; font-style: italic; }
+
+/* A historical advisor's type, beside his name. */
+.gw-advisor-kind { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
+.gw-kind-chip { background: rgba(216,180,92,.14); color: #f0e8d4; border-color: rgba(216,180,92,.4); }
+
 /* ---- collapsible sections (extra script blocks) ---- */
 .gw-extra .gw-collapse { margin: 8px 0; }
 
@@ -788,11 +872,46 @@ mark { background: #ffe9a8; padding: 0 1px; }
    Settings dialog + server-side folder picker
    ===================================================================== */
 
-.lang-btn {
-  min-width: 74px;
-  text-align: center;
-  font-variant: small-caps;
+/* The header language picker. It sits on the navy gradient, so it must not
+   inherit the header's near-white text: an opaque navy fill plus gold text is
+   the only combination that stays readable there. The fill is deliberately
+   opaque (not transparent like .btn.ghost) so the closed control renders the
+   same whatever is behind it, and so its contrast can be verified.
+   `appearance: none` + the drawn chevron replaces the UA arrow, which is dark
+   grey on Windows and would vanish against the navy. */
+.lang-select {
+  min-width: 104px;
+  max-width: 138px;
+  padding: 7px 26px 7px 10px;
+  border: 1px solid var(--pdx-gold);
+  border-radius: 3px;
+  background-color: var(--pdx-navy-3);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23e0c48a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-size: 10px 6px;
+  color: var(--pdx-gold-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
   letter-spacing: .02em;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Language names appear in their own script, so they keep normal casing:
+   small-caps renders `English` as `ENGLISH` while leaving `中文` untouched. */
+.lang-select:hover { border-color: var(--pdx-gold-soft); color: #fff; }
+.lang-select:focus-visible { outline: 2px solid var(--pdx-gold); outline-offset: 1px; }
+
+/* The dropdown list is a native popup: give it explicit opaque colours, or it
+   inherits the gold-on-navy pair above and renders gold text on white. */
+.lang-select option {
+  background-color: #fff;
+  color: var(--wiki-text);
+  font-weight: 400;
+  letter-spacing: normal;
 }
 
 body.set-open { overflow: hidden; }

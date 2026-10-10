@@ -167,5 +167,22 @@
     'GUI 控件树': 'GUI widget tree',
     '这是游戏加载该窗口时构建的控件层级；位置与尺寸为界面文件中的原始数值。':
       "This is the widget hierarchy the game builds when it loads the window; positions and sizes are the raw values from the interface file.",
+
+    // --- historical rulers, leaders, battles and advisors --------------------
+    '君主能力': 'Monarch skills',
+    '将领能力': 'Leader skills',
+    '顾问等级': 'Advisor skill',
+    '顾问类型': 'Type of advice',
+    '{label}：{value} / {max}': '{label}: {value} / {max}',
+    '每个圆点代表 1 点，满 {max} 点。': 'Each dot is one point; the scale runs to {max}.',
+    '日期': 'Date',
+    '战场': 'Battlefield',
+    '所属战争': 'War',
+    '指挥官': 'Commander',
+    '未记载': 'Not recorded',
+    '兵力': 'Troops',
+    '合计': 'Total',
+    '损失': 'Losses',
+    '打开将领条目': 'Open the leader entry',
   });
 })();

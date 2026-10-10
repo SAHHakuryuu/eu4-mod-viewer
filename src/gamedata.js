@@ -29,7 +29,7 @@ const registry = require('./content/registry.js');
 const wiki = require('./wiki.js');
 const gameloc = require('./gameloc.js');
 
-const { L, pick } = require('./i18n.js');
+const { L, pick, pickVars } = require('./i18n.js');
 
 const { FileCache, buildGenericCard } = common;
 
@@ -41,11 +41,11 @@ const TYPE_ORDER = [
   // Content
   'events', 'decisions', 'mission_trees', 'missions', 'idea_groups', 'national_ideas', 'advisors', 'policies',
   // Country
-  'countries', 'government', 'ruler_traits', 'parliament', 'estates', 'rebels', 'disasters', 'ages', 'great_projects',
+  'countries', 'monarchs', 'hist_advisors', 'government', 'ruler_traits', 'parliament', 'estates', 'rebels', 'disasters', 'ages', 'great_projects',
   // Religion & economy
   'religion', 'culture', 'buildings', 'trade',
   // Military
-  'units', 'leader_traits', 'wars',
+  'units', 'leaders', 'battles', 'leader_traits', 'wars',
   // World
   'bookmarks', 'map', 'interface',
   // System
@@ -231,10 +231,18 @@ function groupList(lang) {
   return GROUPS.map((g) => ({ id: g.id, label: pick(g, lang), zh: g.zh, en: g.en }));
 }
 
-/** The list-row title for an item, in the requested language. */
+/**
+ * The list-row title for an item, in the requested language.
+ *
+ * A synthetic title is either a `{zh, en}` pair or — when it carries a number
+ * whose position differs per language — a `{ tpl, vars }` template.
+ */
 function listTitle(index, type, id, lang) {
   const synth = index.synthTitles.get(type + ':' + id);
-  if (synth) return pick(synth, lang);
+  if (synth) {
+    if (synth.tpl) return pickVars(synth.tpl, lang, synth.vars);
+    return pick(synth, lang);
+  }
   return index.titles.get(type + ':' + id) || index.eventTitles.get(id) || null;
 }
 

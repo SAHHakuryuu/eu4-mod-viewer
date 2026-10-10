@@ -61,14 +61,27 @@
   // Language switch
   // -------------------------------------------------------------------------
 
-  function renderLangButton() {
-    const btn = $('#lang-btn');
-    if (!btn) return;
-    const next = I18N.getLang() === 'zh' ? 'en' : 'zh';
-    btn.textContent = I18N.LANG_NAMES[next];
-    btn.title = I18N.getLang() === 'zh'
-      ? 'Switch to English / 切换到英文'
-      : '切换到中文 / Switch to Chinese';
+  /**
+   * Fill the header language picker.
+   *
+   * The options carry the language's own name in its own script, which is the
+   * one string that must never be translated: a reader looking for their own
+   * language scans for `Русский`, not for `Russian`.
+   */
+  function renderLangSelect() {
+    const sel = $('#lang-select');
+    if (!sel) return;
+    const langs = I18N.LANGS || ['zh', 'en'];
+    if (sel.options.length !== langs.length) {
+      sel.innerHTML = '';
+      for (const code of langs) {
+        const opt = document.createElement('option');
+        opt.value = code;
+        opt.textContent = I18N.LANG_NAMES[code] || code;
+        sel.appendChild(opt);
+      }
+    }
+    sel.value = I18N.getLang();
   }
 
   /** Switch language everywhere: UI, storage, and the server-side default. */
@@ -76,7 +89,7 @@
     I18N.setLang(next);
     try { localStorage.setItem('eu4mv.lang', next); } catch { /* private mode */ }
     I18N.applyStatic(document);
-    renderLangButton();
+    renderLangSelect();
     if (S.open) render();
     // Persist so the console launcher and fresh sessions agree. A failure here
     // is not fatal: the UI already switched, every request carries ?lang=.
@@ -566,8 +579,8 @@
   // -------------------------------------------------------------------------
 
   function boot() {
-    const btn = $('#lang-btn');
-    if (btn) btn.addEventListener('click', () => switchLang(I18N.getLang() === 'zh' ? 'en' : 'zh'));
+    const sel = $('#lang-select');
+    if (sel) sel.addEventListener('change', () => switchLang(sel.value));
     const sbtn = $('#settings-btn');
     if (sbtn) sbtn.addEventListener('click', open);
     document.addEventListener('keydown', (ev) => {
@@ -575,7 +588,7 @@
       if (S.picker) closePicker();
       else if (S.open) close();
     });
-    renderLangButton();
+    renderLangSelect();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

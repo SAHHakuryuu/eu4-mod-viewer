@@ -81,10 +81,22 @@ HTML/CSS/JS。没有 `npm install`，没有构建步骤。想加一个依赖，�
 ```bat
 node tools\run-tests.js --all          :: 全部测试，包含 headless 浏览器 e2e
 node tools\i18n-audit.js check         :: 文案与词条
+node tools\build-langs.js check        :: 九语侧表的覆盖率 / 占位符 / 首尾空格
 ```
 
 `--all` 的 e2e 三层需要先有一个服务跑在 `http://127.0.0.1:4173`（`npm start`），
 否则它们会 **SKIP** 而不是 FAIL——这是刻意的：缺环境不该伪装成失败。
+
+改了**界面上的字符串**（`L('中文','English')` 或 `t('中文')`）之后，多跑两步：
+
+```bat
+node tools\i18n-extract.js             :: 重新抽出 _source（键数会变）
+node tools\build-langs.js delta        :: 只把新键发给七种语言的译者
+```
+
+细节见 **[docs/TRANSLATING.md](docs/TRANSLATING.md)**。两条要点：`_work/` 是工作台，
+**不入库**（`.gitignore`）；`build-langs.js split` 会删掉整个工作台（包括别人正在翻的 delta），
+所以它需要 `--force`，而后续轮一律用 `delta`。
 
 ### 各测试文件管什么
 
@@ -93,15 +105,19 @@ node tools\i18n-audit.js check         :: 文案与词条
 | `test-codec.js` | 本地化编解码 + Clausewitz 解析器 |
 | `test-i18n-backend.js` | 后端中英术语层（中文输出被钉住，防回归） |
 | `i18n-audit.js check` | 每个 `t()` 键都在字典里、没有裸露中文 |
+| `check-doc-links.js` | 文档里的相对链接与截图都真实存在，每篇文档都有语言姊妹篇；并检查 markdown 形状（表格列数、反引号成对、围栏闭合、表格没有被压平成空格） |
+| `check-css.js` | 每个 `var(--x)` 都有声明；漏声明 + 备用值兜底的写法会被单独点名 |
+| `build-langs.js check` | 七种语言侧表：覆盖率、占位符、符号、首尾空格 |
 | `test-wikigloss.js` | 词表只能从用户的 wiki 解析出来，不许编造；无 wiki 时可降级 |
 | `test-gamedata.js` | 内容索引 + 通用卡片渲染 |
 | `test-content-types.js` | 每一种内容类型都能索引、建卡、渲染 |
 | `test-missions.js` | 任务树版式（slot/position/连线语义 + GUI 几何对照） |
+| `test-history.js` | 历史君主/将领/战役：条目 id 由位置构成，必须能按同一条链走回原块 |
 | `test-fidelity.js` | 解析器不丢源文件里的任何键 |
 | `test-all-mods.js` | 载入全部模组，每个类别抽样 |
 | `test-dds.js` | DDS 解码（合成贴图 + 真实贴图） |
 | `verify-game.js` | headless 浏览器：游戏内视图逐类截图 |
-| `verify-i18n.js` | headless 浏览器：语言切换、设置、可配置 wiki |
+| `verify-i18n.js` | headless 浏览器：九语切换、设置、可配置 wiki |
 | `verify-wiki.js` | headless 浏览器：wiki 视图 |
 
 ### 新增测试

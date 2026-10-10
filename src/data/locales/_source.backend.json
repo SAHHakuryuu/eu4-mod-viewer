@@ -1,0 +1,2221 @@
+{
+  "  ": [
+    "　"
+  ],
+  " (Chinese wiki text)": [
+    "（中文 wiki 说明）"
+  ],
+  " (file order)": [
+    "（按出现次序）"
+  ],
+  " (localisation title missing)": [
+    "（本地化标题缺失）"
+  ],
+  " branch": [
+    " 分支"
+  ],
+  " days": [
+    " 天"
+  ],
+  " met: ": [
+    " 满足："
+  ],
+  "(unnamed)": [
+    "（未命名）"
+  ],
+  ", ": [
+    "、"
+  ],
+  ", delayed ": [
+    "，延迟 "
+  ],
+  ", for ": [
+    "，持续 "
+  ],
+  ", permanently": [
+    "，永久"
+  ],
+  ": ": [
+    "："
+  ],
+  "A fleet of {n1} ships flying the flag of {tag1} engaged {n2} {tag2} ships": [
+    "{tag1} 的 {n1} 艘船 与 {tag2} 的 {n2} 艘船 交战"
+  ],
+  "AI chance": [
+    "AI 选择权重 ai_chance"
+  ],
+  "AI importance": [
+    "AI 重要度"
+  ],
+  "AI priority": [
+    "AI 优先级"
+  ],
+  "AI weight": [
+    "AI 权重 ai"
+  ],
+  "AI will do": [
+    "AI 意愿 ai_will_do"
+  ],
+  "Absolutism from harsh treatment": [
+    "严酷镇压绝对主义"
+  ],
+  "Absolutism from stability": [
+    "稳定度绝对主义"
+  ],
+  "Absolutism from war exhaustion": [
+    "厌战绝对主义"
+  ],
+  "Absolutism modifiers": [
+    "绝对主义调整"
+  ],
+  "Administrative": [
+    "行政"
+  ],
+  "Administrative technology {n}": [
+    "行政科技 {n} 级"
+  ],
+  "Admiral": [
+    "海军将领"
+  ],
+  "Advisor": [
+    "顾问"
+  ],
+  "Advisors": [
+    "顾问"
+  ],
+  "After": [
+    "后续效果 after"
+  ],
+  "Age": [
+    "时代"
+  ],
+  "Age abilities": [
+    "时代能力 abilities"
+  ],
+  "Age objectives": [
+    "时代目标 objectives"
+  ],
+  "Ages": [
+    "时代"
+  ],
+  "Ahead-of-time modifiers": [
+    "超前惩罚修正 ahead_of_time"
+  ],
+  "Allow": [
+    "允许条件 allow"
+  ],
+  "Allows normal conversion": [
+    "允许常规转教"
+  ],
+  "Ancestor trait": [
+    "先祖特质"
+  ],
+  "Area": [
+    "地区"
+  ],
+  "Artillery share": [
+    "炮兵比例"
+  ],
+  "Artillery weight": [
+    "炮兵权重"
+  ],
+  "As consort": [
+    "作为配偶时 consort_allow"
+  ],
+  "As heir": [
+    "作为继承人时 heir_allow"
+  ],
+  "As ruler": [
+    "作为君主时 ruler_allow"
+  ],
+  "Aspects name key": [
+    "信条名称键"
+  ],
+  "Attacker": [
+    "进攻方"
+  ],
+  "Available": [
+    "可用条件 available"
+  ],
+  "Available from": [
+    "可用日期"
+  ],
+  "Available in nation designer": [
+    "国家设计器可选"
+  ],
+  "Base influence": [
+    "基础影响力"
+  ],
+  "Base price": [
+    "基础价格"
+  ],
+  "Base weight": [
+    "基础权重"
+  ],
+  "Battle": [
+    "战役"
+  ],
+  "Battlefield": [
+    "战场"
+  ],
+  "Benefits": [
+    "收益"
+  ],
+  "Binary asset — contents are not parsed": [
+    "二进制资源，不解析内容"
+  ],
+  "Bonus modifier": [
+    "奖励修正"
+  ],
+  "Bookmark": [
+    "书签"
+  ],
+  "Bookmarks": [
+    "书签与开局"
+  ],
+  "Build cost": [
+    "建造花费"
+  ],
+  "Build trigger": [
+    "建造条件 build_trigger"
+  ],
+  "Building": [
+    "建筑"
+  ],
+  "Buildings": [
+    "建筑"
+  ],
+  "Button sprite": [
+    "按钮贴图 button_gfx"
+  ],
+  "Can be moved": [
+    "可以搬迁"
+  ],
+  "Can be overlord": [
+    "可成为宗主国"
+  ],
+  "Can change primary culture": [
+    "可改主流文化"
+  ],
+  "Can embrace": [
+    "可接纳条件 can_embrace"
+  ],
+  "Can end": [
+    "可以结束 can_end"
+  ],
+  "Can form personal unions": [
+    "可联姻联合统治"
+  ],
+  "Can raze provinces": [
+    "可掠夺省份"
+  ],
+  "Can select": [
+    "可选条件 can_select"
+  ],
+  "Can start": [
+    "可以开始 can_start"
+  ],
+  "Can stop": [
+    "可以停止 can_stop"
+  ],
+  "Can upgrade": [
+    "升级条件 can_upgrade_trigger"
+  ],
+  "Can use modifiers": [
+    "可用修正的条件"
+  ],
+  "Casus belli": [
+    "宣战理由"
+  ],
+  "Casus belli & war": [
+    "宣战理由与战争"
+  ],
+  "Category": [
+    "类别"
+  ],
+  "Cavalry cap": [
+    "骑兵上限比例"
+  ],
+  "Cavalry share": [
+    "骑兵比例"
+  ],
+  "Cavalry weight": [
+    "骑兵权重"
+  ],
+  "Centre of religion": [
+    "宗教中心省份"
+  ],
+  "Chance": [
+    "出现概率 chance"
+  ],
+  "Church aspect": [
+    "教会面向"
+  ],
+  "Climate": [
+    "气候带"
+  ],
+  "Colour": [
+    "颜色"
+  ],
+  "Condition script": [
+    "触发条件内容"
+  ],
+  "Conditional modifier": [
+    "条件修正"
+  ],
+  "Conditions": [
+    "触发条件"
+  ],
+  "Conquistador": [
+    "征服者"
+  ],
+  "Consort": [
+    "配偶"
+  ],
+  "Contains areas": [
+    "包含地区 areas"
+  ],
+  "Contains provinces": [
+    "包含省份 provinces"
+  ],
+  "Content": [
+    "内容"
+  ],
+  "Continent": [
+    "大洲"
+  ],
+  "Cooldown": [
+    "冷却"
+  ],
+  "Cooldown (years)": [
+    "冷却年数"
+  ],
+  "Cost": [
+    "花费"
+  ],
+  "Cost modifier": [
+    "花费倍率"
+  ],
+  "Cost per province": [
+    "每省份花费"
+  ],
+  "Cost type": [
+    "花费类型"
+  ],
+  "Countries": [
+    "国家与政体"
+  ],
+  "Country": [
+    "国家"
+  ],
+  "Country event": [
+    "国家事件"
+  ],
+  "Country modifiers": [
+    "国家修正"
+  ],
+  "Country modifiers while disloyal": [
+    "忠诚（不满）时的国家修正"
+  ],
+  "Country modifiers while loyal": [
+    "忠诚（满意）时的国家修正"
+  ],
+  "Country modifiers while neutral": [
+    "忠诚（中立）时的国家修正"
+  ],
+  "Country tag": [
+    "国家标签"
+  ],
+  "Crusade name key": [
+    "十字军名称键"
+  ],
+  "Culture": [
+    "文化"
+  ],
+  "Culture group": [
+    "文化组"
+  ],
+  "Cultures in this group": [
+    "该文化组包含的文化"
+  ],
+  "DLC metadata": [
+    "DLC 元数据"
+  ],
+  "Date": [
+    "日期"
+  ],
+  "Days per unit of distance": [
+    "搬迁天数／距离"
+  ],
+  "Decisions": [
+    "决议"
+  ],
+  "Decree": [
+    "法令"
+  ],
+  "Default bookmark": [
+    "默认书签"
+  ],
+  "Defection": [
+    "叛变"
+  ],
+  "Defence": [
+    "防御加成"
+  ],
+  "Defender": [
+    "防守方"
+  ],
+  "Defender of the faith": [
+    "可成为信仰守护者"
+  ],
+  "Defensive fire": [
+    "防御火力"
+  ],
+  "Defensive morale": [
+    "防御士气"
+  ],
+  "Defensive shock": [
+    "防御冲击"
+  ],
+  "Defined in": [
+    "定义文件",
+    "所在文件"
+  ],
+  "Deutsch": [
+    "Deutsch"
+  ],
+  "Diplomatic": [
+    "外交"
+  ],
+  "Diplomatic technology {n}": [
+    "外交科技 {n} 级"
+  ],
+  "Disaster": [
+    "灾难"
+  ],
+  "Disasters": [
+    "灾难"
+  ],
+  "Disbands on leader death": [
+    "主将阵亡后解散"
+  ],
+  "Duration": [
+    "持续"
+  ],
+  "Dynasty": [
+    "王朝"
+  ],
+  "Effect": [
+    "效果 effect"
+  ],
+  "Effect script": [
+    "效果内容"
+  ],
+  "Effect when removed": [
+    "移除时的效果 removed_effect"
+  ],
+  "Effects": [
+    "效果"
+  ],
+  "Ends when the country breaks to rebels": [
+    "因国家崩溃而结束"
+  ],
+  "English": [
+    "English"
+  ],
+  "Español": [
+    "Español"
+  ],
+  "Estate": [
+    "阶层"
+  ],
+  "Estate agenda": [
+    "阶层议程"
+  ],
+  "Estate agendas": [
+    "阶层议程 agendas"
+  ],
+  "Estate privilege": [
+    "阶层特权"
+  ],
+  "Estate privileges": [
+    "阶层特权 privileges"
+  ],
+  "Estates": [
+    "阶层"
+  ],
+  "Events": [
+    "事件"
+  ],
+  "Events fired": [
+    "触发的事件 events"
+  ],
+  "Expects institutions": [
+    "期望已接纳思潮"
+  ],
+  "Expiry message type": [
+    "到期提示类型"
+  ],
+  "Explorer": [
+    "探险家"
+  ],
+  "Faction": [
+    "派系"
+  ],
+  "Factor": [
+    "权重系数 factor"
+  ],
+  "Fail if": [
+    "失败条件 fail_if"
+  ],
+  "Failing effect": [
+    "任务失败效果"
+  ],
+  "Fetishist cult": [
+    "拜物教派"
+  ],
+  "File is too large ({mb} MB) — not loaded": [
+    "文件过大（{mb} MB），未加载"
+  ],
+  "Fire only once": [
+    "只触发一次"
+  ],
+  "Flag emblem index range": [
+    "旗帜徽记索引范围"
+  ],
+  "Flags with emblem (%)": [
+    "带徽记旗帜比例"
+  ],
+  "Flagship modification": [
+    "旗舰改装"
+  ],
+  "Folder not found, or it has no wiki\\ subfolder.": [
+    "找不到该目录，或它不包含 wiki\\ 子目录。"
+  ],
+  "Français": [
+    "Français"
+  ],
+  "Free": [
+    "免费"
+  ],
+  "Free concentrate development": [
+    "免费集中发展度"
+  ],
+  "GUI window": [
+    "GUI 窗口"
+  ],
+  "GUI window ": [
+    "GUI 窗口 "
+  ],
+  "General": [
+    "陆军将领"
+  ],
+  "Government": [
+    "政体",
+    "政府与改革"
+  ],
+  "Government attributes": [
+    "政府属性 custom_attributes"
+  ],
+  "Government mechanic": [
+    "政府机制"
+  ],
+  "Government powers": [
+    "政府能力 powers"
+  ],
+  "Government rank": [
+    "政府等级"
+  ],
+  "Government reform": [
+    "政府改革"
+  ],
+  "Graphical culture": [
+    "图形文化"
+  ],
+  "Graphics": [
+    "图形与模型"
+  ],
+  "Great project": [
+    "伟大工程"
+  ],
+  "Great projects": [
+    "伟大工程"
+  ],
+  "HRE religion": [
+    "神罗官方宗教"
+  ],
+  "Harmonised modifier": [
+    "和谐修正"
+  ],
+  "Harmonised modifier key": [
+    "和谐修正键"
+  ],
+  "Has general": [
+    "自带将领"
+  ],
+  "Height": [
+    "高度"
+  ],
+  "Heir": [
+    "继承人"
+  ],
+  "Heir event": [
+    "继承人事件"
+  ],
+  "Hidden": [
+    "隐藏"
+  ],
+  "Hidden effect": [
+    "隐藏效果 hidden_effect"
+  ],
+  "Historical advisors": [
+    "历史顾问"
+  ],
+  "Historical battles": [
+    "历史战役"
+  ],
+  "Historical idea groups": [
+    "历史理念组"
+  ],
+  "Historical leaders": [
+    "历史将领"
+  ],
+  "Historical rulers": [
+    "历史君主"
+  ],
+  "Historical units": [
+    "历史兵种"
+  ],
+  "Historical war ": [
+    "历史战争 "
+  ],
+  "History": [
+    "历史"
+  ],
+  "Holy order": [
+    "圣骑士团"
+  ],
+  "Home province": [
+    "母省"
+  ],
+  "Icon": [
+    "图标 icon"
+  ],
+  "Icon type": [
+    "图标类型"
+  ],
+  "Idea groups": [
+    "理念组"
+  ],
+  "Idea groups available": [
+    "可开启理念组数"
+  ],
+  "Ideas": [
+    "理念"
+  ],
+  "Immediate": [
+    "立即效果 immediate"
+  ],
+  "Immediate effect": [
+    "立即效果 immediate_effect"
+  ],
+  "Imperial reform": [
+    "帝国改革"
+  ],
+  "Incident": [
+    "事件链"
+  ],
+  "Independence": [
+    "独立倾向"
+  ],
+  "Infantry share": [
+    "步兵比例"
+  ],
+  "Influence": [
+    "影响力"
+  ],
+  "Influence per development": [
+    "发展度带来的影响力"
+  ],
+  "Institution": [
+    "思潮"
+  ],
+  "Interactions": [
+    "互动 interactions"
+  ],
+  "Interface": [
+    "界面与 GUI"
+  ],
+  "Is valid": [
+    "有效性 is_valid"
+  ],
+  "Keep trigger": [
+    "保留条件 keep_trigger"
+  ],
+  "Land ownership modifiers": [
+    "土地占有修正"
+  ],
+  "Land share": [
+    "土地占有比例"
+  ],
+  "Latent trade good": [
+    "潜藏商品"
+  ],
+  "Leader": [
+    "将领"
+  ],
+  "Leader skills": [
+    "将领能力"
+  ],
+  "Leader trait": [
+    "将领特质"
+  ],
+  "Leader traits": [
+    "将领特质"
+  ],
+  "Level": [
+    "等级"
+  ],
+  "Local defensiveness": [
+    "本地防御"
+  ],
+  "Local development cost": [
+    "本地发展度花费"
+  ],
+  "Local institution spread": [
+    "本地思潮传播"
+  ],
+  "Localisation": [
+    "本地化"
+  ],
+  "Localisation key": [
+    "本地化键 localization"
+  ],
+  "Locks level when selected": [
+    "选中后锁定等级"
+  ],
+  "Looks like binary content": [
+    "疑似二进制内容"
+  ],
+  "Loyalty": [
+    "忠诚度"
+  ],
+  "Loyalty-scaled modifier": [
+    "按忠诚缩放的修正"
+  ],
+  "Major": [
+    "重大"
+  ],
+  "Maneuver": [
+    "机动"
+  ],
+  "Map": [
+    "地图"
+  ],
+  "Map centre province": [
+    "地图中心省份"
+  ],
+  "Max absolutism": [
+    "绝对主义上限"
+  ],
+  "Max absolutism increase": [
+    "绝对主义上限增加"
+  ],
+  "Max level": [
+    "最高等级"
+  ],
+  "Max parliament seats": [
+    "议会席位上限"
+  ],
+  "Max provinces": [
+    "最大省份数"
+  ],
+  "Members": [
+    "包含的成员"
+  ],
+  "Mercenary company": [
+    "雇佣兵团"
+  ],
+  "Mercenary description key": [
+    "雇佣兵描述键"
+  ],
+  "Military": [
+    "军事"
+  ],
+  "Military technology {n}": [
+    "军事科技 {n} 级"
+  ],
+  "Min autonomy in territories": [
+    "领地最低自治度"
+  ],
+  "Minimum autonomy": [
+    "最低自治度"
+  ],
+  "Mission": [
+    "任务"
+  ],
+  "Mission tree": [
+    "任务树"
+  ],
+  "Mission trees": [
+    "任务树"
+  ],
+  "Missionary strength": [
+    "传教力量"
+  ],
+  "Missions": [
+    "任务",
+    "任务数",
+    "任务树"
+  ],
+  "Mod definition": [
+    "模组定义"
+  ],
+  "Modifier": [
+    "修正"
+  ],
+  "Modifiers": [
+    "修正"
+  ],
+  "Modifiers by land ownership": [
+    "按土地占有的修正"
+  ],
+  "Monarch": [
+    "君主"
+  ],
+  "Monarch power type": [
+    "君主点数类别"
+  ],
+  "Monarch skills": [
+    "君主能力"
+  ],
+  "Month": [
+    "月份"
+  ],
+  "Months": [
+    "月数"
+  ],
+  "Morale multiplier": [
+    "士气倍率"
+  ],
+  "Movement cost": [
+    "移动消耗"
+  ],
+  "Movement evaluation": [
+    "移动评分 movement_evaluation"
+  ],
+  "Music & sound": [
+    "音乐与音效"
+  ],
+  "Name list": [
+    "名称表 names"
+  ],
+  "Nation designer cost": [
+    "国家设计器花费"
+  ],
+  "Nation designer cost multiplier": [
+    "国家设计器花费倍率"
+  ],
+  "National ideas": [
+    "国家理念"
+  ],
+  "Naval doctrine": [
+    "海军学说"
+  ],
+  "News event": [
+    "新闻事件"
+  ],
+  "Off effect": [
+    "停用时的效果 off_effect"
+  ],
+  "Offensive fire": [
+    "进攻火力"
+  ],
+  "Offensive morale": [
+    "进攻士气"
+  ],
+  "Offensive shock": [
+    "进攻冲击"
+  ],
+  "On action": [
+    "行动指令"
+  ],
+  "On actions": [
+    "行动指令"
+  ],
+  "On activation": [
+    "激活时 on_activation"
+  ],
+  "On built": [
+    "建成时 on_built"
+  ],
+  "On convert": [
+    "皈依时 on_convert"
+  ],
+  "On deactivation": [
+    "失效时 on_deactivation"
+  ],
+  "On destroyed": [
+    "拆除时 on_destroyed"
+  ],
+  "On effect": [
+    "启用时的效果 on_effect"
+  ],
+  "On end": [
+    "结束时 on_end"
+  ],
+  "On granted": [
+    "授予时 on_granted"
+  ],
+  "On monthly": [
+    "每月 on_monthly"
+  ],
+  "On progress": [
+    "推进时 on_progress"
+  ],
+  "On revoked": [
+    "撤销时 on_revoked"
+  ],
+  "On start": [
+    "开始时 on_start"
+  ],
+  "Only accepted culture": [
+    "仅已接受文化"
+  ],
+  "Only female": [
+    "仅女性"
+  ],
+  "Only male": [
+    "仅男性"
+  ],
+  "Only primary culture": [
+    "仅主流文化"
+  ],
+  "Opinion": [
+    "好感度"
+  ],
+  "Other": [
+    "其他改动"
+  ],
+  "Other changes in the same dated block": [
+    "同一日期块中的其他改动"
+  ],
+  "Outcome": [
+    "战役结果"
+  ],
+  "Papal influence multiplier": [
+    "教廷影响力倍率"
+  ],
+  "Parliament & edicts": [
+    "议会与法令"
+  ],
+  "Parliament effect duration": [
+    "议会效果时长"
+  ],
+  "Parliament issue": [
+    "议会议题"
+  ],
+  "Peace treaty": [
+    "和平条约"
+  ],
+  "Penalties": [
+    "惩罚"
+  ],
+  "Per-province abandon effect": [
+    "每省份弃用效果"
+  ],
+  "Per-province effect": [
+    "每省份效果 per_province_effect"
+  ],
+  "Personal deity": [
+    "个人神祇"
+  ],
+  "Playable countries": [
+    "可选国家 country"
+  ],
+  "Policies": [
+    "政策"
+  ],
+  "Português": [
+    "Português"
+  ],
+  "Position": [
+    "位置"
+  ],
+  "Position (row)": [
+    "位置（行）"
+  ],
+  "Potential": [
+    "生效条件 potential"
+  ],
+  "Potential on load": [
+    "载入时条件 potential_on_load"
+  ],
+  "Power type": [
+    "点数类别"
+  ],
+  "Pre-effect": [
+    "前置效果 pre_effect"
+  ],
+  "Prerequisite links": [
+    "前置连线"
+  ],
+  "Prerequisites": [
+    "前置条件 prerequisites"
+  ],
+  "Prerequisites (self)": [
+    "自身前置条件"
+  ],
+  "Price": [
+    "价格"
+  ],
+  "Primary": [
+    "主流文化"
+  ],
+  "Primary culture": [
+    "主流文化"
+  ],
+  "Progress": [
+    "推进条件 progress"
+  ],
+  "Province event": [
+    "省份事件"
+  ],
+  "Province modifiers": [
+    "省份修正"
+  ],
+  "Provinces": [
+    "包含的省份",
+    "省份",
+    "省份数"
+  ],
+  "Random New World latent chance": [
+    "随机新世界出现概率"
+  ],
+  "Read failed: {msg}": [
+    "读取失败: {msg}"
+  ],
+  "Rebel type": [
+    "叛军"
+  ],
+  "Rebels": [
+    "叛军"
+  ],
+  "Recommended countries": [
+    "推荐国家 easy_country"
+  ],
+  "Regent": [
+    "摄政"
+  ],
+  "Regiments per development": [
+    "每点发展度的团数"
+  ],
+  "Region": [
+    "区域"
+  ],
+  "Reinforcing": [
+    "可补充"
+  ],
+  "Relations": [
+    "关系条目 dependency"
+  ],
+  "Religion": [
+    "宗教"
+  ],
+  "Religion & economy": [
+    "宗教与经济"
+  ],
+  "Religion group": [
+    "宗教组"
+  ],
+  "Religion-scoped modifier": [
+    "宗教类子修正"
+  ],
+  "Religions in this group": [
+    "该宗教组包含的宗教"
+  ],
+  "Religious conflicts": [
+    "宗教冲突"
+  ],
+  "Required missions": [
+    "前置任务 required_missions"
+  ],
+  "Requirements": [
+    "需求 requirements"
+  ],
+  "Resilient": [
+    "坚韧"
+  ],
+  "Revolt trigger": [
+    "叛乱触发"
+  ],
+  "Ruler": [
+    "君主"
+  ],
+  "Ruler trait": [
+    "君主特质"
+  ],
+  "Ruler traits": [
+    "君主特质"
+  ],
+  "Scholar modifier": [
+    "学者修正"
+  ],
+  "Scripted effect": [
+    "脚本效果"
+  ],
+  "Scripted effects & triggers": [
+    "脚本效果与条件"
+  ],
+  "Scripted function": [
+    "脚本函数"
+  ],
+  "Scripted trigger": [
+    "脚本条件"
+  ],
+  "Season": [
+    "季节"
+  ],
+  "Selection weight": [
+    "选取权重 selection_weight"
+  ],
+  "Slot": [
+    "槽位"
+  ],
+  "Slot (column)": [
+    "槽位（列）"
+  ],
+  "Slots used": [
+    "占用槽位"
+  ],
+  "Smart": [
+    "智能"
+  ],
+  "Sound type": [
+    "音效类型"
+  ],
+  "Spawn chance": [
+    "出现权重 spawn_chance"
+  ],
+  "Spread area": [
+    "扩散范围"
+  ],
+  "Sprite": [
+    "精灵图 sprite"
+  ],
+  "Sprite level": [
+    "兵模等级"
+  ],
+  "Start year": [
+    "起始年份"
+  ],
+  "Starting state (the undated entries of the history file)": [
+    "开局状态（历史文件中的定点设置）"
+  ],
+  "Starting tier": [
+    "初始等级"
+  ],
+  "State edict": [
+    "省份诏令"
+  ],
+  "Subject relation": [
+    "附庸关系"
+  ],
+  "Subject type": [
+    "附庸类型"
+  ],
+  "Subjects and diplomacy ": [
+    "附庸与外交关系 "
+  ],
+  "Superregion": [
+    "大区"
+  ],
+  "Superregions": [
+    "大区 superregion"
+  ],
+  "Supply limit": [
+    "补给上限"
+  ],
+  "System": [
+    "系统"
+  ],
+  "Task completed effect": [
+    "任务完成效果"
+  ],
+  "Task requirements": [
+    "任务需求 task_requirements"
+  ],
+  "Technology": [
+    "科技与思潮"
+  ],
+  "Technology group": [
+    "科技组"
+  ],
+  "Technology level": [
+    "科技等级"
+  ],
+  "Terrain": [
+    "地形"
+  ],
+  "The attacker won": [
+    "进攻方获胜"
+  ],
+  "The defender won": [
+    "防守方获胜"
+  ],
+  "The files record this as a percentage of that side's strength, not a head count.": [
+    "游戏记录的是该方兵力的损失百分比，不是人数。"
+  ],
+  "This battle records no unit counts.": [
+    "该战役未记载兵力数量。"
+  ],
+  "This ruler is also a military leader": [
+    "该君主同时是一名将领"
+  ],
+  "Tier 0": [
+    "0 级"
+  ],
+  "Tier 1": [
+    "1 级"
+  ],
+  "Tier 2": [
+    "2 级"
+  ],
+  "Tier 3": [
+    "3 级"
+  ],
+  "Tier 4": [
+    "4 级"
+  ],
+  "Time": [
+    "耗时"
+  ],
+  "Total": [
+    "合计"
+  ],
+  "Trade": [
+    "贸易"
+  ],
+  "Trade company": [
+    "贸易公司"
+  ],
+  "Trade good": [
+    "贸易商品"
+  ],
+  "Trade good price": [
+    "商品价格"
+  ],
+  "Trade node": [
+    "贸易节点"
+  ],
+  "Trading policy": [
+    "贸易政策"
+  ],
+  "Traits": [
+    "特质"
+  ],
+  "Traits & personalities": [
+    "君主与将领特质"
+  ],
+  "Trigger": [
+    "触发条件 trigger"
+  ],
+  "Triggered only": [
+    "仅由脚本触发"
+  ],
+  "Troops": [
+    "兵力"
+  ],
+  "Type": [
+    "类型"
+  ],
+  "Unit": [
+    "兵种"
+  ],
+  "Unit tech group": [
+    "兵种科技组"
+  ],
+  "Unit transfer": [
+    "转移部队"
+  ],
+  "Units": [
+    "单位与军事"
+  ],
+  "Units enabled": [
+    "解锁单位 enable"
+  ],
+  "Uses Anglican power": [
+    "使用圣公会力量"
+  ],
+  "Valuable": [
+    "贵重商品"
+  ],
+  "Valuable trade good": [
+    "贵重商品"
+  ],
+  "Variables": [
+    "变量 variables"
+  ],
+  "War": [
+    "战争",
+    "所属战争"
+  ],
+  "War & peace": [
+    "战争与和平"
+  ],
+  "War goal": [
+    "战争目标",
+    "战争目标 war_goal"
+  ],
+  "War name": [
+    "战争名称"
+  ],
+  "Widget type": [
+    "控件类型 widgetType"
+  ],
+  "Widgets": [
+    "控件总数"
+  ],
+  "Width": [
+    "宽度"
+  ],
+  "Will relocate": [
+    "会转移"
+  ],
+  "World": [
+    "世界"
+  ],
+  "Year": [
+    "年份"
+  ],
+  "Yearly decay": [
+    "每年衰减"
+  ],
+  "a random ": [
+    "随机一个"
+  ],
+  "accepted culture": [
+    "已接受文化"
+  ],
+  "active estate": [
+    "活跃阶层"
+  ],
+  "active trade node": [
+    "活跃贸易节点"
+  ],
+  "active war": [
+    "进行中的战争"
+  ],
+  "add consort modifier": [
+    "获得配偶修正"
+  ],
+  "add country modifier": [
+    "获得国家修正"
+  ],
+  "add heir modifier": [
+    "获得继承人修正"
+  ],
+  "add permanent province modifier": [
+    "获得永久省份修正"
+  ],
+  "add province modifier": [
+    "获得省份修正"
+  ],
+  "add ruler modifier": [
+    "获得君主修正"
+  ],
+  "add to variable": [
+    "变量累加"
+  ],
+  "adm": [
+    "行政"
+  ],
+  "adm power": [
+    "行政点数"
+  ],
+  "admiral": [
+    "海军将领"
+  ],
+  "admiral name": [
+    "海军将领名"
+  ],
+  "advisor": [
+    "顾问"
+  ],
+  "advisor dies": [
+    "顾问死亡"
+  ],
+  "advisor id": [
+    "顾问编号"
+  ],
+  "advisor name": [
+    "顾问名"
+  ],
+  "all estates": [
+    "所有阶层"
+  ],
+  "all met": [
+    "全部满足"
+  ],
+  "all true": [
+    "全部为真"
+  ],
+  "ally": [
+    "盟友"
+  ],
+  "always true": [
+    "无条件成立"
+  ],
+  "amount": [
+    "数量"
+  ],
+  "and (all met)": [
+    "且（全部满足）"
+  ],
+  "and (all true)": [
+    "且（全部为真）"
+  ],
+  "any ": [
+    "任意一个"
+  ],
+  "area": [
+    "地区"
+  ],
+  "army": [
+    "陆军"
+  ],
+  "artillery": [
+    "炮兵"
+  ],
+  "at least one true": [
+    "至少一个为真"
+  ],
+  "battle result": [
+    "战役结果"
+  ],
+  "birth date": [
+    "出生日期"
+  ],
+  "can be overlord": [
+    "可能成为宗主国"
+  ],
+  "capital": [
+    "首都"
+  ],
+  "capital province name": [
+    "首都省份名"
+  ],
+  "casus belli": [
+    "宣战理由"
+  ],
+  "cavalry": [
+    "骑兵"
+  ],
+  "centre of trade": [
+    "贸易中心"
+  ],
+  "chance": [
+    "概率"
+  ],
+  "change estate land share: ": [
+    "调整阶层土地份额："
+  ],
+  "change variable": [
+    "增加变量"
+  ],
+  "claim": [
+    "继承宣称"
+  ],
+  "clamp variable": [
+    "变量限定范围"
+  ],
+  "clear country flag: ": [
+    "清除国家标记："
+  ],
+  "clear event target": [
+    "清除事件目标"
+  ],
+  "clear global flag: ": [
+    "清除全局标记："
+  ],
+  "colonial region": [
+    "殖民区域"
+  ],
+  "commander": [
+    "指挥官"
+  ],
+  "conquistador": [
+    "征服者"
+  ],
+  "consort": [
+    "配偶"
+  ],
+  "consort dies": [
+    "配偶死亡"
+  ],
+  "consort name": [
+    "配偶姓名"
+  ],
+  "content not found": [
+    "未找到该内容"
+  ],
+  "continent": [
+    "大洲"
+  ],
+  "controlled province": [
+    "控制的省份"
+  ],
+  "controller meets": [
+    "控制者满足"
+  ],
+  "core province": [
+    "核心省份"
+  ],
+  "count": [
+    "数量"
+  ],
+  "country": [
+    "国家"
+  ],
+  "country event": [
+    "国家事件"
+  ],
+  "country name": [
+    "国名"
+  ],
+  "country of origin": [
+    "来自国家"
+  ],
+  "country tag": [
+    "国家 TAG"
+  ],
+  "create admiral": [
+    "生成海军将领"
+  ],
+  "create advisor": [
+    "生成顾问"
+  ],
+  "create conquistador": [
+    "生成征服者"
+  ],
+  "create explorer": [
+    "生成探险家"
+  ],
+  "create general": [
+    "生成陆军将领"
+  ],
+  "culture": [
+    "文化"
+  ],
+  "culture group": [
+    "文化组"
+  ],
+  "current capital name": [
+    "当前首都名"
+  ],
+  "current country name": [
+    "当前国家名"
+  ],
+  "current country tag": [
+    "当前国家 TAG"
+  ],
+  "current culture name": [
+    "当前文化名"
+  ],
+  "current day": [
+    "当前日期"
+  ],
+  "current estate name": [
+    "当前阶层名"
+  ],
+  "current month": [
+    "当前月份"
+  ],
+  "current province name": [
+    "当前省份名"
+  ],
+  "current religion name": [
+    "当前宗教名"
+  ],
+  "current scope name": [
+    "当前作用域名称"
+  ],
+  "current year": [
+    "当前年份"
+  ],
+  "custom tooltip": [
+    "说明"
+  ],
+  "custom trigger tooltip": [
+    "条件说明"
+  ],
+  "custom trigger tooltip: ": [
+    "条件说明："
+  ],
+  "days": [
+    "天数"
+  ],
+  "days left on country modifier": [
+    "国家修正剩余天数"
+  ],
+  "death date": [
+    "逝世日期"
+  ],
+  "define advisor": [
+    "设定顾问"
+  ],
+  "define consort": [
+    "设定配偶"
+  ],
+  "define heir": [
+    "设定继承人"
+  ],
+  "define ruler": [
+    "设定君主"
+  ],
+  "dip": [
+    "外交"
+  ],
+  "dip power": [
+    "外交点数"
+  ],
+  "directory does not exist or is unreadable": [
+    "目录不存在或不可读"
+  ],
+  "disaster": [
+    "灾难"
+  ],
+  "discount": [
+    "折扣"
+  ],
+  "discovery": [
+    "发现"
+  ],
+  "divide variable by": [
+    "变量除以"
+  ],
+  "duration": [
+    "持续天数"
+  ],
+  "dynasty": [
+    "王朝"
+  ],
+  "dynasty ": [
+    "王朝 "
+  ],
+  "effect": [
+    "效果"
+  ],
+  "else": [
+    "否则"
+  ],
+  "else if met": [
+    "否则如果满足"
+  ],
+  "estate": [
+    "阶层"
+  ],
+  "estate influence modifier: ": [
+    "阶层影响力修正："
+  ],
+  "estate loyalty: ": [
+    "阶层忠诚度："
+  ],
+  "estate name": [
+    "阶层名"
+  ],
+  "evaluated by the game at runtime": [
+    "游戏运行时替换"
+  ],
+  "event target": [
+    "事件目标"
+  ],
+  "execute in from scope": [
+    "对来源作用域执行"
+  ],
+  "execute in previous scope": [
+    "对上一作用域执行"
+  ],
+  "execute in root scope": [
+    "对本国作用域执行"
+  ],
+  "execute in this scope": [
+    "对当前作用域执行"
+  ],
+  "execute on controller": [
+    "对控制者执行"
+  ],
+  "execute on owner": [
+    "对拥有者执行"
+  ],
+  "exists": [
+    "存在"
+  ],
+  "explorer": [
+    "探险家"
+  ],
+  "export to variable": [
+    "导出到变量"
+  ],
+  "faction": [
+    "派系"
+  ],
+  "factor": [
+    "权重"
+  ],
+  "female": [
+    "女性"
+  ],
+  "file not found": [
+    "未找到文件"
+  ],
+  "fire": [
+    "火力"
+  ],
+  "flag": [
+    "标记"
+  ],
+  "for every ": [
+    "对每个"
+  ],
+  "forbidden": [
+    "禁止访问"
+  ],
+  "from country name": [
+    "来源国国名"
+  ],
+  "from scope meets": [
+    "来源作用域满足"
+  ],
+  "galley": [
+    "桨帆船"
+  ],
+  "general": [
+    "陆军将领"
+  ],
+  "general name": [
+    "将领名"
+  ],
+  "government": [
+    "政体"
+  ],
+  "grant estate privilege": [
+    "授予阶层特权"
+  ],
+  "great project": [
+    "伟大工程"
+  ],
+  "heavy ship": [
+    "重型船只"
+  ],
+  "heir": [
+    "继承人"
+  ],
+  "heir dies": [
+    "继承人死亡"
+  ],
+  "heir event": [
+    "继承人事件"
+  ],
+  "heir name": [
+    "继承人姓名"
+  ],
+  "hidden": [
+    "隐藏"
+  ],
+  "hidden effect (not shown in game tooltip)": [
+    "隐藏效果（不在游戏提示中显示）"
+  ],
+  "holy order": [
+    "修会"
+  ],
+  "home": [
+    "母国"
+  ],
+  "icon not found": [
+    "未找到图标"
+  ],
+  "ids": [
+    "目标列表"
+  ],
+  "if met": [
+    "如果满足"
+  ],
+  "incident": [
+    "事件"
+  ],
+  "infantry": [
+    "步兵"
+  ],
+  "invalid path": [
+    "路径不合法"
+  ],
+  "is independent or tributary": [
+    "是独立国或朝贡国"
+  ],
+  "is male": [
+    "男性"
+  ],
+  "key": [
+    "键"
+  ],
+  "keywords": [
+    "关键词"
+  ],
+  "known country": [
+    "已知国家"
+  ],
+  "leader": [
+    "将领"
+  ],
+  "legitimacy": [
+    "正统性"
+  ],
+  "light ship": [
+    "轻型船只"
+  ],
+  "limit": [
+    "限制",
+    "限制条件"
+  ],
+  "loan": [
+    "贷款"
+  ],
+  "location": [
+    "地点"
+  ],
+  "losses": [
+    "损失"
+  ],
+  "maneuver": [
+    "机动"
+  ],
+  "manuever": [
+    "机动"
+  ],
+  "max": [
+    "上限"
+  ],
+  "may be overlord": [
+    "可以成为宗主国"
+  ],
+  "mercenary company": [
+    "雇佣兵团"
+  ],
+  "mil": [
+    "军事"
+  ],
+  "mil power": [
+    "军事点数"
+  ],
+  "min": [
+    "下限"
+  ],
+  "missing id": [
+    "缺少参数 id"
+  ],
+  "missing name": [
+    "缺少参数 name"
+  ],
+  "missing path": [
+    "缺少参数 path"
+  ],
+  "mod not found": [
+    "未找到模组"
+  ],
+  "modifier": [
+    "修正"
+  ],
+  "modifier effects": [
+    "修正效果"
+  ],
+  "monarch": [
+    "君主"
+  ],
+  "monarch adm skill": [
+    "君主行政能力"
+  ],
+  "monarch age": [
+    "君主年龄"
+  ],
+  "monarch dip skill": [
+    "君主外交能力"
+  ],
+  "monarch mil skill": [
+    "君主军事能力"
+  ],
+  "monarch name": [
+    "君主姓名"
+  ],
+  "monarch power type": [
+    "君主点数类别"
+  ],
+  "monarch title": [
+    "君主头衔"
+  ],
+  "months": [
+    "月数"
+  ],
+  "multiply variable by": [
+    "变量乘以"
+  ],
+  "name": [
+    "名称"
+  ],
+  "navy": [
+    "海军"
+  ],
+  "neighbour": [
+    "邻居"
+  ],
+  "neighbouring country": [
+    "邻国"
+  ],
+  "neighbouring province": [
+    "相邻省份"
+  ],
+  "news event": [
+    "新闻事件"
+  ],
+  "no such root": [
+    "没有可用的根目录"
+  ],
+  "not ": [
+    "非 "
+  ],
+  "not (all false)": [
+    "非（全部为假）"
+  ],
+  "not (not met)": [
+    "非（不满足）"
+  ],
+  "not found": [
+    "未找到"
+  ],
+  "not in glossary; shown as script": [
+    "词表中未收录的修正，原样显示",
+    "词表中未收录的命令，按脚本原样显示",
+    "词表中未收录的条件，按脚本原样显示"
+  ],
+  "number": [
+    "数字"
+  ],
+  "offline wiki is not enabled or not available": [
+    "离线 wiki 未启用或不可用"
+  ],
+  "on trigger": [
+    "触发时"
+  ],
+  "one of": [
+    "满足其一"
+  ],
+  "or (at least one true)": [
+    "或（至少一个为真）"
+  ],
+  "or (one of)": [
+    "或（满足其一）"
+  ],
+  "overlord": [
+    "宗主国"
+  ],
+  "overlord meets": [
+    "宗主国满足"
+  ],
+  "overlord name": [
+    "宗主国名"
+  ],
+  "owned province": [
+    "拥有的省份"
+  ],
+  "owned state": [
+    "拥有的州"
+  ],
+  "owned trade node": [
+    "拥有的贸易节点"
+  ],
+  "owner meets": [
+    "拥有者满足"
+  ],
+  "parliament issue": [
+    "议会提案"
+  ],
+  "percentage": [
+    "百分比"
+  ],
+  "personal deity": [
+    "个人神祇"
+  ],
+  "personality": [
+    "特质"
+  ],
+  "prestige": [
+    "威望"
+  ],
+  "previous scope meets": [
+    "上一作用域满足"
+  ],
+  "primary culture": [
+    "主流文化"
+  ],
+  "primary culture name": [
+    "主流文化名称"
+  ],
+  "province": [
+    "省份"
+  ],
+  "province event": [
+    "省份事件"
+  ],
+  "province name": [
+    "省份名"
+  ],
+  "random": [
+    "随机"
+  ],
+  "random outcome": [
+    "随机结果"
+  ],
+  "rebel": [
+    "叛军"
+  ],
+  "reform": [
+    "改革"
+  ],
+  "regent": [
+    "摄政"
+  ],
+  "regiment": [
+    "团"
+  ],
+  "region": [
+    "区域"
+  ],
+  "regnal name": [
+    "即位后名号"
+  ],
+  "religion": [
+    "宗教"
+  ],
+  "religion group": [
+    "宗教组"
+  ],
+  "remove country modifier": [
+    "移除国家修正"
+  ],
+  "remove province modifier": [
+    "移除省份修正"
+  ],
+  "remove ruler modifier": [
+    "移除君主修正"
+  ],
+  "revoke estate privilege": [
+    "撤销阶层特权"
+  ],
+  "rival": [
+    "宿敌"
+  ],
+  "root country adjective": [
+    "本国形容词"
+  ],
+  "root country name": [
+    "本国国名"
+  ],
+  "root scope meets": [
+    "本国作用域满足"
+  ],
+  "ruler": [
+    "君主"
+  ],
+  "ruler dies": [
+    "君主死亡"
+  ],
+  "ruler name": [
+    "统治者名"
+  ],
+  "runtime value": [
+    "运行时数值"
+  ],
+  "save event target as": [
+    "记录事件目标为"
+  ],
+  "save global event target as": [
+    "记录全局事件目标为"
+  ],
+  "scale": [
+    "倍率"
+  ],
+  "set country flag: ": [
+    "设置国家标记："
+  ],
+  "set estate privilege": [
+    "设定阶层特权"
+  ],
+  "set global flag: ": [
+    "设置全局标记："
+  ],
+  "set local variable": [
+    "设定局部变量"
+  ],
+  "set province flag: ": [
+    "设置省份标记："
+  ],
+  "set ruler flag: ": [
+    "设置君主标记："
+  ],
+  "set variable": [
+    "设定变量"
+  ],
+  "share": [
+    "份额"
+  ],
+  "ship": [
+    "船只"
+  ],
+  "shock": [
+    "冲击"
+  ],
+  "siege": [
+    "围城"
+  ],
+  "size": [
+    "规模"
+  ],
+  "skill": [
+    "等级"
+  ],
+  "skill ": [
+    "等级 "
+  ],
+  "stability": [
+    "稳定度"
+  ],
+  "state": [
+    "州"
+  ],
+  "state religion name": [
+    "国教名称"
+  ],
+  "subject": [
+    "附庸国"
+  ],
+  "subject country": [
+    "附庸国"
+  ],
+  "subject name": [
+    "附属国名"
+  ],
+  "subtract variable": [
+    "减少变量"
+  ],
+  "superregion": [
+    "大区"
+  ],
+  "switch on trigger": [
+    "按条件分支"
+  ],
+  "tag": [
+    "国家"
+  ],
+  "target": [
+    "目标"
+  ],
+  "technology group": [
+    "科技组"
+  ],
+  "texture not found": [
+    "未找到贴图"
+  ],
+  "this scope meets": [
+    "当前作用域满足"
+  ],
+  "tooltip": [
+    "提示"
+  ],
+  "tooltip: ": [
+    "提示："
+  ],
+  "trade good": [
+    "贸易商品"
+  ],
+  "trade good name": [
+    "贸易商品名"
+  ],
+  "trade node": [
+    "贸易节点"
+  ],
+  "trigger": [
+    "条件"
+  ],
+  "trigger ": [
+    "触发"
+  ],
+  "type": [
+    "类型"
+  ],
+  "type ": [
+    "类型 "
+  ],
+  "unit": [
+    "部队"
+  ],
+  "unit name": [
+    "部队名"
+  ],
+  "unknown API route": [
+    "未知的 API 路由"
+  ],
+  "unknown content type": [
+    "未知的内容类型"
+  ],
+  "unsupported DDS format": [
+    "不支持的 DDS 格式"
+  ],
+  "value": [
+    "数值"
+  ],
+  "variable": [
+    "变量"
+  ],
+  "variable at least": [
+    "变量至少为"
+  ],
+  "war": [
+    "战争"
+  ],
+  "when": [
+    "当满足"
+  ],
+  "which": [
+    "哪一个"
+  ],
+  "who": [
+    "目标"
+  ],
+  "wiki page not found": [
+    "未找到 wiki 页面"
+  ],
+  "years": [
+    "年数"
+  ],
+  "years of income": [
+    "年收入倍数"
+  ],
+  "{n1} {tag1} soldiers attacked {n2} {tag2} soldiers": [
+    "{tag1} 的 {n1} 名士兵 攻击了 {tag2} 的 {n2} 名士兵"
+  ],
+  "{tag1} attacked with {n1} units against {n2} units of {tag2}": [
+    "{tag1} 以 {n1} 个单位 攻击了 {tag2} 的 {n2} 个单位"
+  ],
+  "Русский": [
+    "Русский"
+  ],
+  "中文": [
+    "中文"
+  ],
+  "日本語": [
+    "日本語"
+  ],
+  "한국어": [
+    "한국어"
+  ]
+}

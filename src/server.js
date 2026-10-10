@@ -563,6 +563,10 @@ async function handleApi(req, res, pathname, query) {
           // single slot, so the list row can say what the tree covers.
           missionCount: r.missionCount,
           slots: r.slots,
+          // A history item has no localisation key: its row says `MNG · 1368.1.23`
+          // (a ruler), `AL2 · 1402.6.6` (a leader) or `靖难之役 · 1399.8.24`
+          // (a battle) so two rulers of one country stay tellable apart.
+          note: r.note || null,
         },
       }));
 

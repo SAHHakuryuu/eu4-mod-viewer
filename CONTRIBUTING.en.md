@@ -96,11 +96,24 @@ layer:
 ```bat
 node tools\run-tests.js --all          :: everything, including the headless-browser e2e checks
 node tools\i18n-audit.js check         :: wording and dictionary
+node tools\build-langs.js check        :: coverage / placeholders / edge whitespace of the nine-language side tables
 ```
 
 The three e2e tiers need a server already listening on `http://127.0.0.1:4173` (`npm start`).
 Without one they **SKIP** rather than FAIL — deliberately: a missing environment must not masquerade
 as a failure.
+
+After changing a **string the interface shows** (`L('中文','English')` or `t('中文')`), run two more:
+
+```bat
+node tools\i18n-extract.js             :: re-extract _source (the key count grows)
+node tools\build-langs.js delta        :: hand only the new keys to the seven languages
+```
+
+Details are in **[docs/TRANSLATING.en.md](docs/TRANSLATING.en.md)**. Two things to remember: `_work/`
+is a workbench and is **never committed** (it is in `.gitignore`), and `build-langs.js split` deletes
+that whole workbench — including another translator's delta files — which is why it demands
+`--force` and why later rounds use `delta` instead.
 
 ### What each test file covers
 
@@ -109,15 +122,19 @@ as a failure.
 | `test-codec.js` | localisation codec + Clausewitz parser |
 | `test-i18n-backend.js` | the backend zh/en term layer (Chinese output is pinned to prevent regressions) |
 | `i18n-audit.js check` | every `t()` key exists in the dictionary; no bare Chinese literals |
+| `check-doc-links.js` | every relative link and screenshot in the docs exists and each doc has its language sibling; the markdown shape is checked too (table cells, paired backticks, closed fences, no table flattened into spaces) |
+| `check-css.js` | every `var(--x)` has a declaration; an undeclared name hidden behind a fallback is called out separately |
+| `build-langs.js check` | the seven side tables: coverage, placeholders, symbols, edge whitespace |
 | `test-wikigloss.js` | term tables may only be parsed from the user's wiki, never invented; degrades with no wiki |
 | `test-gamedata.js` | content index + the generic card renderers |
 | `test-content-types.js` | every content type indexes, builds a card and renders |
 | `test-missions.js` | mission-tree layout (slot/position/link semantics + GUI geometry cross-check) |
+| `test-history.js` | rulers / leaders / battles: an item's id is built from its position, so it must walk back to the same block |
 | `test-fidelity.js` | the parser loses no key present in the source file |
 | `test-all-mods.js` | loads every mod and samples every category |
 | `test-dds.js` | DDS decoding (synthetic textures + real ones) |
 | `verify-game.js` | headless browser: the in-game view, one screenshot per content type |
-| `verify-i18n.js` | headless browser: language switching, settings, the configurable wiki |
+| `verify-i18n.js` | headless browser: all nine languages, settings, the configurable wiki |
 | `verify-wiki.js` | headless browser: the embedded wiki view |
 
 ### Adding a test

@@ -27,7 +27,7 @@ const gametext = require('../gametext.js');
 const terms = require('../gameterms.js');
 const i18n = require('../i18n.js');
 
-const { L, pick, normalizeLang, isEn } = i18n;
+const { L, pick, pickVars, normalizeLang, isEn, usesRawTerms } = i18n;
 
 const MAX_FILE_BYTES = 16 * 1024 * 1024;
 
@@ -817,7 +817,10 @@ function indexTitleFor(index, type, ref, spec) {
     if (pair) {
       if (!index.synthTitles) index.synthTitles = new Map();
       index.synthTitles.set(type + ':' + ref.id, pair);
-      index.titles.set(type + ':' + ref.id, typeof pair === 'string' ? pair : pair.zh);
+      // A title with a number in it is a template plus its variables, so that
+      // `listTitle` can resolve it per language instead of freezing one order.
+      const zh = pair.tpl ? pair.tpl.zh : (typeof pair === 'string' ? pair : pair.zh);
+      index.titles.set(type + ':' + ref.id, zh);
       return;
     }
   }
@@ -1495,6 +1498,17 @@ const KIND_LABEL = {
   ruler_trait: L('君主特质', 'Ruler trait'),
   ancestor_trait: L('先祖特质', 'Ancestor trait'),
   leader_trait: L('将领特质', 'Leader trait'),
+  // Historical rulers, leaders and battles (history/countries, history/wars)
+  monarch: L('君主', 'Monarch'),
+  heir: L('继承人', 'Heir'),
+  consort: L('配偶', 'Consort'),
+  general: L('陆军将领', 'General'),
+  admiral: L('海军将领', 'Admiral'),
+  explorer: L('探险家', 'Explorer'),
+  conquistador: L('征服者', 'Conquistador'),
+  leader: L('将领', 'Leader'),
+  battle: L('战役', 'Battle'),
+  advisor: L('顾问', 'Advisor'),
 };
 
 function kindLabel(kind, lang) {
@@ -1544,8 +1558,10 @@ module.exports = {
   colorValue,
   L,
   pick,
+  pickVars,
   normalizeLang,
   isEn,
+  usesRawTerms,
   COND_KEYS,
   EFF_KEYS,
   MOD_KEYS,

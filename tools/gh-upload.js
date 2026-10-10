@@ -201,29 +201,38 @@ async function run(opts) {
   // repository with one real file, then build the full tree on top of it.
   if (!parent) {
     console.log('  仓库为空，先用 Contents API 落一个初始提交（GitHub 限制，必须如此）...');
-    const seedPath = '.gitignore';
-    const seedAbs = path.join(ROOT, seedPath);
-    const seed = fs.existsSync(seedAbs)
-      ? fs.readFileSync(seedAbs).toString('base64')
-      : Buffer.from('# placeholder\n').toString('base64');
-    const seeded = await api(token, 'PUT', '/repos/' + owner + '/' + repo + '/contents/' + seedPath, {
-      message: 'chore: 初始化仓库（占位提交，随后立即被完整提交取代）',
-      content: seed,
-      branch
-    });
-    parent = seeded.commit.sha;
+    parent = await seedRepository({ api, token, owner, repo, branch, fs, path, ROOT });
     console.log('  bootstrap commit ' + parent.slice(0, 7));
   }
 
   console.log('uploading ' + files.length + ' files (' + (bytes / 1048576).toFixed(2) + ' MB) as blobs...');
   const tree = [];
   let done = 0;
-  for (const f of files) {
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i];
     const data = fs.readFileSync(f.abs).toString('base64');
-    const blob = await api(token, 'POST', '/repos/' + owner + '/' + repo + '/git/blobs', {
-      content: data,
-      encoding: 'base64'
-    });
+    let blob;
+    try {
+      blob = await api(token, 'POST', '/repos/' + owner + '/' + repo + '/git/blobs', {
+        content: data,
+        encoding: 'base64'
+      });
+    } catch (e) {
+      // Belt and braces: an empty repository cannot accept blobs written through
+      // the Git Data API (409 "Git Repository is empty."). The seeding above
+      // normally prevents this; if a repository is created between the two
+      // steps, seed now and retry this one blob.
+      if (e.status === 409 && !parent) {
+        console.log('  遇到空仓库的 409，补一个初始提交后重试...');
+        parent = await seedRepository({ api, token, owner, repo, branch, fs, path, ROOT });
+        blob = await api(token, 'POST', '/repos/' + owner + '/' + repo + '/git/blobs', {
+          content: data,
+          encoding: 'base64'
+        });
+      } else {
+        throw e;
+      }
+    }
     tree.push({ path: f.rel, mode: '100644', type: 'blob', sha: blob.sha });
     done++;
     if (done % 10 === 0 || done === files.length) {
@@ -293,7 +302,29 @@ async function run(opts) {
   return result;
 }
 
-module.exports = { run, collect, parseArgs, ROOT };
+/**
+ * GitHub refuses POST /git/blobs while a repository has no commits at all
+ * ("409 Git Repository is empty."). The Contents API is the only door in,
+ * because it creates the commit for you. Seed with one real tracked file -- the
+ * .gitignore -- and return the resulting commit sha, which then becomes the
+ * parent of the real commit.
+ */
+async function seedRepository(ctx) {
+  const seedPath = '.gitignore';
+  const seedAbs = ctx.path.join(ctx.ROOT, seedPath);
+  const seed = ctx.fs.existsSync(seedAbs)
+    ? ctx.fs.readFileSync(seedAbs).toString('base64')
+    : Buffer.from('# placeholder\n').toString('base64');
+  const seeded = await ctx.api(ctx.token, 'PUT',
+    '/repos/' + ctx.owner + '/' + ctx.repo + '/contents/' + seedPath, {
+      message: 'chore: 初始化仓库（占位提交，随后立即被完整提交取代）',
+      content: seed,
+      branch: ctx.branch
+    });
+  return seeded.commit.sha;
+}
+
+module.exports = { run, collect, parseArgs, ROOT, seedRepository };
 
 if (require.main === module) {
   run().catch((e) => {

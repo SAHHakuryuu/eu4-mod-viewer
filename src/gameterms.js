@@ -38,7 +38,7 @@ const { getEntry } = require('./codec/script.js');
 const { EFFECT_NAMES } = require('./data/effects-curated.js');
 const { MODIFIER_NAMES } = require('./data/modifiers-curated.js');
 const wikigloss = require('./wikigloss.js');
-const { L, pick, isEn } = require('./i18n.js');
+const { L, pick, usesRawTerms } = require('./i18n.js');
 
 /** Chrome labels, resolved once. `undefined`/unknown language degrades to zh. */
 function tx(pair, ctx) {
@@ -51,6 +51,8 @@ const NOT_IN_GLOSSARY_TRIGGER = L('词表中未收录的条件，按脚本原样
 const MISSING_EVENT_TITLE = L('（本地化标题缺失）', ' (localisation title missing)');
 /** The offline wiki's description column has no English twin. */
 const CHINESE_WIKI_NOTE = L('（中文 wiki 说明）', ' (Chinese wiki text)');
+/** Suffix of the `ROOT = { … }` header, in every non-Chinese language. */
+const SCOPE_MET = L(' 满足：', ' met: ');
 
 // ---------------------------------------------------------------------------
 // Glossary loading
@@ -229,7 +231,7 @@ function glossaries() {
  */
 function glossLabel(entry, ctx) {
   if (!entry || !entry.zh) return '';
-  if (isEn(ctx && ctx.lang)) return '';
+  if (usesRawTerms(ctx && ctx.lang)) return '';
   return tx(labelPair(entry.zh), ctx);
 }
 
@@ -249,7 +251,7 @@ function entryDesc(entry) {
 function knownNote(entry, ctx) {
   const desc = entryDesc(entry);
   if (!desc) return null;
-  if (isEn(ctx && ctx.lang)) return tx(CHINESE_WIKI_NOTE, ctx);
+  if (usesRawTerms(ctx && ctx.lang)) return tx(CHINESE_WIKI_NOTE, ctx);
   return desc;
 }
 
@@ -418,6 +420,27 @@ const FIELD_LABEL = {
   custom_tooltip: L('说明', 'custom tooltip'), custom_trigger_tooltip: L('条件说明', 'custom trigger tooltip'),
   event_target: L('事件目标', 'event target'), variable: L('变量', 'variable'),
   max: L('上限', 'max'), min: L('下限', 'min'),
+  // History blocks: rulers, heirs, consorts, leaders and battles. These are the
+  // field names `history/countries/*.txt` and `history/wars/*.txt` use, and the
+  // same names appear in `define_ruler` / `define_heir` effects, so labelling
+  // them here also improves how those effects read.
+  birth_date: L('出生日期', 'birth date'), death_date: L('逝世日期', 'death date'),
+  monarch_name: L('即位后名号', 'regnal name'), claim: L('继承宣称', 'claim'),
+  female: L('女性', 'female'), country_of_origin: L('来自国家', 'country of origin'),
+  fire: L('火力', 'fire'), shock: L('冲击', 'shock'),
+  manuever: L('机动', 'manuever'), maneuver: L('机动', 'maneuver'),
+  siege: L('围城', 'siege'), personality: L('特质', 'personality'),
+  location: L('地点', 'location'), infantry: L('步兵', 'infantry'),
+  cavalry: L('骑兵', 'cavalry'), artillery: L('炮兵', 'artillery'),
+  heavy_ship: L('重型船只', 'heavy ship'), light_ship: L('轻型船只', 'light ship'),
+  galley: L('桨帆船', 'galley'),
+  losses: L('损失', 'losses'), commander: L('指挥官', 'commander'),
+  // Advisors (`history/advisors/*.txt`).
+  advisor_id: L('顾问编号', 'advisor id'), discount: L('折扣', 'discount'),
+  // `result` in a battle block is who won: `yes` is the attacker's victory and
+  // `no` the defender's, checked against the battles whose outcome is recorded.
+  // (The wiki's comment for the key, "Show result", describes the wrong thing.)
+  result: L('战役结果', 'battle result'),
 };
 
 /** A sub-field name in `ctx.lang`, falling back to the raw script key. */
@@ -532,7 +555,7 @@ function nameOf(kind, id, ctx) {
   if (!ctx || !ctx.resolver || !kind || id === null || id === undefined || id === '') return null;
   const cands = NAME_CANDIDATES[kind];
   if (!cands) return null;
-  if (isEn(ctx.lang)) return String(id);
+  if (usesRawTerms(ctx.lang)) return String(id);
   for (const pattern of cands) {
     const key = pattern.replace('{id}', String(id));
     const hit = ctx.resolver.lookup(key);
@@ -724,8 +747,7 @@ function scopeLabel(key, valueNode, glossHas, lang) {
 
 /** The `… 满足：` header of a scope block, in `lang`. */
 function scopeHead(scope, lang) {
-  if (isEn(lang)) return scope + ' met: ';
-  return scope + ' 满足：';
+  return scope + pick(SCOPE_MET, lang);
 }
 
 /** Look up a `common/scripted_triggers` / `scripted_effects` definition. */

@@ -95,6 +95,18 @@ const TESTS = [
     what: 'Every t() key exists in the dictionary; no stray Chinese literals',
   },
   {
+    id: 'doc-links',
+    file: 'tools/check-doc-links.js',
+    tier: 'core',
+    what: 'Every relative link and screenshot in the documentation exists',
+  },
+  {
+    id: 'css-vars',
+    file: 'tools/check-css.js',
+    tier: 'core',
+    what: 'Every CSS custom property is declared before it is referenced',
+  },
+  {
     id: 'wikigloss',
     file: 'tools/test-wikigloss.js',
     tier: 'mods',
@@ -123,6 +135,14 @@ const TESTS = [
     file: 'tools/test-missions.js',
     tier: 'mods',
     what: 'Mission trees lay out on the game\'s own slot/position grid',
+    needs: hasMods,
+    skipReason: 'no EU4 mods found on this machine',
+  },
+  {
+    id: 'history',
+    file: 'tools/test-history.js',
+    tier: 'mods',
+    what: 'Historical rulers, leaders and battles index, resolve and render',
     needs: hasMods,
     skipReason: 'no EU4 mods found on this machine',
   },

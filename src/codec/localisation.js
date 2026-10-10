@@ -71,16 +71,58 @@ function isValidUtf8(buf) {
 }
 
 /**
+ * Walk one UTF-8 sequence at `pos`. Returns `[codepoint, bytesConsumed, valid]`.
+ *
+ * Unlike `readUtf8` below this accepts C1 code points (U+0080–U+009F), because
+ * that is exactly what the CP1252 layer encodes: a payload byte of 0x80 was
+ * written as the two bytes `C2 80`. A byte that does not start a well-formed
+ * sequence is reported invalid so the caller can keep it verbatim — turning it
+ * into something else is how a raw 0xF9 silently became 0xFD.
+ */
+function utf8Walk(buf, i) {
+  const b = buf[i];
+  if (b === undefined) return [undefined, 1, false];
+  if (b < 0x80) return [b, 1, true];
+
+  let len;
+  let cp;
+  if (b >= 0xf0) { len = 4; cp = b & 0x07; }
+  else if (b >= 0xe0) { len = 3; cp = b & 0x0f; }
+  else if (b >= 0xc0) { len = 2; cp = b & 0x1f; }
+  else return [b, 1, false];              // a continuation byte on its own
+
+  if (i + len > buf.length) return [b, 1, false];
+  for (let k = 1; k < len; k++) {
+    const c = buf[i + k];
+    if ((c & 0xc0) !== 0x80) return [b, 1, false];
+    cp = (cp << 6) | (c & 0x3f);
+  }
+  if (cp < 0x80) return [b, 1, false];    // overlong
+  if (cp > 0xffff) return [b, 1, false];  // out of the BMP this scheme uses
+  return [cp, len, true];
+}
+
+/**
  * Map a valid-UTF-8 buffer back to the raw byte stream the escapes were built
  * from, by running every code unit through the CP1252 C1 table.
+ *
+ * The pass is *lossless*: a byte that was never UTF-8-encoded (which is the
+ * normal shape of a script file — payload bytes are stored raw) is kept as it
+ * is. Getting this wrong is not cosmetic: a raw 0xF9 used to be replaced by
+ * 0xFD, so 曹 (U+66F9) read as 曽 (U+66FD) — plausible-looking, silently wrong
+ * Chinese, and invisible to the scoring heuristic because both are real
+ * ideographs.
  */
 function cp1252Normalize(buf) {
-  const s = buf.toString('utf8').replace(/^\uFEFF/, '');
   const out = [];
-  for (const ch of s) {
-    const cp = ch.codePointAt(0);
+  let i = 0;
+  if (buf.length >= 3 && buf[0] === 0xef && buf[1] === 0xbb && buf[2] === 0xbf) i = 3;
+  while (i < buf.length) {
+    const [cp, len, valid] = utf8Walk(buf, i);
+    if (!valid) { out.push(buf[i]); i++; continue; }
     const mapped = UNICODE_TO_CP1252_C1[cp];
     out.push(mapped !== undefined ? mapped : cp & 0xff);
+    i += len;
   }
   return out;
 }
@@ -162,13 +204,7 @@ function decodeEscapedBuffer(buf, opts = {}) {
   let start = 0;
 
   if (opts.normalize === 'cp1252') {
-    const s = buf.toString('utf8').replace(/^\uFEFF/, '');
-    bytes = [];
-    for (const ch of s) {
-      const cp = ch.codePointAt(0);
-      const mapped = UNICODE_TO_CP1252_C1[cp];
-      bytes.push(mapped !== undefined ? mapped : cp & 0xff);
-    }
+    bytes = cp1252Normalize(buf);
   } else {
     bytes = buf;
     if (buf.length >= 3 && buf[0] === 0xef && buf[1] === 0xbb && buf[2] === 0xbf) start = 3;

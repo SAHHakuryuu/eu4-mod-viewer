@@ -19,7 +19,7 @@ const { getEntry, scalarValue } = require('../codec/script.js');
 const c = require('./common.js');
 const terms = require('../gameterms.js');
 
-const { L, pick, underPrefix, underPrefixAny, makeRef, makeLocRefs, contentCtx, fileStem, kindLabel } = c;
+const { L, pick, pickVars, underPrefix, underPrefixAny, makeRef, makeLocRefs, contentCtx, fileStem, kindLabel } = c;
 
 // ---------------------------------------------------------------------------
 // Navigation groups
@@ -62,6 +62,16 @@ function nodeSig(node) {
 /** A `{zh, en}` pair for a synthetic title, so both languages read correctly. */
 function synth(zh, en) { return { zh, en }; }
 
+/**
+ * A synthetic title resolved for one language, with `{name}` placeholders filled.
+ *
+ * Word order differs between languages (`行政科技 5 级` vs `Administrative
+ * technology 5`), so a synthetic title with a number in it must be translated as
+ * a template rather than as a prefix glued to a value: the English template is
+ * the lookup key in `src/data/locales/<lang>.json`.
+ */
+const synthText = pickVars;
+
 // ---------------------------------------------------------------------------
 // Missions
 // ---------------------------------------------------------------------------
@@ -101,6 +111,16 @@ const POWER_LABEL = {
   MIL: L('军事', 'Military'),
 };
 
+/**
+ * A technology level's title. The level number sits inside the translatable
+ * string because its position moves between languages (`行政科技 5 级`).
+ */
+const TECH_TITLE = {
+  ADM: L('行政科技 {n} 级', 'Administrative technology {n}'),
+  DIP: L('外交科技 {n} 级', 'Diplomatic technology {n}'),
+  MIL: L('军事科技 {n} 级', 'Military technology {n}'),
+};
+
 generic('technology', 'system', 'technology',
   { zh: '科技与思潮', en: 'Technology', icon: '🔬' },
   {
@@ -117,10 +137,9 @@ generic('technology', 'system', 'technology',
     keyedLists: { expects_institution: 'keyWeight' },
     titleFn(index, ref) {
       const power = String(ref.file).split('/').pop().replace(/\.[^.]+$/, '').toUpperCase();
-      const label = POWER_LABEL[power];
-      const n = Number(ref.level) || 0;
-      if (!label) return null;
-      return synth(`${pick(label, 'zh')}科技 ${n} 级`, `${pick(label, 'en')} technology ${n}`);
+      const tpl = TECH_TITLE[power];
+      if (!tpl) return null;
+      return { tpl, vars: { n: Number(ref.level) || 0 } };
     },
     decorate(card, { node, index: ix, ref, lang, ctx }) {
       const power = String(ref.file).split('/').pop().replace(/\.[^.]+$/, '').toUpperCase();
@@ -128,7 +147,7 @@ generic('technology', 'system', 'technology',
         card.power = power;
         card.powerLabel = pick(POWER_LABEL[power], lang);
         card.name = null;
-        card.synthName = synth(`${pick(POWER_LABEL[power], 'zh')}科技 ${ref.level} 级`, `${pick(POWER_LABEL[power], 'en')} technology ${ref.level}`);
+        card.synthName = pickVars(TECH_TITLE[power], lang, { n: ref.level });
       }
       const tree = ix.cache.tree(ref.file);
       const ahead = tree ? getEntry(tree, 'ahead_of_time') : null;
@@ -768,7 +787,7 @@ function buildWar(index, ref, lang, LR, ctx) {
     kindLabel: kindLabel('war', lang),
     file: ref.file, line: 1, sourceLine: 1,
     nameKey: null, name: null, descKey: null, desc: null,
-    synthName: synth('历史战争 ' + ref.id, 'Historical war ' + ref.id),
+    synthName: synthText(L('历史战争 ', 'Historical war '), lang) + ref.id,
     fields, groups, timeline, locRefs: LR.refs,
   };
 }
@@ -798,11 +817,42 @@ function buildDependency(index, ref, lang, LR, ctx) {
     kindLabel: kindLabel('dependency', lang),
     file: ref.file, line: 1, sourceLine: 1,
     nameKey: null, name: null, descKey: null, desc: null,
-    synthName: synth('附庸与外交关系 ' + ref.id, 'Subjects and diplomacy ' + ref.id),
+    synthName: synthText(L('附庸与外交关系 ', 'Subjects and diplomacy '), lang) + ref.id,
     fields: [], groups: items.length ? [{ key: 'deps', role: 'list', label: pick(L('关系条目 dependency', 'Relations'), lang), items }] : [],
     locRefs: LR.refs,
   };
 }
+
+// ---------------------------------------------------------------------------
+// History: the rulers, leaders, battles and advisors a mod's history describes
+// ---------------------------------------------------------------------------
+//
+// `history/countries/*.txt`, `history/wars/*.txt` and `history/advisors/*.txt`
+// are read by the collectors in `src/content/history.js`. Each is its own tab
+// because each is a different question: who ruled, who fought, where the
+// fighting happened, and who could be hired.
+
+const historyEngine = require('./history.js');
+
+custom('monarchs', 'country', 'history',
+  { zh: '历史君主', en: 'Historical rulers', icon: '🤴' },
+  historyEngine.collectRulers,
+  historyEngine.buildRuler);
+
+custom('hist_advisors', 'country', 'history',
+  { zh: '历史顾问', en: 'Historical advisors', icon: '🎓' },
+  historyEngine.collectHistAdvisors,
+  historyEngine.buildHistAdvisor);
+
+custom('leaders', 'military', 'history',
+  { zh: '历史将领', en: 'Historical leaders', icon: '🗡' },
+  historyEngine.collectLeaders,
+  historyEngine.buildLeader);
+
+custom('battles', 'military', 'history',
+  { zh: '历史战役', en: 'Historical battles', icon: '💥' },
+  historyEngine.collectBattles,
+  historyEngine.buildBattle);
 
 // ---------------------------------------------------------------------------
 // Map: areas, regions, superregions, continents, climates and terrain
@@ -1014,7 +1064,7 @@ custom('interface', 'world', 'interface',
       file: ref.file, line: found.line, sourceLine: found.line,
       nameKey: null,
       name: null,
-      synthName: synth('GUI 窗口 ' + ref.id, 'GUI window ' + ref.id),
+      synthName: synthText(L('GUI 窗口 ', 'GUI window '), lang) + ref.id,
       descKey: null, desc: null,
       fields: [
         { key: 'widgetType', label: pick(L('控件类型 widgetType', 'Widget type'), lang), value: ref.widgetType, tone: 'text' },

@@ -9,18 +9,52 @@
  *
  * Design rules:
  *   - Never invent a term. Where the wiki-derived Chinese glossary is the only
- *     source, English mode falls back to the raw script identifier, which is
+ *     source, non-Chinese modes fall back to the raw script identifier, which is
  *     exactly the name the English EU4 wiki and the game's own script use.
- *   - A `pair` is always `{ zh, en }`; `pick` degrades gracefully if a language
- *     is missing (zh -> en -> first non-empty value).
+ *   - A `pair` in the source is always `{ zh, en }` — that is what `L()` builds,
+ *     and it keeps ~700 call sites readable. The seven further languages live in
+ *     a side table (`src/data/locales/<lang>.json`) keyed by the **English**
+ *     string, so a new language never has to touch a call site. `pick` consults
+ *     it automatically, which is why every existing label becomes translatable
+ *     by translating one JSON file.
+ *   - `pick` degrades gracefully: requested language -> side table -> English ->
+ *     Chinese -> first non-empty value.
  */
 
 /** Supported UI languages, in menu order. */
-const LANGS = ['zh', 'en'];
+const LANGS = ['zh', 'en', 'fr', 'de', 'es', 'pt', 'ru', 'ja', 'ko'];
+/** Languages that exist only as a side table (no `{ zh, en }` pair entries). */
+const EXTRA_LANGS = LANGS.filter((l) => l !== 'zh' && l !== 'en');
 const DEFAULT_LANG = 'zh';
+const FALLBACK_LANG = 'en';
+
+/**
+ * Language menu labels, always in the language's own script: a language picker
+ * is the one place where a translation is never wanted.
+ */
 const LANG_LABELS = {
-  zh: { zh: '中文', en: 'Chinese' },
+  zh: { zh: '中文', en: '中文' },
   en: { zh: 'English', en: 'English' },
+  fr: { zh: 'Français', en: 'Français' },
+  de: { zh: 'Deutsch', en: 'Deutsch' },
+  es: { zh: 'Español', en: 'Español' },
+  pt: { zh: 'Português', en: 'Português' },
+  ru: { zh: 'Русский', en: 'Русский' },
+  ja: { zh: '日本語', en: '日本語' },
+  ko: { zh: '한국어', en: '한국어' },
+};
+
+/** Accepted spellings/regional tags per language, longest-prefix match first. */
+const LANG_ALIASES = {
+  zh: ['zh', 'cn', 'chs', 'cht', 'chi', 'zho'],
+  en: ['en', 'eng'],
+  fr: ['fr', 'fra', 'fre'],
+  de: ['de', 'deu', 'ger'],
+  es: ['es', 'spa'],
+  pt: ['pt', 'por'],
+  ru: ['ru', 'rus'],
+  ja: ['ja', 'jp', 'jpn'],
+  ko: ['ko', 'kor'],
 };
 
 /** Build a bilingual pair. */
@@ -28,13 +62,49 @@ function L(zh, en) {
   return { zh, en: en === undefined ? zh : en };
 }
 
+// ---------------------------------------------------------------------------
+// Side tables
+// ---------------------------------------------------------------------------
+
+/**
+ * `{ <english label>: <translated label> }` per extra language.
+ *
+ * Loaded lazily and defensively: a language file may legitimately be absent (a
+ * fresh checkout before `tools/build-langs.js` has run, or a packager who ships
+ * only some languages), and a missing table must degrade to English rather than
+ * throw.
+ */
+const TABLES = new Map();
+
+function tableFor(lang) {
+  if (!EXTRA_LANGS.includes(lang)) return null;
+  if (TABLES.has(lang)) return TABLES.get(lang);
+  let table = null;
+  try {
+    // eslint-disable-next-line global-require
+    table = require('./data/locales/' + lang + '.json');
+  } catch {
+    table = null;
+  }
+  if (!table || typeof table !== 'object') table = null;
+  TABLES.set(lang, table);
+  return table;
+}
+
 /** Coerce anything (query param, config value, Accept-Language) to a language. */
 function normalizeLang(value) {
   const s = String(value == null ? '' : value).trim().toLowerCase();
   if (!s) return DEFAULT_LANG;
   if (s === 'auto') return DEFAULT_LANG;
-  if (s.startsWith('en')) return 'en';
-  if (s.startsWith('zh') || s.startsWith('cn')) return 'zh';
+  // Match on the primary subtag, so `pt-BR`, `zh-Hans-CN` and `ja_JP` all land.
+  const primary = s.split(/[-_]/)[0];
+  if (primary === 'cn') return 'zh';
+  for (const lang of LANGS) {
+    if (primary === lang) return lang;
+  }
+  for (const lang of LANGS) {
+    if ((LANG_ALIASES[lang] || []).includes(primary)) return lang;
+  }
   return DEFAULT_LANG;
 }
 
@@ -43,7 +113,7 @@ function normalizeLang(value) {
  *
  * An explicitly present key always wins — including an empty string, which is
  * how a caller says "this label genuinely has no English form". Only a *missing*
- * key falls back (requested language -> Chinese -> any non-empty value).
+ * key falls back.
  */
 function pick(pair, lang) {
   if (pair == null) return '';
@@ -51,6 +121,17 @@ function pick(pair, lang) {
   const l = normalizeLang(lang);
   const has = (k) => Object.prototype.hasOwnProperty.call(pair, k);
   if (has(l)) return pair[l];
+
+  const en = has(FALLBACK_LANG) ? pair[FALLBACK_LANG] : null;
+  if (l !== FALLBACK_LANG && typeof en === 'string' && en) {
+    const table = tableFor(l);
+    if (table && Object.prototype.hasOwnProperty.call(table, en)) {
+      const hit = table[en];
+      if (typeof hit === 'string' && hit) return hit;
+    }
+  }
+
+  if (has(FALLBACK_LANG)) return pair[FALLBACK_LANG];
   if (has(DEFAULT_LANG)) return pair[DEFAULT_LANG];
   for (const k of Object.keys(pair)) if (pair[k]) return pair[k];
   return '';
@@ -58,6 +139,34 @@ function pick(pair, lang) {
 
 function isEn(lang) {
   return normalizeLang(lang) === 'en';
+}
+
+/**
+ * `pick()` plus `{name}` substitution.
+ *
+ * Synthetic titles such as `Administrative technology 5` must be translated as a
+ * *template* (`Administrative technology {n}`) because the number's position
+ * moves between languages — `行政科技 5 级` puts the level behind a counter word
+ * that English does not have.
+ */
+function pickVars(pair, lang, vars) {
+  let out = pick(pair, lang);
+  if (vars && typeof out === 'string' && out.includes('{')) {
+    out = out.replace(/\{(\w+)\}/g, (m, k) => (vars[k] === undefined ? m : String(vars[k])));
+  }
+  return out;
+}
+
+/**
+ * "Do not consult the Chinese glossary."
+ *
+ * The wiki-derived term tables are Chinese-only, so every language other than
+ * Chinese shows the raw script identifier — the name the English wiki and the
+ * game's own script use. That is the honest fallback for French, Russian or
+ * Japanese too: `pick()` still translates the *chrome* around the identifier.
+ */
+function usesRawTerms(lang) {
+  return normalizeLang(lang) !== DEFAULT_LANG;
 }
 
 /**
@@ -116,12 +225,18 @@ function msg(lang, key, vars) {
 
 module.exports = {
   LANGS,
+  EXTRA_LANGS,
   DEFAULT_LANG,
+  FALLBACK_LANG,
   LANG_LABELS,
+  LANG_ALIASES,
   MESSAGES,
   L,
   pick,
+  pickVars,
   isEn,
+  usesRawTerms,
+  tableFor,
   normalizeLang,
   prettyKey,
   enTermName,

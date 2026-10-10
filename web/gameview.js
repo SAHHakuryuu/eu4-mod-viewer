@@ -43,16 +43,18 @@ const gw = {
   loading: false,
 };
 
-/** The active language, defensively. */
+/** The active language code, defensively. */
 function gwLang() {
-  return window.I18N && I18N.getLang() === 'en' ? 'en' : 'zh';
+  return (window.I18N && I18N.getLang()) || 'zh';
 }
 
 /** Pick the right side of a `{zh, en}` pair the server sent. */
 function gwPick(pair) {
   if (!pair) return '';
   if (typeof pair === 'string') return pair;
-  return gwLang() === 'en' ? (pair.en || pair.zh || '') : (pair.zh || pair.en || '');
+  const l = gwLang();
+  if (pair[l]) return pair[l];
+  return l === 'zh' ? (pair.zh || pair.en || '') : (pair.en || pair.zh || '');
 }
 
 /** Type metadata from the server's ordered list. */
@@ -74,10 +76,16 @@ function gwTypesInGroup(groupId) {
   return list.filter((x) => x.group === groupId);
 }
 
-/** Menu label for a content type: English in `en` mode, Chinese otherwise. */
+/**
+ * Menu label for a content type.
+ *
+ * The server already resolved `label` for the active language (it knows the
+ * side tables), so it wins; `en`/`zh` are only a fallback for an older server.
+ */
 function gwTypeLabel(type) {
   if (!type) return '';
-  return gwLang() === 'en' ? (type.en || type.label || type.zh) : (type.zh || type.label || type.en);
+  if (type.label) return type.label;
+  return gwLang() === 'zh' ? (type.zh || type.en || '') : (type.en || type.zh || '');
 }
 
 /** Monarch-power label for the active language ('' when unknown). */
@@ -229,6 +237,14 @@ const GW_LINK_TYPES = {
   // (`add_ruler_personality`, `has_ruler_personality`), so that is where the chip
   // points. Leader traits are browsed from their own tab.
   personality: 'ruler_traits',
+  ruler_trait: 'ruler_traits',
+  leader_trait: 'leader_traits',
+  // History: a battle belongs to a war, and a leader nested in a ruler's block
+  // is indexed under its own id.
+  war: 'countries',
+  ruler: 'monarchs',
+  leader: 'leaders',
+  battle: 'battles',
   modifier: 'modifiers',
   scripted_effect: 'scripted',
   scripted_trigger: 'scripted',
@@ -517,6 +533,10 @@ function gwListItem(it) {
   if (meta.slot) tags.push(t('槽位 {n}', { n: meta.slot }));
   if (meta.slots) tags.push(t('槽位 {n}', { n: meta.slots }));
   if (meta.missionCount) tags.push(t('{n} 个任务', { n: fmtNum(meta.missionCount) }));
+  // A history item has no localisation key at all, so the row says where it
+  // comes from instead: `MNG · 1368.1.23` for a ruler, `靖难之役 · 1399.8.24`
+  // for a battle.
+  if (meta.note) tags.push(meta.note);
   if (tags.length) {
     node.appendChild(el('div', { class: 'gw-item-tags' }, tags.map((tag) => el('span', { class: 'gw-tag', text: tag }))));
   }
@@ -581,6 +601,10 @@ function gwRenderCard(card) {
     case 'national_ideas': return gwIdeaCard(card);
     case 'advisors': return gwAdvisorCard(card);
     case 'policies': return gwPolicyCard(card);
+    case 'monarchs': return gwRulerCard(card);
+    case 'hist_advisors': return gwHistAdvisorCard(card);
+    case 'leaders': return gwLeaderCard(card);
+    case 'battles': return gwBattleCard(card);
     default: return gwGenericCard(card);
   }
 }
@@ -868,6 +892,299 @@ function gwPolicyCard(card) {
 }
 
 /* ------------------------------------------------------------------ *
+ * History: rulers, leaders and battles
+ *
+ * A ruler and a leader are the same drawing — a name, the day the game applies
+ * the block, the country, a row of pips and the block's settings — so they
+ * share one renderer. A battle is two sides plus the field the game reads from
+ * the block. Nothing here computes an outcome: `result` is a "show result"
+ * switch in the game, and the only outcome the files record is the losses.
+ * ------------------------------------------------------------------ */
+
+/** A row of pips, the way the game prints a ruler's or a leader's skills. */
+function gwPips(pips, label) {
+  if (!pips || !pips.rows || !pips.rows.length) return null;
+  const box = el('div', { class: 'gw-pips' });
+  if (label) box.appendChild(el('div', { class: 'gw-sub', text: label }));
+  for (const r of pips.rows) {
+    const dots = el('span', { class: 'gw-pip-dots' });
+    for (let i = 1; i <= pips.max; i++) {
+      dots.appendChild(el('span', {
+        class: 'gw-pip gw-pip-' + (r.cls || 'x') + (i <= r.value ? ' on' : ''),
+      }));
+    }
+    const row = el('div', { class: 'gw-pip-row' }, [
+      el('span', { class: 'gw-pip-label', text: r.label }),
+      dots,
+      el('span', { class: 'gw-pip-val', text: String(r.value) }),
+    ]);
+    row.title = t('{label}：{value} / {max}', { label: r.label, value: r.value, max: pips.max });
+    box.appendChild(row);
+  }
+  box.appendChild(el('div', { class: 'gw-note', text: t('每个圆点代表 1 点，满 {max} 点。', { max: pips.max }) }));
+  return box;
+}
+
+/** The shared heading of a person and of a battle. */
+function gwPersonHead(card) {
+  const head = el('div', { class: 'gw-gen-head' });
+  const title = card.name
+    ? gwRich(card.name)
+    : (card.synthName ? document.createTextNode(gwPick(card.synthName)) : gwMissing(card.id));
+  head.appendChild(el('h3', { class: 'gw-gen-title' }, [title]));
+  if (card.kindLabel) head.appendChild(el('span', { class: 'gw-flag', text: card.kindLabel }));
+  if (card.tag) {
+    const chip = el('span', { class: 'gw-chip gw-link', text: card.countryName || card.tag });
+    chip.title = t('{kind}：{id}（点击查看）', { kind: 'tag', id: card.tag });
+    chip.addEventListener('click', () => gwFollow({ kind: 'tag', id: card.tag }));
+    head.appendChild(chip);
+  }
+  if (card.date) head.appendChild(el('span', { class: 'gw-flag gw-flag-date', text: card.date }));
+  return head;
+}
+
+/** The cross-reference chips every card can carry. */
+function gwLinksRow(links) {
+  const row = el('div', { class: 'gw-links' }, [el('span', { class: 'gw-links-label', text: t('关联内容：') })]);
+  for (const l of links || []) {
+    if (!l || !l.id) continue;
+    const chip = el('span', { class: 'gw-chip gw-link', text: l.label || l.id });
+    chip.title = t('{kind}：{id}（点击查看）', { kind: l.kind, id: l.id });
+    chip.addEventListener('click', () => gwFollow({ kind: l.kind, id: l.id }));
+    row.appendChild(chip);
+  }
+  return row;
+}
+
+/**
+ * The card's groups, with the long "same dated block" list folded away.
+ *
+ * A history file's dated block is often dozens of effects long — the day a
+ * dynasty changes is the day a country's whole setup is rewritten — and the
+ * person is what the reader opened the card for, so the rest starts collapsed.
+ */
+function gwCardGroups(card) {
+  const frag = document.createDocumentFragment();
+  for (const g of card.groups || []) {
+    if (g.key === 'dated' && (g.lines || []).length > GW_TIMELINE_CAP) {
+      frag.appendChild(gwCollapsible(g.label || g.key, gwLines(g.lines), false));
+      continue;
+    }
+    frag.appendChild(gwGroupBlock(g));
+  }
+  return frag;
+}
+
+/** The leader block nested inside a ruler's: the same person, in the field. */
+function gwSubLeader(leader) {
+  const box = el('div', { class: 'gw-gblock gw-role-subcard' });
+  const head = el('div', { class: 'gw-gen-head' });
+  head.appendChild(el('h4', { class: 'gw-gen-title' }, [
+    leader.name ? gwRich(leader.name) : document.createTextNode(leader.id || ''),
+  ]));
+  if (leader.kindLabel) head.appendChild(el('span', { class: 'gw-flag', text: leader.kindLabel }));
+  if (leader.label) head.appendChild(el('span', { class: 'gw-sub-note', text: leader.label }));
+  if (leader.link) {
+    const chip = el('span', { class: 'gw-chip gw-link', text: t('打开将领条目') });
+    chip.title = t('{kind}：{id}（点击查看）', { kind: leader.link.kind, id: leader.link.id });
+    chip.addEventListener('click', () => gwFollow(leader.link));
+    head.appendChild(chip);
+  }
+  box.appendChild(head);
+  const pips = gwPips(leader.pips, null);
+  if (pips) box.appendChild(pips);
+  if (leader.fields && leader.fields.length) box.appendChild(gwFieldTable(leader.fields));
+  if (leader.traits && leader.traits.length) box.appendChild(gwItemList(leader.traits));
+  return box;
+}
+
+/** A ruler or a leader: identical layout, different pip semantics. */
+function gwPersonCard(card, pipsLabel, cls) {
+  const win = el('div', { class: 'gw-win gw-generic ' + cls });
+  win.appendChild(gwPersonHead(card));
+  const pips = gwPips(card.pips, pipsLabel);
+  if (pips) win.appendChild(pips);
+  if (card.fields && card.fields.length) win.appendChild(gwFieldTable(card.fields));
+  if (card.leader) win.appendChild(gwSubLeader(card.leader));
+  if (card.links && card.links.length) win.appendChild(gwLinksRow(card.links));
+  win.appendChild(gwCardGroups(card));
+  return win;
+}
+
+function gwRulerCard(card) {
+  return gwPersonCard(card, t('君主能力'), 'gw-ruler');
+}
+
+function gwLeaderCard(card) {
+  return gwPersonCard(card, t('将领能力'), 'gw-leader');
+}
+
+/**
+ * A *historical* advisor from `history/advisors/*.txt`: the same shape as a
+ * ruler — name, skills, settings — with the type of advice he gives beside his
+ * name. (The `common/advisortypes` card above is a different thing: an advisor
+ * *definition*, not a person.)
+ */
+function gwHistAdvisorCard(card) {
+  const win = el('div', { class: 'gw-win gw-generic gw-advisor' });
+  win.appendChild(gwPersonHead(card));
+  if (card.subKind) {
+    const row = el('div', { class: 'gw-advisor-kind' }, [
+      el('span', { class: 'gw-sub-note', text: t('顾问类型') }),
+      el('span', { class: 'gw-chip gw-kind-chip' }, [gwRich(card.subKind)]),
+    ]);
+    win.appendChild(row);
+  }
+  const pips = gwPips(card.pips, t('顾问等级'));
+  if (pips) win.appendChild(pips);
+  if (card.fields && card.fields.length) win.appendChild(gwFieldTable(card.fields));
+  if (card.links && card.links.length) win.appendChild(gwLinksRow(card.links));
+  win.appendChild(gwCardGroups(card));
+  return win;
+}
+
+/** One army in a battle: who it was, who led it, what it had, what it lost. */
+function gwBattleSide(s, outcome, lossNote) {
+  const cls = ['gw-side', 'gw-side-' + s.role];
+  if (outcome && outcome.winner) cls.push(outcome.winner === s.role ? 'gw-side-won' : 'gw-side-lost');
+  const box = el('div', { class: cls.join(' ') });
+  const head = el('div', { class: 'gw-side-head' }, [
+    el('span', { class: 'gw-side-role', text: s.label }),
+  ]);
+  if (s.tag) {
+    const chip = el('span', { class: 'gw-chip gw-link', text: s.countryName || s.tag });
+    chip.title = t('{kind}：{id}（点击查看）', { kind: 'tag', id: s.tag });
+    chip.addEventListener('click', () => gwFollow({ kind: 'tag', id: s.tag }));
+    head.appendChild(chip);
+  }
+  box.appendChild(head);
+
+  const cmd = el('div', { class: 'gw-side-cmd' }, [
+    el('span', { class: 'gw-side-cmd-label', text: t('指挥官') }),
+  ]);
+  if (s.commander) cmd.appendChild(el('span', { class: 'gw-side-cmd-name' }, [gwRich(s.commander)]));
+  else cmd.appendChild(el('span', { class: 'gw-missing', text: t('未记载') }));
+  box.appendChild(cmd);
+
+  const table = el('table', { class: 'wikitable gw-side-table' });
+  const tbody = el('tbody');
+  for (const tr of s.troops || []) {
+    tbody.appendChild(el('tr', {}, [
+      el('th', { text: tr.label }),
+      el('td', { class: 'gw-num', text: fmtNum(tr.value) }),
+    ]));
+  }
+  if (s.total) {
+    tbody.appendChild(el('tr', { class: 'gw-side-total' }, [
+      el('th', { text: t('合计') }),
+      el('td', { class: 'gw-num', text: fmtNum(s.total) }),
+    ]));
+  }
+  if (s.losses !== null && s.losses !== undefined) {
+    // `losses` is already a percentage of that side's strength — the vanilla
+    // files say so in a trailing `# percent` comment — so it is printed as one
+    // and never divided by the side's head count a second time.
+    tbody.appendChild(el('tr', { class: 'gw-side-loss' }, [
+      el('th', { text: t('损失'), title: lossNote || '' }),
+      el('td', { class: 'gw-num', text: fmtNum(s.losses) + '%' }),
+    ]));
+  }
+  for (const f of s.extra || []) {
+    tbody.appendChild(el('tr', {}, [
+      el('th', { text: f.label || f.key }),
+      el('td', { class: f.tone === 'num' ? 'gw-num' : '', text: String(f.value) }),
+    ]));
+  }
+  table.appendChild(tbody);
+  box.appendChild(table);
+  return box;
+}
+
+/** A two-column label/value table whose values are nodes, not strings. */
+function gwMetaTable(rows) {
+  const table = el('table', { class: 'wikitable gw-fields-table gw-meta-table' });
+  const tbody = el('tbody');
+  for (const r of rows) {
+    if (!r || !r.node) continue;
+    tbody.appendChild(el('tr', {}, [el('th', { text: r.label }), el('td', {}, [r.node])]));
+  }
+  table.appendChild(tbody);
+  return table;
+}
+
+/** Fill a server-resolved template: `{n1}`, `{tag2}`… Numbers arrive formatted. */
+function gwFill(tpl, vars) {
+  return String(tpl || '').replace(/\{(\w+)\}/g, (m, k) => (
+    vars && vars[k] !== undefined ? String(vars[k]) : m
+  ));
+}
+
+function gwBattleCard(card) {
+  const win = el('div', { class: 'gw-win gw-generic gw-battle' });
+  win.appendChild(gwPersonHead(card));
+
+  // Who won, and the game's own "N soldiers attacked M soldiers" line. The
+  // sentence is a template from the server so each language can put the number
+  // and the country where it belongs; the numbers are formatted here.
+  if (card.outcome || card.line || card.noTroops) {
+    const box = el('div', {
+      class: 'gw-outcome' + (card.outcome ? ' gw-outcome-' + card.outcome.winner : ''),
+    });
+    if (card.outcome) {
+      box.appendChild(el('span', {
+        class: 'gw-outcome-badge',
+        text: card.outcome.label,
+        title: card.outcomeLabel || '',
+      }));
+    }
+    if (card.line) {
+      box.appendChild(el('p', {
+        class: 'gw-outcome-line',
+        text: gwFill(card.line.tpl, Object.assign({}, card.line.vars, {
+          n1: fmtNum(card.line.vars.n1),
+          n2: fmtNum(card.line.vars.n2),
+        })),
+      }));
+    } else if (card.noTroops) {
+      box.appendChild(el('p', { class: 'gw-outcome-line gw-outcome-none', text: card.noTroops }));
+    }
+    win.appendChild(box);
+  }
+
+  // Where and in which war, as the same label/value table every other card
+  // uses — the colon is then part of the layout rather than a string that has
+  // to be translated a second time in every language.
+  const meta = [];
+  if (card.location) {
+    meta.push({
+      label: t('战场'),
+      node: el('span', {}, [
+        el('span', { class: 'gw-battle-place', text: card.location.name }),
+        card.location.name === card.location.id
+          ? null
+          : el('code', { class: 'gw-chip-id', text: card.location.id }),
+      ]),
+    });
+  }
+  if (card.war) {
+    const chip = el('span', { class: 'gw-chip gw-link', text: card.war.name });
+    chip.title = t('{kind}：{id}（点击查看）', { kind: 'war', id: card.war.id });
+    chip.addEventListener('click', () => gwFollow({ kind: 'war', id: card.war.id }));
+    meta.push({ label: t('所属战争'), node: chip });
+  }
+  if (meta.length) win.appendChild(gwMetaTable(meta));
+
+  const sides = el('div', { class: 'gw-battle-sides' });
+  for (const s of card.sides || []) if (s) sides.appendChild(gwBattleSide(s, card.outcome, card.lossNote));
+  win.appendChild(sides);
+
+  if (card.fields && card.fields.length) win.appendChild(gwFieldTable(card.fields));
+  if (card.links && card.links.length) win.appendChild(gwLinksRow(card.links));
+  win.appendChild(gwCardGroups(card));
+  return win;
+}
+
+/* ------------------------------------------------------------------ *
  * Generic card
  *
  * Everything the server does not model bespoke arrives as a flat list of
@@ -1083,16 +1400,7 @@ function gwGenericCard(card) {
   else if (card.descKey) win.appendChild(el('p', { class: 'gw-gen-desc' }, [gwMissing(card.descKey)]));
 
   // --- cross-references the script names
-  if (card.links && card.links.length) {
-    const row = el('div', { class: 'gw-links' }, [el('span', { class: 'gw-links-label', text: t('关联内容：') })]);
-    for (const l of card.links) {
-      const chip = el('span', { class: 'gw-chip gw-link', text: l.label || l.id });
-      chip.title = t('{kind}：{id}（点击查看）', { kind: l.kind, id: l.id });
-      chip.addEventListener('click', () => gwFollow({ kind: l.kind, id: l.id }));
-      row.appendChild(chip);
-    }
-    win.appendChild(row);
-  }
+  if (card.links && card.links.length) win.appendChild(gwLinksRow(card.links));
 
   // --- unit stat table
   if (card.stats && card.stats.length) win.appendChild(gwUnitStats(card.stats));

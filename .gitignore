@@ -9,6 +9,15 @@ node_modules/
 dist/
 build/
 
+# --- translation workbench (scratch, regenerated on demand) -------------
+# tools/build-langs.js cuts the extracted strings into translator-sized chunks
+# here and reads the translations back from `_work/out` and `_work/delta`. The
+# merged result is what ships (`src/data/locales/<lang>.json`,
+# `frontend.<lang>.json` and the generated `web/lang/<lang>.js`), so the
+# workbench itself is scratch: `split` re-cuts it, `delta` re-issues only the
+# strings a language is still missing. See docs/TRANSLATING.md.
+src/data/locales/_work/
+
 # --- third-party content that must never enter the repository ----------
 # Chinese term tables scraped out of the offline wiki. That wiki is licensed
 # CC BY-NC-SA 4.0 (non-commercial), so an extraction of it cannot be shipped

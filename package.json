@@ -1,7 +1,7 @@
 {
   "name": "eu4-mod-viewer",
-  "version": "1.0.0",
-  "description": "A local, zero-dependency viewer for Europa Universalis IV mods: browse every change a mod makes, and read events, decisions, ideas, advisors and policies in the format the game itself displays them.",
+  "version": "1.1.0",
+  "description": "A local, zero-dependency viewer for Europa Universalis IV mods: browse every change a mod makes, and read 35 kinds of content — events, decisions, missions, countries, historical rulers, advisors, leaders and battles, and more — in the format the game itself displays them. The interface speaks nine languages.",
   "keywords": [
     "eu4",
     "europa-universalis",
@@ -34,9 +34,17 @@
     "test:i18n": "node tools/test-i18n-backend.js",
     "test:mods": "node tools/test-all-mods.js",
     "test:fidelity": "node tools/test-fidelity.js",
+    "test:content-types": "node tools/test-content-types.js",
+    "test:history": "node tools/test-history.js",
     "verify:game": "node tools/verify-game.js",
+    "verify:i18n": "node tools/verify-i18n.js",
     "verify:wiki": "node tools/verify-wiki.js",
-    "audit:i18n": "node tools/i18n-audit.js extract"
+    "langs:extract": "node tools/i18n-extract.js",
+    "langs:delta": "node tools/build-langs.js delta",
+    "langs:check": "node tools/build-langs.js check",
+    "audit:i18n": "node tools/i18n-audit.js extract",
+    "check:css": "node tools/check-css.js",
+    "check:links": "node tools/check-doc-links.js"
   },
   "dependencies": {},
   "devDependencies": {},

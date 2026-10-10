@@ -36,7 +36,13 @@ function parseArgs(argv) {
     else if (a === '--timeout') out.timeoutMin = Number(argv[++i]) || 20;
     else if (a === '--repo') out.repo = argv[++i] || out.repo;
     else if (a === '--profile') out.profile = argv[++i] || undefined;
+    else if (a === '--proxy') out.proxy = argv[++i] || undefined;
   }
+  // A proxy is often the only way github.com loads: the system proxy can be
+  // switched off while the client is still listening on 127.0.0.1:7890, and a
+  // throwaway Chrome profile has none of your extensions to fall back on. Set
+  // it explicitly and the token page comes up.
+  if (!out.proxy && process.env.EU4MV_PROXY) out.proxy = process.env.EU4MV_PROXY;
   return out;
 }
 
@@ -98,8 +104,14 @@ async function main() {
     encodeURIComponent('eu4-mod-viewer upload (temporary)');
 
   console.log('启动一个我自己能控制的 Chrome 窗口（全新独立配置，不碰你现有的窗口和数据）...');
-  const L = await browser.launch({ port: 9333, url: openUrl, profile: args.profile });
-  console.log('  chrome pid ' + L.proc.pid + '  profile ' + L.profile + '\n');
+  const L = await browser.launch({
+    port: 9333,
+    url: openUrl,
+    profile: args.profile,
+    extraArgs: args.proxy ? ['--proxy-server=' + args.proxy] : undefined
+  });
+  console.log('  chrome pid ' + L.proc.pid + '  profile ' + L.profile +
+    (args.proxy ? '  proxy ' + args.proxy : '') + '\n');
 
   const page = await browser.attachToPage(9333);
   await page.send('Page.enable');

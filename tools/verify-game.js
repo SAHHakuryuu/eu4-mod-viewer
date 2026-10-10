@@ -45,6 +45,13 @@ const TARGETS = [
   { type: 'disasters', id: 'bm_dongnan_corruption_disaster', file: 'screenshot-game-disasters.png', label: '灾难' },
   // --- country & government
   { type: 'countries', id: 'ABQ', file: 'screenshot-game-countries.png', label: '国家' },
+  // The four history types: a ruler with a nested leader, a leader with traits,
+  // a battle whose two sides carry troops and losses, and an advisor with a
+  // type, a skill and a province.
+  { type: 'monarchs', id: 'MNG@1368.1.23@monarch', file: 'screenshot-game-monarchs.png', label: '历史君主' },
+  { type: 'hist_advisors', id: 'ChinaKoreaJapan@1', file: 'screenshot-game-hist-advisors.png', label: '历史顾问' },
+  { type: 'leaders', id: 'AL2@1402.6.6@monarch.leader', file: 'screenshot-game-leaders.png', label: '历史将领' },
+  { type: 'battles', id: 'JingNanWar@1399.8.24#1', file: 'screenshot-game-battles.png', label: '历史战役' },
   { type: 'government', id: 'celestial_empire', file: 'screenshot-game-government.png', label: '政府改革' },
   { type: 'ruler_traits', id: 'CE_fatuity_personality', file: 'screenshot-game-ruler-traits.png', label: '君主特质' },
   { type: 'parliament', id: 'charter_trade_companies', file: 'screenshot-game-parliament.png', label: '议会与法令' },
@@ -384,6 +391,53 @@ function check(label, ok, detail) {
           loaded > 0,
           `loaded=${loaded}/${info.missionFrames}`,
         );
+      }
+      // A battle has to read the way the game's war screen reads: who won, the
+      // "N soldiers attacked M soldiers" line, and losses as a percentage.
+      if (t.type === 'battles') {
+        const battle = await cdp.eval(`(function(){
+          var badge = document.querySelector('.gw-outcome-badge');
+          var line = document.querySelector('.gw-outcome-line');
+          var loss = document.querySelector('.gw-side-loss td');
+          return {
+            outcome: badge ? badge.textContent : null,
+            line: line ? line.textContent : null,
+            won: document.querySelectorAll('.gw-side-won').length,
+            lost: document.querySelectorAll('.gw-side-lost').length,
+            loss: loss ? loss.textContent : null,
+            units: Array.prototype.map.call(document.querySelectorAll('.gw-side-table th'), function(th){return th.textContent;}).join(',')
+          };
+        })()`);
+        console.log('  battle: ' + JSON.stringify(battle));
+        check(`${t.label}: says which side won`, /获胜/.test(String(battle.outcome || '')), String(battle.outcome));
+        check(`${t.label}: marks exactly one winner and one loser`,
+          battle.won === 1 && battle.lost === 1, `won=${battle.won} lost=${battle.lost}`);
+        check(`${t.label}: prints the game's attack line`,
+          /攻击了/.test(String(battle.line || '')) && /\d\d/.test(String(battle.line || '')),
+          String(battle.line));
+        check(`${t.label}: losses are a percentage of that side`,
+          /%$/.test(String(battle.loss || '').trim()), String(battle.loss));
+        check(`${t.label}: unit rows are counts, not shares`,
+          /步兵/.test(battle.units) && !/步兵比例/.test(battle.units), battle.units);
+      }
+      if (t.type === 'hist_advisors') {
+        const adv = await cdp.eval(`(function(){
+          return {
+            kind: (document.querySelector('.gw-advisor-kind .gw-chip')||{}).textContent || null,
+            kindLabel: (document.querySelector('.gw-advisor-kind .gw-sub-note')||{}).textContent || null,
+            pips: document.querySelectorAll('.gw-pips .gw-pip-row').length,
+            skill: (document.querySelector('.gw-pip-val')||{}).textContent || null,
+            fields: Array.prototype.map.call(document.querySelectorAll('.gw-fields-table th'), function(th){return th.textContent;}).join(',')
+          };
+        })()`);
+        console.log('  advisor: ' + JSON.stringify(adv));
+        check(`${t.label}: names the type of advice`,
+          !!adv.kind && !!adv.kindLabel, `${adv.kindLabel}=${adv.kind}`);
+        check(`${t.label}: draws one skill row`, adv.pips === 1 && /^[1-3]$/.test(adv.skill),
+          `rows=${adv.pips} skill=${adv.skill}`);
+        check(`${t.label}: carries his id, province and dates`,
+          /顾问编号/.test(adv.fields) && /地点/.test(adv.fields) && /可用日期/.test(adv.fields),
+          adv.fields);
       }
       if (t.type === 'events') {
         // The picture is streamed as a decoded PNG, so give it a moment.

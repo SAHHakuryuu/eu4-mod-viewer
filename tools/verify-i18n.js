@@ -185,9 +185,106 @@ function chromeProbe(selectors) {
     console.log('  ' + JSON.stringify(zhChrome));
     check('Chinese search button', zhChrome['#search-btn'].text === '搜索', zhChrome['#search-btn'].text);
     check('Chinese sidebar heading', zhChrome['.panel-title'].text === '模组列表', zhChrome['.panel-title'].text);
-    check('language button offers English', zhChrome['#settings-btn'] && /English/.test(
-      await cdp.eval("document.querySelector('#lang-btn').textContent")),
-      await cdp.eval("document.querySelector('#lang-btn').textContent"));
+    // The picker is a `<select>` whose options are the language's own name in
+    // its own script — the one string that must never be translated.
+    const picker = await cdp.eval(`(function(){
+      var s = document.querySelector('#lang-select');
+      if (!s) return null;
+      return {
+        value: s.value,
+        values: Array.prototype.map.call(s.options, function(o){ return o.value; }),
+        names: Array.prototype.map.call(s.options, function(o){ return o.textContent; })
+      };
+    })()`);
+    check('header language picker exists', !!picker);
+    check('picker offers nine languages',
+      !!picker && picker.values.length === 9, picker ? picker.values.join(',') : '');
+    check('picker offers every code the UI knows',
+      !!picker && ['zh', 'en', 'fr', 'de', 'es', 'pt', 'ru', 'ja', 'ko'].every((l) => picker.values.includes(l)),
+      picker ? picker.values.join(',') : '');
+    check('picker names each language in its own script',
+      !!picker && ['中文', 'English', 'Français', 'Deutsch', 'Español', 'Português', 'Русский', '日本語', '한국어']
+        .every((n) => picker.names.includes(n)),
+      picker ? picker.names.join(',') : '');
+    check('picker shows the active language', !!picker && picker.value === 'zh', picker ? picker.value : '');
+
+    // The picker sits on the navy header, so it must not inherit the header's
+    // near-white text. It once did, while its background resolved
+    // `var(--panel, #fff)` to #fff -- a white box with white text (1.0:1) that
+    // read as an empty control. Assert the contrast ratio, not the stylesheet.
+    const pickerStyle = await cdp.eval(`(function(){
+      function parse(c){
+        var m = c.match(/[\\d.]+/g).map(Number);
+        return { rgb: m.slice(0, 3), a: m.length > 3 ? m[3] : 1 };
+      }
+      function chan(v){ v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+      function lum(rgb){ return 0.2126*chan(rgb[0]) + 0.7152*chan(rgb[1]) + 0.0722*chan(rgb[2]); }
+      function ratio(fg, bg){
+        var f = parse(fg), b = parse(bg);
+        var mix = [0, 1, 2].map(function(i){ return f.rgb[i]*f.a + b.rgb[i]*(1-f.a); });
+        var hi = Math.max(lum(mix), lum(b.rgb)), lo = Math.min(lum(mix), lum(b.rgb));
+        return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
+      }
+      var s = document.querySelector('#lang-select');
+      var cs = getComputedStyle(s);
+      var o = s.options[s.selectedIndex];
+      var oc = o ? getComputedStyle(o) : null;
+      var active = s.value;
+      var names = Array.prototype.map.call(s.options, function(op){
+        s.value = op.value;
+        return { code: op.value, name: op.textContent, fits: s.scrollWidth <= s.clientWidth };
+      });
+      // Moving value around measures each option; put the control back so the
+      // page (and the screenshot taken below) still shows the active language.
+      s.value = active;
+      return {
+        alpha: parse(cs.backgroundColor).a,
+        contrast: ratio(cs.color, cs.backgroundColor),
+        optionContrast: oc ? ratio(oc.color, oc.backgroundColor) : 0,
+        caps: cs.fontVariantCaps,
+        transform: cs.textTransform,
+        names: names,
+        restored: s.value,
+        width: Math.round(s.getBoundingClientRect().width)
+      };
+    })()`);
+    console.log('  picker style ' + JSON.stringify(pickerStyle));
+    check('picker background is opaque', pickerStyle.alpha === 1, `alpha=${pickerStyle.alpha}`);
+    check('picker text is readable on its own background', pickerStyle.contrast >= 4.5,
+      `contrast ${pickerStyle.contrast}:1`);
+    check('picker dropdown rows are readable', pickerStyle.optionContrast >= 4.5,
+      `contrast ${pickerStyle.optionContrast}:1`);
+    // Language names stay in their own script and their own casing: small-caps
+    // renders `English` as `ENGLISH` while leaving `中文` alone.
+    check('picker does not restyle the language names',
+      pickerStyle.caps === 'normal' && pickerStyle.transform === 'none',
+      `caps=${pickerStyle.caps} transform=${pickerStyle.transform}`);
+    const clipped = pickerStyle.names.filter((n) => !n.fits).map((n) => n.name);
+    check('every language name fits without clipping', clipped.length === 0,
+      clipped.length ? clipped.join(',') : pickerStyle.names.map((n) => n.name).join(' '));
+    check('picker still shows the active language after probing', pickerStyle.restored === 'zh',
+      pickerStyle.restored);
+
+    // A close-up of the control, so the documentation can show the fix and a
+    // future contrast regression is obvious at a glance rather than measured.
+    await cdp.eval('window.scrollTo(0, 0)');
+    await sleep(300);
+    const pr = await cdp.eval(`(function(){
+      var r = document.querySelector('#lang-select').getBoundingClientRect();
+      return { x: r.left, y: r.top, w: r.width, h: r.height };
+    })()`);
+    const headerClip = {
+      x: Math.max(0, pr.x - 60),
+      y: 0,
+      width: Math.min(1400, pr.w + 120),
+      height: pr.y + pr.h + 14,
+      scale: 3,
+    };
+    const headerPng = await cdp.send('Page.captureScreenshot', { format: 'png', clip: headerClip });
+    fs.writeFileSync(path.join(DOCS, 'screenshot-header-after.png'), Buffer.from(headerPng.data, 'base64'));
+    const headerSize = fs.statSync(path.join(DOCS, 'screenshot-header-after.png')).size;
+    console.log(`  shot  screenshot-header-after.png  ${Math.round(headerClip.width)}x${Math.round(headerClip.height)}  ${(headerSize / 1024).toFixed(0)} KB`);
+    check('screenshot screenshot-header-after.png written', headerSize > 8000, `${headerSize} bytes`);
 
     // Capture the Chinese settings dialog too, so the docs show both languages.
     await cdp.eval("document.querySelector('#settings-btn').click()");
@@ -203,15 +300,14 @@ function chromeProbe(selectors) {
     await cdp.eval("var c=document.querySelector('.set-close'); if(c) c.click();");
     await sleep(300);
 
-    // ---- switch to English via the header button -------------------------
+    // ---- switch to English via the header picker -------------------------
     console.log('\n--- 2. switch to English ---');
-    await cdp.eval("document.querySelector('#lang-btn').click()");
-    for (let i = 0; i < 40; i++) {
-      if (await cdp.eval("I18N.getLang() === 'en'")) break;
-      await sleep(250);
-    }
+    await setLangVia(cdp, 'en');
     check('language switched to en', (await cdp.eval('I18N.getLang()')) === 'en');
-    check('html lang attribute updated', (await cdp.eval('document.documentElement.lang')) === 'en');
+    // `<html lang>` carries the full BCP-47 locale, because that is what a
+    // browser needs for hyphenation and font fallback (`en-US`, `ja-JP`, …).
+    check('html lang attribute updated', (await cdp.eval('document.documentElement.lang')) === 'en-US',
+      await cdp.eval('document.documentElement.lang'));
     check('document.title translated',
       (await cdp.eval('document.title')) === 'EU4 Mod Viewer',
       await cdp.eval('document.title'));
@@ -253,6 +349,35 @@ function chromeProbe(selectors) {
       urls.length > 0 && urls.every((u) => /[?&]lang=en/.test(u)),
       urls.join(' , '));
 
+    // ---- every other language -------------------------------------------
+    // Each one must switch from the picker, land in `I18N.getLang()`, move
+    // <html lang> to the right locale and translate the chrome. Japanese and
+    // Korean legitimately use Han characters, so "no Chinese left" applies to
+    // the Latin and Cyrillic languages only.
+    console.log('\n--- 2b. the other seven languages ---');
+    const LOCALE = {
+      fr: 'fr-FR', de: 'de-DE', es: 'es-ES', pt: 'pt-PT', ru: 'ru-RU', ja: 'ja-JP', ko: 'ko-KR',
+    };
+    const HAN_LANGS = new Set(['ja', 'ko']);
+    for (const code of ['fr', 'de', 'es', 'pt', 'ru', 'ja', 'ko']) {
+      await setLangVia(cdp, code);
+      const got = await cdp.eval('I18N.getLang()');
+      check(`${code}: switched`, got === code, `lang=${got}`);
+      const htmlLang = await cdp.eval('document.documentElement.lang');
+      check(`${code}: <html lang> follows`, htmlLang === LOCALE[code], htmlLang);
+      const chrome = await cdp.eval(chromeProbe(CHROME_SELECTORS));
+      const left = [];
+      for (const [sel, label] of CHROME_SELECTORS) {
+        const rec = chrome[sel];
+        if (!rec || rec.missing) { left.push(`${label} missing`); continue; }
+        if (!HAN_LANGS.has(code) && CJK.test(rec.text)) left.push(`${label}="${rec.text}"`);
+      }
+      check(`${code}: chrome is translated`, left.length === 0, left.join(' | '));
+      console.log(`  ${code}  search="${chrome['#search-btn'].text}"  panel="${chrome['.panel-title'].text}"`);
+    }
+    await setLangVia(cdp, 'en');
+    check('back to English for the API assertions', (await cdp.eval('I18N.getLang()')) === 'en');
+
     // ---- reload keeps the choice ----------------------------------------
     console.log('\n--- 3. persistence across reload ---');
     await cdp.send('Page.reload', { ignoreCache: false });
@@ -277,8 +402,13 @@ function chromeProbe(selectors) {
     const setInfo = await cdp.eval(`(function(){
       var d = document.querySelector('.set-dialog');
       var txt = d ? d.innerText : '';
+      // The language picker's options are the language's own name in its own
+      // script — the one string that must never be translated — so an <option>
+      // is not a leak. Everything else in the dialog must be English.
       var all = d ? Array.prototype.map.call(d.querySelectorAll('*'), function(n){
-        return n.children.length ? '' : (n.innerText || n.textContent || '');
+        if (n.children.length) return '';
+        if (n.closest && n.closest('select')) return '';
+        return n.innerText || n.textContent || '';
       }).filter(function(s){ return /[\\u4e00-\\u9fff\\u3000-\\u303f\\uff00-\\uffef]/.test(s); }) : [];
       return {
         text: txt.slice(0, 400),
@@ -477,6 +607,26 @@ function chromeProbe(selectors) {
   console.log(`\nI18N / SETTINGS TEST: ${pass}/${pass + fail} checks passed`);
   if (fail) process.exit(1);
 })().catch((e) => { console.error('FAILED:', e.message); process.exit(1); });
+
+/**
+ * Choose a language from the header picker, the way a reader does, and wait for
+ * the shell to re-render in it.
+ */
+async function setLangVia(cdp, code) {
+  const ok = await cdp.eval(`(function(){
+    var s = document.querySelector('#lang-select');
+    if (!s) return false;
+    s.value = ${JSON.stringify(code)};
+    s.dispatchEvent(new Event('change'));
+    return true;
+  })()`);
+  if (!ok) throw new Error('#lang-select is missing');
+  for (let i = 0; i < 80; i++) {
+    const ready = await cdp.eval(`I18N.getLang() === ${JSON.stringify(code)} && !!document.querySelector('.cat-grid')`);
+    if (ready) return;
+    await sleep(200);
+  }
+}
 
 /** Snapshot the "related wiki pages" block. */
 function wikiProbe(cdp) {

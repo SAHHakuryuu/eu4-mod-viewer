@@ -22,8 +22,8 @@ The repository is ready with these files:
 | `package.json` | name, version, `npm start` / `npm test` scripts, placeholder repository URL |
 | `config.example.json` | settings template (the real `config.json` is never uploaded) |
 | `README.md` / `README.en.md` | badges, screenshots, the bilingual write-up |
-| `docs/` | screenshots + localisation key conventions + this file |
-| `src/` `web/` `tools/` | all the source and the tests |
+| `docs/` | screenshots + localisation key conventions + this file + [GITHUB-UPDATE.en.md](GITHUB-UPDATE.en.md) (pushing updates) |
+| `src/` `web/` `tools/` | all the source and the tests, including `tools/gh-*.js` (the no-git publish scripts) |
 
 **Never uploaded**: `config.json` (your UI language, wiki folder, mod paths), `tools/dds-out/`,
 `tools/out/`, any `*.tmp`, and **any term table extracted from the offline wiki** (`src/data/` holds
@@ -54,8 +54,8 @@ Good for: getting the code up there without planning to change it often.
 
    > ⚠️ The web uploader **cannot take folders** — files only, one at a time — and **empty
    > directories are not preserved**. This project does not have many directories
-   > (`src/` `src/codec/` `src/data/` `web/` `tools/` `docs/`), but there are 40-odd files, and
-   > dragging them by hand is tedious.
+   > (`src/` `src/codec/` `src/data/` `web/` `tools/` `docs/`), but there are 140-odd files (48 of
+   > them screenshots), and dragging them by hand is tedious.
    >
    > Zipping the project first does not help either: GitHub does not unpack an uploaded archive.
    > So **Route B** is recommended.

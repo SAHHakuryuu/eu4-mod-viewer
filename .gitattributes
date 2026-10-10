@@ -19,11 +19,12 @@
 *.woff2 binary
 *.ttf binary
 
-# Data snapshots are generated; collapse them in diffs.
-src/data/modifiers.json linguist-generated=true
-src/data/triggers.json linguist-generated=true
-src/data/effects.json linguist-generated=true
+# Hand-written term tables. These are ours; the wiki-derived tables that used to
+# live next to them in src/data/*.json are deliberately not in the repository
+# (their source wiki is CC BY-NC-SA, see .gitignore). Collapse them in diffs.
+src/data/modifiers-curated.js linguist-generated=true
+src/data/effects-curated.js linguist-generated=true
 
-# Documentation and vendored wiki data.
+# Documentation.
 *.md text
 docs/*.png binary
