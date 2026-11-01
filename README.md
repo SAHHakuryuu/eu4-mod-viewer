@@ -556,7 +556,7 @@ eu4-mod-viewer/
 │  ├─ loc-key-conventions.md  本地化键约定与各类型在游戏中的渲染顺序（含实测命中率）
 │  ├─ TRANSLATING.md          ★ 九语翻译流水线（+ TRANSLATING.en.md）
 │  ├─ GITHUB.md               上传到 GitHub 的图文步骤（+ GITHUB.en.md 英文版）
-│  ├─ GITHUB-UPDATE.md        ★ 更新仓库：没有 git 时怎么推送（+ GITHUB-UPDATE.en.md）
+│  ├─ GITHUB-UPDATE.md        ★ 更新仓库：git 日常推送 / 撤销 / 无 git 时的备用脚本（+ .en.md）
 │  └─ screenshot-*.png        截图（每类内容一张）
 └─ tools/
    ├─ launcher.js            ★ 控制台启动器（双语横幅、端口探测、自动开浏览器）
@@ -567,7 +567,7 @@ eu4-mod-viewer/
    ├─ check-doc-links.js     ★ 校验文档里的相对链接与截图都真实存在（README 的图不许挂），
    │                           并检查 markdown 形状：表格列数、反引号成对、围栏闭合
    ├─ check-css.js           ★ 校验每个 var(--x) 都有声明（页头语言框白底白字就是栽在这）
-   ├─ gh-upload.js           ★ 用 GitHub API 把工作树推成一个 commit（本机没有 git）
+   ├─ gh-upload.js           ★ 用 GitHub API 把工作树推成一个 commit（无 git 环境的备用）
    ├─ gh-login.js            ★ 引导式发布：开可控浏览器拿 token → 建仓库 → 推送 → 引导撤销
    ├─ gh-delete.js           ★ 从仓库删除指定路径（gh-upload 只能新增/覆盖）
    ├─ browser.js             上面脚本共用的 Chrome DevTools Protocol 客户端
@@ -745,8 +745,9 @@ node tools\i18n-audit.js extract  :: 列出前端所有中文字面量及其包�
 [MIT](LICENSE) © 2025–2026 SAHHakuryuu
 
 想把项目发布到 GitHub？见 **[docs/GITHUB.md](docs/GITHUB.md)**（两条路线：网页上传 / Git 命令行，
-含 `.gitattributes` 强制 CRLF 的注意事项）。**本机没有 git**、想用随项目附带的脚本直接推？
-见 **[docs/GITHUB-UPDATE.md](docs/GITHUB-UPDATE.md)**。参与开发前请读 **[CONTRIBUTING.md](CONTRIBUTING.md)**；
+含 `.gitattributes` 强制 CRLF 的注意事项）。仓库已经用 git 管起来：日常怎么提交、怎么回退，
+见 **[docs/GITHUB-UPDATE.md](docs/GITHUB-UPDATE.md)**（没有 git 的机器也有备用脚本）。
+参与开发前请读 **[CONTRIBUTING.md](CONTRIBUTING.md)**；
 每个版本改了什么见 **[CHANGELOG.md](CHANGELOG.md)**。
 
 **这个仓库里没有别人的东西**，这一点是刻意维持的：

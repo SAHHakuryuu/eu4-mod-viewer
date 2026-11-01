@@ -46,6 +46,11 @@ The Chinese edition is [CHANGELOG.md](CHANGELOG.md).
 - The side tables gain the 8 new field names (8 per language for fr/de/es/pt/ru/ja/ko): **744** backend
   and **398** frontend strings, 100% coverage, `build-langs.js check` → `CHECK: clean`. The measured
   numbers in the README and both TRANSLATING docs were updated to match.
+- **The repository is managed with git now.** With Git installed, this project directory is the
+  repository (`origin` → `SAHHakuryuu/eu4-mod-viewer`, branch `main`). `docs/GITHUB-UPDATE.md` (both
+  editions) was rewritten git-first: three commands a day, undo and roll back, the `.bat` CRLF caveat;
+  the three API scripts (`gh-login.js` / `gh-upload.js` / `gh-delete.js`) stay as the fallback for a
+  machine without git. `docs/GITHUB.md` / `GITHUB.en.md` no longer claim there is no Git here.
 
 ---
 

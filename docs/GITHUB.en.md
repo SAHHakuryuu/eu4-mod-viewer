@@ -2,8 +2,10 @@
 
 [English](GITHUB.en.md) | [中文](GITHUB.md)
 
-This machine currently has **neither Git nor the `gh` CLI installed**, so here are two routes, and
-neither of them asks you to install anything on my behalf. Pick one.
+**Git is installed** (`git --version` will tell you), the repository already exists and has been
+pushed once; for day-to-day changes see [GITHUB-UPDATE.en.md](GITHUB-UPDATE.en.md). What follows is the
+**first publish** in two routes (web upload / Git command line) — follow it on a new machine, for a new
+repository name, or when starting over.
 
 > ▲ = a spot you have to replace with your own value.
 

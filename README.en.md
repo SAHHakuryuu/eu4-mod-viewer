@@ -609,7 +609,7 @@ eu4-mod-viewer/
 │  ├─ loc-key-conventions.md  localisation key conventions and each type's in-game render order (with measured hit rates)
 │  ├─ TRANSLATING.en.md       ★ the nine-language translation pipeline
 │  ├─ GITHUB.md               illustrated steps for uploading to GitHub (in Chinese; + GITHUB.en.md)
-│  ├─ GITHUB-UPDATE.md        ★ pushing updates when there is no git (+ GITHUB-UPDATE.en.md)
+│  ├─ GITHUB-UPDATE.md        ★ updating the repo: git push / undo / fallback scripts (+ .en.md)
 │  └─ screenshot-*.png        screenshots (one per content type)
 └─ tools/
    ├─ launcher.js            ★ console launcher (bilingual banner, port probe, opens the browser)
@@ -620,7 +620,7 @@ eu4-mod-viewer/
    ├─ check-doc-links.js     ★ every relative link and screenshot in the docs must exist (no broken README images),
    │                            and the markdown shape is checked too: table cells, paired backticks, closed fences
    ├─ check-css.js           ★ every var(--x) must be declared (the header language box was white on white)
-   ├─ gh-upload.js           ★ pushes the working tree as one commit through the GitHub API (no git here)
+   ├─ gh-upload.js           ★ pushes the working tree as one commit through the GitHub API (fallback for a machine without git)
    ├─ gh-login.js            ★ guided publish: drives a controlled browser for the token, then pushes
    ├─ gh-delete.js           ★ removes paths from the repository (gh-upload can only add or overwrite)
    ├─ browser.js             Chrome DevTools Protocol client shared by the two scripts above
@@ -806,9 +806,10 @@ Environment variables can override auto-detection: `EU4_USER_DIR`, `EU4_INSTALL_
 [MIT](LICENSE) © 2025–2026 SAHHakuryuu
 
 Want to publish this on GitHub? See **[docs/GITHUB.en.md](docs/GITHUB.en.md)** (two routes: web upload or
-the Git command line, including the `.gitattributes` CRLF caveat). **No git on this machine** and you
-want to push with the scripts that ship with the project? See
-**[docs/GITHUB-UPDATE.en.md](docs/GITHUB-UPDATE.en.md)**.
+the Git command line, including the `.gitattributes` CRLF caveat). The repository is managed with git
+now: day-to-day commits and how to undo them are in
+**[docs/GITHUB-UPDATE.en.md](docs/GITHUB-UPDATE.en.md)**, which also keeps the fallback scripts for a
+machine that has no git.
 Before contributing, please read **[CONTRIBUTING.en.md](CONTRIBUTING.en.md)**; what changed in each
 release is in **[CHANGELOG.en.md](CHANGELOG.en.md)**.
 

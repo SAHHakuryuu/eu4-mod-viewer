@@ -38,6 +38,10 @@
 
 - 侧表补上 8 个新字段名（fr/de/es/pt/ru/ja/ko 各 8 条），后端 **744** / 前端 **398** 条，
   覆盖率 100%，`build-langs.js check` → `CHECK: clean`；README 与两篇 TRANSLATING 里的实测数字同步更新。
+- **仓库改用 git 管理**：本机装好 Git 后，仓库就是这个目录（`origin` → `SAHHakuryuu/eu4-mod-viewer`，
+  分支 `main`）。`docs/GITHUB-UPDATE.md` 中英双语改写为「git 优先」：日常三条命令、撤销与回退、
+  `.bat` 的 CRLF 注意事项；`gh-login.js` / `gh-upload.js` / `gh-delete.js` 三个 API 脚本保留为
+  **没有 git 的机器**的备用方案。`docs/GITHUB.md` / `GITHUB.en.md` 的「本机没有 Git」前提一并更正。
 
 ---
 
