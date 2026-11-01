@@ -734,5 +734,13 @@
   "heavy ship": "Тяжёлый корабль",
   "light ship": "Лёгкий корабль",
   "{n1} {tag1} soldiers attacked {n2} {tag2} soldiers": "{n1} солдат {tag1} атаковали {n2} солдат {tag2}",
-  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1} атаковал силами {n1} юнитов против {n2} юнитов {tag2}"
+  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1} атаковал силами {n1} юнитов против {n2} юнитов {tag2}",
+  "center of trade level": "уровень торгового центра",
+  "clear scripted personalities": "очистить заданные скриптом черты",
+  "government rank": "ранг правительства",
+  "government reform": "правительственная реформа",
+  "historical friend": "исторический друг",
+  "historical rival": "исторический соперник",
+  "religious school": "религиозная школа",
+  "trait": "черта"
 }

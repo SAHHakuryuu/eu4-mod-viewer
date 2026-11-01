@@ -167,6 +167,61 @@ const entry = modsSvc.listModDescriptors(userDir)
   console.log('');
   console.log(`kinds exercised: ${[...kindSeen].sort().join(', ')}`);
 
+  // -------------------------------------------------------------------------
+  // A country's history is a set of *assignments*, not effects
+  // -------------------------------------------------------------------------
+  //
+  // `history/countries/*.txt` mixes assignments (`government = monarchy`,
+  // `capital = 739`, `monarch = { … }`) with real commands
+  // (`add_army_tradition`). Rendering it through the effect glossary printed the
+  // assignments as "not in glossary" script keys — the exact complaint this
+  // guards against: a labelled field must never come back as a raw key.
+  console.log('\n--- country history fields ---');
+  {
+    const FIELD_KEYS = new Set([
+      'monarch', 'heir', 'queen', 'consort', 'regent', 'leader', 'capital', 'government',
+      'technology_group', 'primary_culture', 'religion', 'government_rank', 'historical_rival',
+      'historical_friend', 'name', 'adm', 'dip', 'mil', 'fire', 'shock', 'manuever', 'siege',
+      'personality', 'type', 'birth_date', 'death_date', 'dynasty', 'claim', 'add_government_reform',
+    ]);
+    const rawKeys = (card) => {
+      const out = [];
+      const walk = (v) => {
+        if (Array.isArray(v)) return v.forEach(walk);
+        if (v && typeof v === 'object') {
+          if (v.t === 'raw' && typeof v.s === 'string' && FIELD_KEYS.has(v.s)) out.push(v.s);
+          for (const k of Object.keys(v)) walk(v[k]);
+        }
+      };
+      for (const g of card.groups || []) walk(g.lines);
+      for (const t of card.timeline || []) walk(t.lines);
+      return out;
+    };
+
+    const list = index.lists.countries || [];
+    let checkedCards = 0;
+    let labelled = 0;
+    let withPerson = 0;
+    let withEffect = 0;
+    let offenders = 0;
+    for (const ref of list.slice(0, 40)) {
+      let card = null;
+      try { card = gamedata.buildCard(index, 'countries', ref.id); } catch { card = null; }
+      if (!card) continue;
+      checkedCards++;
+      const flat = JSON.stringify(card.groups || []) + JSON.stringify(card.timeline || []);
+      if (/首都|政体|科技组/.test(flat)) labelled++;
+      if (/"k":"group"[^}]*君主|"k":"group"[^}]*继承人/.test(flat)) withPerson++;
+      if (/增加陆军传统|设定阶层特权|添加君主特质/.test(flat)) withEffect++;
+      offenders += rawKeys(card).length;
+    }
+    check('history: country cards were built', checkedCards > 0, `cards=${checkedCards}`);
+    check('history: assignment fields carry a Chinese label', labelled > 0, `labelled=${labelled}/${checkedCards}`);
+    check('history: a person block is drawn as a named group', withPerson > 0, `withPerson=${withPerson}/${checkedCards}`);
+    check('history: real commands still use the effect tooltip path', withEffect > 0, `withEffect=${withEffect}/${checkedCards}`);
+    check('history: no labelled field comes back as a raw key', offenders === 0, `raw=${offenders}`);
+  }
+
   if (failures.length) {
     console.log(`\nFAILURES (${failures.length}):`);
     for (const f of failures) console.log('  !! ' + f);

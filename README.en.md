@@ -202,11 +202,17 @@ and the server's `config.json`, so:
 
 Switching redraws the current view **immediately** (no reload) without losing your place.
 
-The translations are **hand-written side tables, never machine translation**: Chinese is the source
-language, English is the fallback, and the other seven take their words from the **official EU4
-localisation** (`localisation\*_l_<lang>.yml`) — the exact word the game prints. The fallback chain is
+The translations are **side tables** (`src/data/locales/<lang>.json` plus the generated
+`web/lang/<lang>.js`) that cover **interface text only** — buttons, field names, hints, error
+messages — and never game terms.
+
+The game itself ships **four** official localisations: English, French, German and Spanish
+(`Europa Universalis IV\localisation\*_l_<lang>.yml` — 143 / 145 / 145 / 144 files on the machine
+measured here). Português / Русский / 日本語 / 한국어 are **this viewer's own interface languages**:
+the game has no official terminology for them, so in those languages a game term is shown exactly as
+English shows it — as the raw script identifier (see the next section). The fallback chain is
 "requested language → English → the Chinese source", so a raw key like `some.key.name` can never
-appear. Measured this round: each of the seven languages covers **720 backend + 397 frontend** strings,
+appear. Measured this round: each of the seven languages covers **744 backend + 398 frontend** strings,
 100%, with `tools/build-langs.js check` reporting no problems. To add a language or change a
 translation, see **[docs/TRANSLATING.en.md](docs/TRANSLATING.en.md)**.
 
@@ -300,7 +306,7 @@ what each type renders, by theme:
 
 | Type | Script source | What it renders |
 |---|---|---|
-| **Countries & government** | `history/countries/`, `common/countries/` | Country dossier: starting ruler/heir, religion and culture, technology, a timeline of historical events |
+| **Countries & government** | `history/countries/`, `common/countries/` | Country dossier: starting ruler/heir, religion and culture, technology, a timeline of historical events. The entries in `history/countries/*.txt` are **assignments, not commands**, so they get a history renderer of their own: `政体 Monarchy`, `科技组 Chinese`, `首都 北平`, `宗教流派 Hanafi`, `历史宿敌 大顺`, a person block opens as `君主：努尔哈赤` → name/dynasty/adm/dip/mil, a leader block as fire/shock/manoeuvre/siege, and a real command such as `add_army_tradition` still uses the game tooltip |
 | **👑 Historical rulers** | `history/countries/*.txt` | A `monarch` / `heir` / `queen` / `monarch_consort` entry: name and dynasty, life dates, the day the game applies it, **administrative/diplomatic/military pips**, religion and culture, claim strength, regency and female flags, ruler traits; when the same entry also carries a `leader` block, **the ruler's own four pips as a commander are drawn in place** (it is a separate row in *Historical leaders* and the chip jumps to it), and the rest of that dated block follows underneath |
 | **🎓 Historical advisors** | `history/advisors/*.txt` | An advisor entry: name, **type of advice** (the `type` key is resolved through localisation — theologian, navigator …), **skill 1–3 (drawn as pips)**, the province they sit in (name + id), the advisor id, the appointed and death dates, the discount and the female flag. Note that this is a different tab from *Advisors* (`common/advisortypes/`, which defines what an advisor is) |
 | **Governments & reforms** | `common/governments/`, `common/government_reforms/`, `government_mechanics/`, `subject_types/`, `factions/` … | Government/reform panel: name + description + attribute table (royal marriage, parliament …) + modifiers + unlock requirements |
@@ -608,7 +614,7 @@ eu4-mod-viewer/
 └─ tools/
    ├─ launcher.js            ★ console launcher (bilingual banner, port probe, opens the browser)
    ├─ run-tests.js           ★ test entry point (core / mods / e2e tiers, with SKIP detection)
-   ├─ i18n-extract.js        ★ extracts every translatable string from the sources (720 backend / 397 frontend keys)
+   ├─ i18n-extract.js        ★ extracts every translatable string from the sources (744 backend / 398 frontend keys)
    ├─ build-langs.js         ★ translation pipeline: split / delta / verify / merge / check / status
    ├─ i18n-audit.js          ★ scans frontend sources and reports Chinese literals not yet wrapped in t()
    ├─ check-doc-links.js     ★ every relative link and screenshot in the docs must exist (no broken README images),
@@ -625,7 +631,7 @@ eu4-mod-viewer/
    ├─ test-all-mods.js        coverage test across every mod and every category
    ├─ test-gamedata.js        content extraction and card rendering for the first six types
    ├─ test-history.js       ★ rulers / advisors / leaders / battles: unique ids, the chain walk back to the block, winners and loss percentages, pip scale, cross-links (51 assertions)
-   ├─ test-content-types.js ★ all 35 types: indexed, non-empty card, readable title, no Chinese in the English UI (284 assertions)
+   ├─ test-content-types.js ★ all 35 types: indexed, non-empty card, readable title, no Chinese in the English UI (289 assertions)
    ├─ test-missions.js      ★ mission tree layout: slot/position/link semantics + GUI geometry cross-check (297 assertions)
    ├─ test-wikigloss.js     ★ term tables come only from your wiki and are never invented; degrades with no wiki (59 assertions)
    ├─ test-fidelity.js        parser fidelity check (source keys vs parsed keys)
@@ -688,7 +694,7 @@ node tools\test-codec.js          :: codec + parser (57 assertions)
 node tools\test-i18n-backend.js   :: backend bilingual layer (66 assertions, Chinese compared to the old output)
 node tools\test-dds.js            :: DDS decoder (267 assertions, real textures pixel-by-pixel)
 node tools\test-gamedata.js       :: content extraction and card rendering for the first six types
-node tools\test-content-types.js  :: all 35 types: indexed, non-empty card, readable title (284 assertions)
+node tools\test-content-types.js  :: all 35 types: indexed, non-empty card, readable title (289 assertions)
 node tools\test-missions.js       :: mission tree layout: slot/position/link semantics + GUI geometry (297 assertions)
 node tools\test-history.js        :: rulers / advisors / leaders / battles: unique ids, the chain walk back to the block, winners and loss percentages, pip scale, cross-links (51 assertions)
 node tools\test-wikigloss.js      :: term tables parsed from your wiki + no-wiki degradation (59 assertions)
@@ -747,9 +753,9 @@ Multi-language measurements:
 
 | Metric | Result |
 |---|---|
-| English dictionary entries | **397** in total (core + `i18n.app.js` + `i18n.game.js`), **0 missing, 0 containing Chinese** |
+| English dictionary entries | **398** in total (core + `i18n.app.js` + `i18n.game.js`), **0 missing, 0 containing Chinese** |
 | Dictionary audit | `node tools/i18n-audit.js check` → 0 missing / 0 unexplained / 0 CJK value |
-| Backend pairs | 297 `L()` pairs in `gameterms.js` + 49 in `gametext.js`, 720 distinct English keys |
+| Backend pairs | 865 `L()` pairs across `src/**` (799 call sites), 744 distinct English keys |
 | Chinese regression | the backend test compares Chinese strings **character by character** with the pre-change output; identical |
 | English wiki links | all 57 unique links tested **HTTP 200** |
 | UI end-to-end | `verify-i18n.js` **88 / 88** (all nine languages, persistence, `?lang=` injection, settings panel, folder picker, both wiki switches, error recovery, plus contrast and no-clipping checks on the header language picker) |

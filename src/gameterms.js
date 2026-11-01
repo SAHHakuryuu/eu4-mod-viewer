@@ -208,6 +208,19 @@ function glossaries() {
       });
     }
 
+    // The engine accepts a long spelling for a modifier name: `development_cost`
+    // in vanilla scripts, `development_cost_modifier` in older ones and in the
+    // estate loyalty/influence keys — same modifier, same effect. The wiki only
+    // documents the short form, so without this the long form rendered as "not
+    // in glossary", which reads like a missing translation instead of a second
+    // spelling of a word we already know. Aliases stay out of `modifiers` so the
+    // UI's "修正 692 条" keeps counting documented modifiers only.
+    const modifierAliases = new Map();
+    for (const k of Object.keys(modifiers)) {
+      if (k.endsWith('_modifier') || modifiers[k + '_modifier']) continue;
+      modifierAliases.set(k + '_modifier', k);
+    }
+
     const triggers = {};
     for (const [k, rec] of Object.entries(runtime.triggers)) {
       triggers[k] = normalizeLabel(rec);
@@ -216,10 +229,29 @@ function glossaries() {
       triggers[k] = Object.assign({}, triggers[k] || {}, rec);
     }
 
-    GLOSS = { modifiers, triggers, effects };
+    GLOSS = { modifiers, modifierAliases, triggers, effects };
     GLOSS_KEY = key;
   }
   return GLOSS;
+}
+
+/**
+ * The glossary record for a modifier key, following the engine's long spelling.
+ *
+ * A miss on the exact key is retried through `modifierAliases` (`X_modifier` →
+ * `X`), and the record is tagged with `aliasOf` so callers can decide the
+ * positive/negative tone from the documented spelling rather than from a
+ * `_modifier` suffix that no cost regex matches.
+ */
+function modifierEntry(name) {
+  const g = glossaries();
+  const key = String(name);
+  const hit = g.modifiers[key];
+  if (hit) return hit;
+  const base = g.modifierAliases.get(key);
+  if (!base) return null;
+  const rec = g.modifiers[base];
+  return rec ? Object.assign({}, rec, { aliasOf: base }) : null;
 }
 
 /**
@@ -498,6 +530,13 @@ const NAME_CANDIDATES = {
   building: ['{id}'],
   religion: ['{id}'],
   religion_group: ['{id}'],
+  technology_group: ['{id}'],
+  leader_trait: ['{id}'],
+  ruler_trait: ['{id}'],
+  religious_school: ['{id}'],
+  // The game's own keys for the five government forms are upper case
+  // (`MONARCHY`, `REPUBLIC`, `TRIBAL`, `NOMAD`, `THEOCRACY`).
+  government_form: ['{ID}'],
   culture: ['{id}'],
   culture_group: ['{id}'],
   trade_good: ['{id}'],
@@ -557,7 +596,7 @@ function nameOf(kind, id, ctx) {
   if (!cands) return null;
   if (usesRawTerms(ctx.lang)) return String(id);
   for (const pattern of cands) {
-    const key = pattern.replace('{id}', String(id));
+    const key = pattern.replace('{id}', String(id)).replace('{ID}', String(id).toUpperCase());
     const hit = ctx.resolver.lookup(key);
     if (hit && hit.value) {
       if (ctx.used) ctx.used.push({ key, value: hit.value, file: hit.file, line: hit.line, origin: hit.origin });
@@ -617,7 +656,6 @@ function modifierLines(node, ctx, opts = {}) {
   const out = [];
   if (!node) return out;
   const indent = opts.indent || 0;
-  const gloss = glossaries().modifiers;
 
   if (node.type !== 'object') return out;
 
@@ -627,7 +665,7 @@ function modifierLines(node, ctx, opts = {}) {
     if (v.type === 'object' || v.type === 'array') continue;
 
     const rawVal = scalar(v);
-    const entry = gloss[e.key];
+    const entry = modifierEntry(e.key);
     const label = glossLabel(entry, ctx);
 
     if (isYes(rawVal) || isNo(rawVal)) {
@@ -654,7 +692,7 @@ function modifierLines(node, ctx, opts = {}) {
     // applying the ×100 convention to a flat value would not lose a label, it
     // would print a false number (`prestige = 10` as `+1000%`).
     const mode = entry && entry.mode ? entry.mode : null;
-    const tone = toneFor(e.key, num, entry);
+    const tone = toneFor(entry && entry.aliasOf ? entry.aliasOf : e.key, num, entry);
     const valueText = mode ? formatModifierValue(mode, num) : rawVal;
     if (label) {
       out.push(line(indent, 'mod', [mode ? val(valueText, tone) : raw(valueText), t(' ' + label)],
@@ -1254,6 +1292,153 @@ function effectLines(node, ctx, opts = {}) {
 }
 
 // ---------------------------------------------------------------------------
+// Country history: `history/countries/*.txt`, `history/diplomacy`, `history/wars`
+// ---------------------------------------------------------------------------
+
+/**
+ * Field names a history file uses that no shared table carries.
+ *
+ * A history file is not an effect file. Its entries are *assignments* —
+ * `government = monarchy`, `capital = 739`, `monarch = { … }` — so the effect
+ * glossary cannot name them, and they used to print as `词表中未收录的命令`.
+ * `FIELD_LABEL` already names most of the fields (`adm`, `dip`, `mil`, `fire`,
+ * `shock`, `manuever`, `siege`, `personality`, `birth_date`, `dynasty`, `claim`,
+ * `capital`…); this table adds the block keys — a monarch is a block, not a field
+ * — and the few that only occur in history files.
+ */
+const HISTORY_FIELD = {
+  monarch: L('君主', 'monarch'),
+  heir: L('继承人', 'heir'),
+  queen: L('配偶', 'consort'),
+  consort: L('配偶', 'consort'),
+  regent: L('摄政', 'regent'),
+  monarch_consort: L('配偶', 'consort'),
+  leader: L('将领', 'leader'),
+  army: L('陆军', 'army'),
+  navy: L('海军', 'navy'),
+  add_government_reform: L('政府改革', 'government reform'),
+  government_rank: L('政府等级', 'government rank'),
+  religious_school: L('宗教流派', 'religious school'),
+  historical_rival: L('历史宿敌', 'historical rival'),
+  historical_friend: L('历史友邦', 'historical friend'),
+  clear_scripted_personalities: L('清除脚本设定的将领特质', 'clear scripted personalities'),
+  center_of_trade: L('贸易中心等级', 'center of trade level'),
+  centre_of_trade: L('贸易中心等级', 'center of trade level'),
+  trait: L('特质', 'trait'),
+};
+
+/** Kinds a history field's value names, where `ARG_KIND` says nothing. */
+const HISTORY_ARG_KIND = {
+  historical_rival: 'tag',
+  historical_friend: 'tag',
+  overlord: 'tag',
+  capital: 'province',
+  personality: 'leader_trait',
+  trait: 'leader_trait',
+  government: 'government_form',
+  technology_group: 'technology_group',
+  religious_school: 'religious_school',
+};
+
+/** Blocks that describe a person: they read as `君主：努尔哈赤`, not as a key. */
+const PERSON_BLOCKS = new Set(['monarch', 'heir', 'queen', 'consort', 'regent', 'monarch_consort']);
+
+/** The four kinds of leader, as the game names them. */
+const LEADER_KIND = {
+  general: L('陆军将领', 'general'),
+  admiral: L('海军将领', 'admiral'),
+  explorer: L('探险家', 'explorer'),
+  conquistador: L('征服者', 'conquistador'),
+};
+
+/** The field label for a history key, or null when nothing names it. */
+function historyLabel(key) {
+  return HISTORY_FIELD[key] || FIELD_LABEL[key] || null;
+}
+
+/**
+ * One history block as the game's start-of-game state reads it.
+ *
+ * Rule of thumb, and the reason this cannot be `effectLines`: a key the effect
+ * glossary knows is a real command (`add_country_modifier`, `add_army_tradition`)
+ * and keeps its game tooltip; every other key is a field and gets a label plus
+ * its value, with the value resolved through `ARG_KIND` when it names something
+ * (`capital = 739` → 滁州).
+ */
+function historyLines(node, ctx, opts = {}) {
+  const out = [];
+  if (!node) return out;
+  const indent = opts.indent || 0;
+  const maxDepth = opts.maxDepth === undefined ? 4 : opts.maxDepth;
+  const effects = glossaries().effects;
+
+  const personName = (block) => {
+    const n = block.entries.find((e) => e.key === 'name' && e.value.type !== 'object');
+    return n ? stripMarkup(scalar(n.value)) : '';
+  };
+
+  const emit = (e, ind, parentKey) => {
+    const key = e.key;
+    const v = e.value;
+
+    if (ind > maxDepth) { out.push(line(ind, 'eff', [raw(key + ' = \u2026')])); return; }
+
+    // A history file mixes assignments with real effects; a key the effect
+    // glossary knows keeps its game tooltip, keyword and all.
+    if (effects[key]) {
+      for (const l of effectLines({ type: 'object', entries: [e] }, ctx, { indent: ind })) out.push(l);
+      return;
+    }
+
+    const pair = historyLabel(key);
+    const label = pair ? tx(pair, ctx) : '';
+
+    if (v.type === 'object') {
+      const who = PERSON_BLOCKS.has(key) ? personName(v) : '';
+      const colon = tx(L('：', ': '), ctx);
+      const spans = label ? [t(label + (who ? colon : ''), 'head')] : [raw(key), t(who ? colon : '', 'head')];
+      if (who) spans.push(nm(who));
+      out.push(line(ind, 'group', spans));
+      for (const child of v.entries) emit(child, ind + 1, key);
+      return;
+    }
+
+    if (v.type === 'array') {
+      const items = v.items.map((it) => (it && it.type !== 'object' ? scalar(it) : '\u2026'));
+      out.push(line(ind, 'eff', [label ? t(label + ' ') : raw(key + ' '), val(items.join(', '))]));
+      return;
+    }
+
+    const rawVal = scalar(v);
+    let valueSpan;
+    if (isYes(rawVal)) valueSpan = t('\u2713', 'good');
+    else if (isNo(rawVal)) valueSpan = t('\u2717', 'bad');
+    else if (parentKey === 'leader' && key === 'type' && LEADER_KIND[rawVal]) valueSpan = t(tx(LEADER_KIND[rawVal], ctx), 'good');
+    else {
+      const kind = HISTORY_ARG_KIND[key] || ARG_KIND[key] || null;
+      valueSpan = kind ? argSpan(kind, v, ctx) : val(rawVal);
+    }
+
+    if (label) out.push(line(ind, 'eff', [t(label + ' '), valueSpan]));
+    else {
+      out.push(line(ind, 'eff', [raw(key), t(' = ', 'muted'), valueSpan],
+        unknownNote(NOT_IN_GLOSSARY_EFFECT, ctx)));
+    }
+  };
+
+  const walk = (n, ind) => {
+    if (!n) return;
+    if (n.type === 'array') { for (const it of n.items) walk(it, ind); return; }
+    if (n.type !== 'object') { out.push(line(ind, 'eff', [raw(scalar(n))])); return; }
+    for (const e of n.entries) emit(e, ind, null);
+  };
+
+  walk(node, indent);
+  return out;
+}
+
+
+// ---------------------------------------------------------------------------
 // Tooltips for the reader: what does an unknown key mean?
 // ---------------------------------------------------------------------------
 
@@ -1266,8 +1451,7 @@ function describeEffect(key) {
   return g || null;
 }
 function describeModifier(key) {
-  const g = glossaries().modifiers[key];
-  return g || null;
+  return modifierEntry(key);
 }
 
 /** Keys the hand-written tables cover on their own, with no wiki mounted. */
@@ -1313,6 +1497,7 @@ module.exports = {
   modifierLines,
   conditionLines,
   effectLines,
+  historyLines,
   nameOf,
   stripMarkup,
   trimNum,

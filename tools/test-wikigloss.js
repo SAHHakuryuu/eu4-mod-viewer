@@ -196,7 +196,40 @@ const flatten = (lines) => lines
 }
 
 // ---------------------------------------------------------------------------
-// 4. No wiki mounted: the hand-written tables stand alone
+// 4. The `_modifier` long spelling of a documented modifier
+// ---------------------------------------------------------------------------
+
+console.log('\n--- long spelling ---');
+{
+  // `development_cost_modifier` is what the mod's idea groups, technologies and
+  // monuments write; the wiki documents the short `development_cost`. They are
+  // the same modifier, so the long form must resolve to the same name, mode and
+  // tone rather than printing as "not in glossary".
+  const e = terms.describeModifier('development_cost_modifier');
+  ok('alias: the long spelling resolves to a name', Boolean(e && e.zh && e.zh.zh), JSON.stringify(e || null));
+  check('alias: it is tagged with the documented spelling', e && e.aliasOf, 'development_cost');
+  check('alias: it keeps the documented display mode', e && e.mode, 'mul');
+  check('alias: an unrelated unknown key still misses', terms.describeModifier('some_unknown_mod'), null);
+  check('alias: a key that only looks similar still misses', terms.describeModifier('development_cost_modifier_extra'), null);
+
+  const node = parseScript('m = {\n development_cost_modifier = -0.1\n}').entries[0].value;
+  const lines = terms.modifierLines(node, { lang: 'zh' });
+  const text = flatten(lines);
+  ok('alias: it renders as a percentage', /−10%/.test(text), text);
+  ok('alias: it renders with a human name, not the script key', !/<development_cost_modifier>/.test(text), text);
+  ok('alias: it does not claim to be missing', !/词表中未收录/.test(text), text);
+  const tone = lines[0] && lines[0].spans && lines[0].spans[0] ? lines[0].spans[0].c : null;
+  check('alias: a cheaper cost reads as good, judged by the short spelling', tone, 'good');
+
+  // The same name must survive with no wiki mounted: the alias is built from the
+  // merged tables, and `development_cost` is in the hand-written table too.
+  const full = Object.keys(terms.glossaries().modifiers).length;
+  check('alias: aliases are not counted as documented modifiers',
+    terms.glossaryStats().modifiers, full);
+}
+
+// ---------------------------------------------------------------------------
+// 5. No wiki mounted: the hand-written tables stand alone
 // ---------------------------------------------------------------------------
 
 console.log('\n--- with the wiki switched off ---');
@@ -217,6 +250,9 @@ console.log('\n--- with the wiki switched off ---');
     const node = parseScript('m = {\n discipline = 0.05\n}').entries[0].value;
     const text = flatten(terms.modifierLines(node, { lang: 'zh' }));
     ok('off: a curated modifier still renders in game format', /\+5%/.test(text) && /训练度/.test(text), text);
+
+    const alias = terms.describeModifier('development_cost_modifier');
+    ok('off: the long spelling resolves from the hand-written table alone', Boolean(alias && alias.zh && alias.zh.zh), JSON.stringify(alias || null));
   } finally {
     restore();
   }

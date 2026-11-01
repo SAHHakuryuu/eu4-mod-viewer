@@ -186,10 +186,16 @@ Español / Português / Русский / 日本語 / 한국어`）——这是�
 
 语言切换会**立刻重绘当前视图**（不用刷新），且不会丢失你正在看的位置。
 
-翻译是**人工侧表**，不是机翻：中文是源语言，英文是回退语言，其余七种的词取自
-**官方 EU4 本地化**（`localisation\*_l_<lang>.yml`）里游戏自己印的那个词。回退链是
-「目标语言 → 英文 → 中文原文」，所以任何时候都不会露出 `some.key.name` 这种键名。
-本轮实测：七种语言各 **720 条后端 + 397 条前端**，覆盖率 100%，`tools/build-langs.js check` 无告警。
+翻译用的是**侧表**（`src/data/locales/<lang>.json`，合库后生成 `web/lang/<lang>.js`），只翻
+**界面文案**——按钮、字段名、提示语、错误信息——**不翻游戏术语**。
+
+游戏本身只出了**四种**官方本地化：English / Français / Deutsch / Español
+（`Europa Universalis IV\localisation\*_l_<lang>.yml`，本机实测 143 / 145 / 145 / 144 个文件）。
+界面里的 Português / Русский / 日本語 / 한국어 是**本程序自己加的界面语言**，游戏里没有对应的
+官方术语可依，所以这几种语言下术语与 English 一样原样显示脚本标识符（见下一节）。
+
+回退链是「目标语言 → 英文 → 中文原文」，所以任何时候都不会露出 `some.key.name` 这种键名。
+本轮实测：七种语言各 **744 条后端 + 398 条前端**，覆盖率 100%，`tools/build-langs.js check` 无告警。
 想自己加一种语言或改译文，见 **[docs/TRANSLATING.md](docs/TRANSLATING.md)**。
 
 ### 非中文界面下「术语」怎么显示
@@ -274,7 +280,7 @@ Español / Português / Русский / 日本語 / 한국어`）——这是�
 
 | 类型 | 脚本来源 | 渲染成什么 |
 |---|---|---|
-| **国家与政体** | `history/countries/`、`common/countries/` | 国家档案：开局君主/继承人、宗教文化、科技、历史事件时间轴 |
+| **国家与政体** | `history/countries/`、`common/countries/` | 国家档案：开局君主/继承人、宗教文化、科技、历史事件时间轴。`history/countries/*.txt` 里的那些条目是**赋值不是命令**，所以走专门的国史渲染：`政体 Monarchy`、`科技组 Chinese`、`首都 北平`、`宗教流派 Hanafi`、`历史宿敌 大顺`，人物块展开成 `君主：努尔哈赤` → 名称/王朝/行政/外交/军事，将领块则是火力/冲击/机动/围城；`add_army_tradition` 这类**真命令**照旧走游戏提示 |
 | **👑 历史君主** | `history/countries/*.txt` | 君主 / 继承人 / 配偶条目：姓名与王朝、生卒、即位日、**行政/外交/军事能力点（圆点）**、宗教文化、继承宣称、摄政与女性标记、君主特质；同一条目里若还有 `leader` 块，**就地把这位君主作为将领的四维一起画出来**（它是「历史将领」里独立的一条，可点击跳过去）；下方列出**同一个日期块里的其它改动** |
 | **🎓 历史顾问** | `history/advisors/*.txt` | 顾问条目：姓名、**顾问类型**（`type` 走本地化解析，如 神学家/航海家）、**技能等级（1–3 圆点）**、所在省份（名称 + 编号）、顾问编号、可用日期与逝世日期、折扣与女性标记。注意它与「顾问」（`common/advisortypes/`，顾问的定义）是两个不同的页签 |
 | **政府与改革** | `common/governments/`、`common/government_reforms/`、`government_mechanics/`、`subject_types/`、`factions/` 等 | 政体/改革面板：名称 + 说明 + 属性表（是否可联姻、是否有议会…）+ 修正 + 解锁条件 |
@@ -555,7 +561,7 @@ eu4-mod-viewer/
 └─ tools/
    ├─ launcher.js            ★ 控制台启动器（双语横幅、端口探测、自动开浏览器）
    ├─ run-tests.js           ★ 测试总入口（core / mods / e2e 三档，带 SKIP 判定）
-   ├─ i18n-extract.js        ★ 扫描源码抽出待翻字符串（后端 720 / 前端 397 个键）
+   ├─ i18n-extract.js        ★ 扫描源码抽出待翻字符串（后端 744 / 前端 398 个键）
    ├─ build-langs.js         ★ 翻译流水线：split / delta / verify / merge / check / status
    ├─ i18n-audit.js          ★ 扫描前端源码，报告「还没包进 t() 的中文字面量」
    ├─ check-doc-links.js     ★ 校验文档里的相对链接与截图都真实存在（README 的图不许挂），
@@ -571,7 +577,7 @@ eu4-mod-viewer/
    ├─ test-scan.js          模组发现与扫描测试
    ├─ test-all-mods.js      全部模组、全部类别的覆盖测试
    ├─ test-gamedata.js      最早六个类型的内容抽取与卡片渲染检查
-   ├─ test-content-types.js ★ 全部 35 类：索引有记录、卡片非空、标题可读、英文界面无中文（284 项）
+   ├─ test-content-types.js ★ 全部 35 类：索引有记录、卡片非空、标题可读、英文界面无中文（289 项）
    ├─ test-missions.js      ★ 任务树版式：slot/position/连线语义 + GUI 几何对照（297 项）
    ├─ test-history.js       ★ 历史君主/顾问/将领/战役：id 唯一、按链找回原块、胜负与损失百分比、能力点在刻度内、互链（51 项）
    ├─ test-wikigloss.js     ★ 词表只从你的 wiki 解析、不许编造；无 wiki 时可降级（59 项）
@@ -635,7 +641,7 @@ node tools\test-codec.js          :: 编解码 + 解析器（57 项）
 node tools\test-i18n-backend.js   :: 后端双语层（66 项，中文字符串逐字比对旧输出）
 node tools\test-dds.js            :: DDS 解码器（267 项断言，含真实贴图往返逐像素比对）
 node tools\test-gamedata.js       :: 最早六个类型的内容抽取与卡片渲染
-node tools\test-content-types.js  :: 全部 35 类内容：索引有记录、卡片非空、标题可读（284 项）
+node tools\test-content-types.js  :: 全部 35 类内容：索引有记录、卡片非空、标题可读（289 项）
 node tools\test-missions.js       :: 任务树版式：slot/position/连线语义 + GUI 几何对照（297 项）
 node tools\test-history.js        :: 历史君主/顾问/将领/战役：id 唯一、按链找回原块、胜负与损失百分比、能力点刻度、互链（51 项）
 node tools\test-wikigloss.js      :: 词表解析自你的离线 wiki + 无 wiki 时的降级（59 项）
@@ -693,10 +699,10 @@ node tools\i18n-audit.js extract  :: 列出前端所有中文字面量及其包�
 
 | 指标 | 结果 |
 |---|---|
-| 英文词典条目 | 共 **397** 条（核心 + `i18n.app.js` + `i18n.game.js`），**0 条缺失、0 条含中文** |
+| 英文词典条目 | 共 **398** 条（核心 + `i18n.app.js` + `i18n.game.js`），**0 条缺失、0 条含中文** |
 | 词典审计 | `node tools/i18n-audit.js check` → 0 missing / 0 unexplained / 0 CJK value |
-| 后端双语 | `gameterms.js` 297 处 + `gametext.js` 49 处 `L()` 配对，共 720 个英文键 |
-| 七种语言侧表 | 各 720 后端 + 397 前端，覆盖率 100%；`build-langs.js check` → `CHECK: clean` |
+| 后端双语 | `src/**` 里 865 处 `L()` 配对（799 个调用点），抽出 744 个英文键 |
+| 七种语言侧表 | 各 744 后端 + 398 前端，覆盖率 100%；`build-langs.js check` → `CHECK: clean` |
 | 中文回归 | 后端测试把中文字符串与改动前的输出**逐字比对**，完全一致 |
 | 英文 wiki 链接 | 57 个唯一链接全部实测 **HTTP 200** |
 | 界面端到端 | `verify-i18n.js` **88 / 88**（九语逐一切换、刷新保持、`?lang=` 注入、设置面板、文件夹选择器、两种 wiki 开关、错误恢复，以及页头语言框的对比度/不截断检查） |

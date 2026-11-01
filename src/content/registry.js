@@ -692,7 +692,7 @@ custom('countries', 'country', 'countries',
           if (DATE_RE.test(e.key)) {
             if (timeline.length >= MAX_TIMELINE) continue;
             if (e.value.type !== 'object') continue;
-            timeline.push({ date: e.key, lines: terms.effectLines(e.value, ctx, { indent: 0 }) });
+            timeline.push({ date: e.key, lines: terms.historyLines(e.value, ctx, { indent: 0 }) });
           } else if (e.value.type !== 'object' && e.value.type !== 'array') {
             initial.push({ key: e.key, value: e.value });
           } else if (e.value.type === 'object') {
@@ -703,7 +703,7 @@ custom('countries', 'country', 'countries',
     }
     if (initial.length) {
       const rest = { type: 'object', entries: initial };
-      const lines = terms.effectLines(rest, ctx, { indent: 0 });
+      const lines = terms.historyLines(rest, ctx, { indent: 0 });
       if (lines.length) {
         groups.unshift({
           key: 'initial', role: 'eff',

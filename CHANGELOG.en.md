@@ -5,6 +5,50 @@ The Chinese edition is [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
+## 1.1.1 — 2026-11-01
+
+### Fixed
+
+- **A modifier's long spelling now gets its Chinese name.** EU4 accepts two spellings of the same
+  modifier: `development_cost` (vanilla scripts) and `development_cost_modifier` (which this mod's
+  ideas, technologies and monuments use heavily). The term table only listed the short one, so the
+  long one fell through to "not in glossary; shown as script". A miss now retries as `X_modifier → X`,
+  which brings the name, the percentage mode and the good/bad colour along with it. The alias is not
+  written into the table, so counts like "692 modifiers" stay honest. Measured on the main test mod:
+  all 10 long spellings found in modifier blocks now resolve.
+- **The docs no longer call the seven interface languages "the official EU4 localisation".** The game
+  ships exactly four official localisations — English / Français / Deutsch / Español
+  (`localisation\*_l_<lang>.yml`, 143 / 145 / 145 / 144 files measured on this machine).
+  Português / Русский / 日本語 / 한국어 are this viewer's own interface languages, and the game has no
+  official terminology for them, so a game term always prints as the raw script identifier. The side
+  tables translate interface text only. README and `docs/TRANSLATING` corrected in both editions.
+- `tools/test-wikigloss.js` grows 11 assertions for the long-spelling path (name, mode, tone, and the
+  two ways it must *not* fire), 70 passing.
+
+### Added
+
+- **A country card's history is now read as fields** (`terms.historyLines`). The entries in
+  `history/countries/*.txt` — `government = monarchy`, `capital = 739`, `monarch = { … }` — are
+  *assignments*, not commands, so the effect glossary could only print them as "not in glossary". Now a
+  real command the glossary knows (`add_army_tradition`, `add_country_modifier`…) still gets the game
+  tooltip, and everything else renders as a field: the name comes from `FIELD_LABEL` plus a new
+  `HISTORY_FIELD`, a value that names something is resolved (`capital = 1816` → 北平,
+  `historical_rival = CSH` → 大顺, `type = general` → 陆军将领), a person block opens as
+  "君主：努尔哈赤", and a leader's four skills read 火力 / 冲击 / 机动 / 围城. On the main test mod's
+  QNG card the raw script keys dropped from 222 to 101, and what is left is flag names and numbers that
+  have no translation to begin with.
+- `tools/test-content-types.js` grows 5 country-history assertions (fields are labelled, a person opens
+  as a block, commands stay on the effect path, and no *named* field may fall back to a raw key), 289
+  passing.
+
+### Other
+
+- The side tables gain the 8 new field names (8 per language for fr/de/es/pt/ru/ja/ko): **744** backend
+  and **398** frontend strings, 100% coverage, `build-langs.js check` → `CHECK: clean`. The measured
+  numbers in the README and both TRANSLATING docs were updated to match.
+
+---
+
 ## 1.1.0 — 2026-10-11
 
 ### Added

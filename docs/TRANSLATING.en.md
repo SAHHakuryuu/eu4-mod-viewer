@@ -2,7 +2,15 @@
 
 The interface ships in **Chinese / English / Français / Deutsch / Español / Português / Русский /
 日本語 / 한국어**. Chinese is the source language, English is the fallback, and the other seven hang
-off side tables — **nothing anywhere is machine-translated**.
+off side tables.
+
+The side tables cover **interface text only** — buttons, field names, hints, error messages — and
+**never game terms**. The reason is blunt: EU4 itself ships **four** official localisations, English /
+Français / Deutsch / Español (`Europa Universalis IV\localisation\*_l_<lang>.yml`, 143 / 145 / 145 /
+144 files measured here), so the game has no official terminology for the other languages, and this
+project does not read those yml files either. In all seven languages a game term therefore stays the
+**raw script identifier**, exactly as in English — that is not an oversight, and machine translation
+or invented terms are not allowed (see section 5).
 
 This document is about changing translations. To *add* a language, see the last section.
 
@@ -126,7 +134,7 @@ safe to run repeatedly.
 | Side | Source |
 |---|---|
 | Chinese | **the offline wiki you mounted yourself** (parsed at run time from the 条件 / 命令 / 修正列表 pages, `src/wikigloss.js`) plus the hand-written `src/data/*-curated.js`. **None of it is in the repository.** |
-| Everything else | **the official EU4 localisation**: the exact word the game prints, taken from `Europa Universalis IV\localisation\*_l_<lang>.yml`. If the game has no such word, English is used — never a machine translation, never an invention. |
+| Everything else | **terms are not translated at all**: the raw script identifier is printed (`land_morale`, `MNG@1368.1.23@monarch`), because the game has official localisations for English / French / German / Spanish only — there is no official word to borrow for the other languages. Interface text comes from the `src/data/locales/<lang>.json` side table (keyed by the English label) — never a machine translation, never an invention. |
 
 A few deliberate decisions (not oversights):
 
@@ -144,17 +152,17 @@ A few deliberate decisions (not oversights):
 
 ## 6. This round, measured
 
-Seven languages × (720 backend + 397 frontend); `check` reports 100% for all of them, `CHECK: clean`.
+Seven languages × (744 backend + 398 frontend); `check` reports 100% for all of them, `CHECK: clean`.
 
 | Language | Backend | Frontend | Identical to source (for review) |
 |---|---|---|---|
-| fr | 720/720 | 397/397 | 48 |
-| de | 720/720 | 397/397 | 19 |
-| es | 720/720 | 397/397 | 19 |
-| pt | 720/720 | 397/397 | 23 |
-| ru | 720/720 | 397/397 | 7 |
-| ja | 720/720 | 397/397 | 11 |
-| ko | 720/720 | 397/397 | 7 |
+| fr | 744/744 | 398/398 | 49 |
+| de | 744/744 | 398/398 | 19 |
+| es | 744/744 | 398/398 | 19 |
+| pt | 744/744 | 398/398 | 23 |
+| ru | 744/744 | 398/398 | 7 |
+| ja | 744/744 | 398/398 | 11 |
+| ko | 744/744 | 398/398 | 7 |
 
 The identical-to-source entries are proper nouns (`Conquistador`, `Total`), placeholder-only format
 strings (`{label}: {value} / {max}`) and paths.

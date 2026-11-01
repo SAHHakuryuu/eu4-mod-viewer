@@ -734,5 +734,13 @@
   "heavy ship": "大型船",
   "light ship": "小型船",
   "{n1} {tag1} soldiers attacked {n2} {tag2} soldiers": "{tag1} の {n1} 名の兵士が {tag2} の {n2} 名の兵士を攻撃した",
-  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1} が {n1} ユニットで {tag2} の {n2} ユニットを攻撃した"
+  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1} が {n1} ユニットで {tag2} の {n2} ユニットを攻撃した",
+  "center of trade level": "交易中心のレベル",
+  "clear scripted personalities": "スクリプト設定の特性を消去",
+  "government rank": "政体ランク",
+  "government reform": "政体改革",
+  "historical friend": "歴史的友好国",
+  "historical rival": "歴史的宿敵",
+  "religious school": "宗教学派",
+  "trait": "特性"
 }

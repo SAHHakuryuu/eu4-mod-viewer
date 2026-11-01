@@ -52,3 +52,11 @@ Desktop.ini
 /tools/out/
 /tools/dds-out/
 /tools/shot-*.png
+
+# --- throwaway development probes -------------------------------------
+# Files whose name starts with an underscore are one-off diagnostics: a
+# temporary probe while chasing a bug, or a helper that drives a browser by
+# hand. They are deleted when the work is done, but two of them were published
+# by accident in the first push (the upload script reads the working tree, not a
+# stage), so the rule is here as a backstop rather than as tidiness.
+/tools/_*

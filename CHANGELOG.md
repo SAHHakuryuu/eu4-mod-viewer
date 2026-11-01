@@ -5,6 +5,42 @@
 
 ---
 
+## 1.1.1 — 2026-11-01
+
+### 修正
+
+- **`_modifier` 长写法的修正现在有中文名了**。EU4 接受同一个修正的两种拼法：`development_cost`
+  （原版脚本）与 `development_cost_modifier`（本模组的理念、科技、奇观里大量这么写）。词表只收了
+  短写法，长写法就落成「词表中未收录的修正，原样显示」。现在原键查不到时会按 `X_modifier → X`
+  再查一次，中文名、百分比模式、好坏着色三者都跟着短写法走；别名不写进词表，所以「修正 692 条」
+  这类计数不变。主测试模组实测：修正块里出现的 10 个长写法全部命中。
+- **文档不再把那七种界面语言说成「官方 EU4 本地化」**。游戏官方只有 **English / Français /
+  Deutsch / Español 四种**本地化（`localisation\*_l_<lang>.yml`，本机实测 143 / 145 / 145 / 144
+  个文件）；Português / Русский / 日本語 / 한국어 是本程序自己加的界面语言，游戏里没有官方术语可依，
+  所以这些语言下游戏术语一律原样显示脚本标识符，侧表只翻界面文案。README 与
+  `docs/TRANSLATING` 中英双语同步更正。
+- `tools/test-wikigloss.js` 增加 11 条长写法断言（名字、模式、着色，以及两种**必须不命中**的情况），
+  现为 70 项全过。
+
+### 新增
+
+- **国家卡的历史块现在按字段读**（`terms.historyLines`）。`history/countries/*.txt` 里那些
+  `government = monarchy`、`capital = 739`、`monarch = { … }` 是**赋值**，不是命令，走效果词表只会
+  落成「词表中未收录」。现在：效果词表认识的真命令（`add_army_tradition`、`add_country_modifier`…）
+  照旧走游戏提示；其余按字段渲染——字段名取 `FIELD_LABEL` + 新增的 `HISTORY_FIELD`，值能对上号
+  就解析（`capital = 1816` → 北平，`historical_rival = CSH` → 大顺，`type = general` → 陆军将领），
+  人物块按「君主：努尔哈赤」成块展开，将领四维成了「火力 / 冲击 / 机动 / 围城」。
+  主测试模组 QNG 实卡：原始脚本键从 222 个降到 101 个，剩下的全是旗标名与数字，本就无可译。
+- `tools/test-content-types.js` 增加 5 条国史断言（字段有中文名、人物成块、命令仍走效果路径、
+  任何**有名字的字段都不许退回原始键**），现为 289 项全过。
+
+### 其他
+
+- 侧表补上 8 个新字段名（fr/de/es/pt/ru/ja/ko 各 8 条），后端 **744** / 前端 **398** 条，
+  覆盖率 100%，`build-langs.js check` → `CHECK: clean`；README 与两篇 TRANSLATING 里的实测数字同步更新。
+
+---
+
 ## 1.1.0 — 2026-10-11
 
 ### 新增

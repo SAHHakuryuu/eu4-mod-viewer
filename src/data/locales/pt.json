@@ -734,5 +734,13 @@
   "heavy ship": "Navio pesado",
   "light ship": "Navio leve",
   "{n1} {tag1} soldiers attacked {n2} {tag2} soldiers": "{n1} soldados de {tag1} atacaram {n2} soldados de {tag2}",
-  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1} atacou com {n1} unidades contra {n2} unidades de {tag2}"
+  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1} atacou com {n1} unidades contra {n2} unidades de {tag2}",
+  "center of trade level": "nível do centro de comércio",
+  "clear scripted personalities": "limpar personalidades roteirizadas",
+  "government rank": "grau de governo",
+  "government reform": "reforma de governo",
+  "historical friend": "amigo histórico",
+  "historical rival": "rival histórico",
+  "religious school": "escola religiosa",
+  "trait": "traço"
 }

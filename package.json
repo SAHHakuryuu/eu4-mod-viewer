@@ -1,6 +1,6 @@
 {
   "name": "eu4-mod-viewer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A local, zero-dependency viewer for Europa Universalis IV mods: browse every change a mod makes, and read 35 kinds of content — events, decisions, missions, countries, historical rulers, advisors, leaders and battles, and more — in the format the game itself displays them. The interface speaks nine languages.",
   "keywords": [
     "eu4",

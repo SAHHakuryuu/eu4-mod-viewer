@@ -734,5 +734,13 @@
   "heavy ship": "대형선",
   "light ship": "소형선",
   "{n1} {tag1} soldiers attacked {n2} {tag2} soldiers": "{tag1}의 병사 {n1}명이 {tag2}의 병사 {n2}명을 공격했습니다",
-  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1}가 {n1} 유닛으로 {tag2}의 {n2} 유닛을 공격했습니다"
+  "{tag1} attacked with {n1} units against {n2} units of {tag2}": "{tag1}가 {n1} 유닛으로 {tag2}의 {n2} 유닛을 공격했습니다",
+  "center of trade level": "교역 중심지 등급",
+  "clear scripted personalities": "스크립트 설정 특성 삭제",
+  "government rank": "정부 등급",
+  "government reform": "정부 개혁",
+  "historical friend": "역사적 우방",
+  "historical rival": "역사적 라이벌",
+  "religious school": "종교 학파",
+  "trait": "특성"
 }

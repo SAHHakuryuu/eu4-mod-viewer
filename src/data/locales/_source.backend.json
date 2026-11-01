@@ -1411,6 +1411,9 @@
   "cavalry": [
     "骑兵"
   ],
+  "center of trade level": [
+    "贸易中心等级"
+  ],
   "centre of trade": [
     "贸易中心"
   ],
@@ -1437,6 +1440,9 @@
   ],
   "clear global flag: ": [
     "清除全局标记："
+  ],
+  "clear scripted personalities": [
+    "清除脚本设定的将领特质"
   ],
   "colonial region": [
     "殖民区域"
@@ -1699,6 +1705,12 @@
   "government": [
     "政体"
   ],
+  "government rank": [
+    "政府等级"
+  ],
+  "government reform": [
+    "政府改革"
+  ],
   "grant estate privilege": [
     "授予阶层特权"
   ],
@@ -1725,6 +1737,12 @@
   ],
   "hidden effect (not shown in game tooltip)": [
     "隐藏效果（不在游戏提示中显示）"
+  ],
+  "historical friend": [
+    "历史友邦"
+  ],
+  "historical rival": [
+    "历史宿敌"
   ],
   "holy order": [
     "修会"
@@ -1999,6 +2017,9 @@
   "religion group": [
     "宗教组"
   ],
+  "religious school": [
+    "宗教流派"
+  ],
   "remove country modifier": [
     "移除国家修正"
   ],
@@ -2142,6 +2163,9 @@
   ],
   "trade node": [
     "贸易节点"
+  ],
+  "trait": [
+    "特质"
   ],
   "trigger": [
     "条件"
